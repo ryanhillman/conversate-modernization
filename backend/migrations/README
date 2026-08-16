@@ -1,0 +1,6 @@
+Database migrations (Alembic, via Flask-Migrate)
+
+- Build a fresh database with `flask db upgrade`.
+- The test suite builds its schema with db.create_all(), not this chain.
+- New revisions should use an explicit sequential id:
+  `flask db migrate --rev-id 0002 -m "..."`.
