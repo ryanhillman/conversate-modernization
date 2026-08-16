@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Virtual environments
+.venv
+venv/
+
+# Editor / tooling
+.claude/
+.idea/
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local databases
+*.db
+
+# Environment files (keep *.env.example templates)
+*.env
+!*.env.example
+.env.production
+
+# Deployment
+/deploy
