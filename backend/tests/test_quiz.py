@@ -1,6 +1,7 @@
 from datetime import timedelta
 
-from conversate.api import _build_quiz, _utcnow
+from conversate.api.quiz import _build_quiz
+from conversate.api.common import _utcnow
 from conversate.extensions import db
 from conversate.models import QuizAttempt
 

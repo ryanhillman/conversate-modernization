@@ -2,7 +2,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 from werkzeug.exceptions import HTTPException
 
-from .api import api_bp
+from .api import api_blueprints
 from .extensions import db, migrate
 
 
@@ -27,5 +27,6 @@ def create_app(config):
     db.init_app(app)
     migrate.init_app(app, db)
     _register_error_handlers(app)
-    app.register_blueprint(api_bp)
+    for blueprint in api_blueprints:
+        app.register_blueprint(blueprint)
     return app
