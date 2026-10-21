@@ -34,10 +34,18 @@ def _username_error(name):
     return None
 
 
+_EMAIL_INVALID = object()
+
+
 def _body_email(body):
+    """None if the client didn't supply one (email is optional — some Auth0
+    connections never return one). _EMAIL_INVALID if one was supplied but
+    doesn't look like an address."""
     email = (body.get('email') or '').strip()
-    if not _EMAIL_RE.match(email) or len(email) > MAX_EMAIL_LENGTH:
+    if not email:
         return None
+    if not _EMAIL_RE.match(email) or len(email) > MAX_EMAIL_LENGTH:
+        return _EMAIL_INVALID
     return email
 
 
@@ -69,8 +77,8 @@ def create_me():
         return jsonify(error='Request body must be a JSON object'), 400
     user_name = (body.get('user_name') or '').strip()
     email = _body_email(body)
-    if email is None:
-        return jsonify(error='A valid email is required'), 400
+    if email is _EMAIL_INVALID:
+        return jsonify(error='email must be a valid address'), 400
     if _find_user(sub) is not None:
         return jsonify(error='User already exists'), 409
     error = _validate_username(user_name, 'User already exists')

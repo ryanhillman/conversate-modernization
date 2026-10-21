@@ -24,10 +24,18 @@ def test_create_stores_body_email(client, auth_headers):
     assert response.get_json()['email'] == 'real@example.com'
 
 
-def test_create_requires_a_valid_email(client, auth_headers):
-    assert client.post(ME, json={'user_name': 'tester'}, headers=auth_headers()).status_code == 400
-    assert client.post(ME, json={'user_name': 'tester', 'email': 'notanemail'},
-                       headers=auth_headers()).status_code == 400
+def test_create_allows_a_missing_email(client, auth_headers):
+    # Some Auth0 connections never return an email; account creation must
+    # not depend on one.
+    response = client.post(ME, json={'user_name': 'tester'}, headers=auth_headers())
+    assert response.status_code == 201
+    assert response.get_json()['email'] is None
+
+
+def test_create_rejects_a_malformed_email(client, auth_headers):
+    response = client.post(ME, json={'user_name': 'tester', 'email': 'notanemail'},
+                           headers=auth_headers())
+    assert response.status_code == 400
 
 
 def test_create_rejects_a_duplicate(client, auth_headers, create_user):
