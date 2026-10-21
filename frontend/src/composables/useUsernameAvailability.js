@@ -7,7 +7,10 @@ import { usernameError } from "../utils/usernameValidation";
 // to suppress the request for values the host already considers available
 // (e.g. the user's own current name).
 export function useUsernameAvailability(username, { skipAvailabilityCheck = () => false } = {}) {
-  const processing = ref(false);
+  // Separate from the host's own "saving" flag for the actual create/rename
+  // call: a debounced availability check settling after Save is clicked
+  // must not re-enable the button mid-save.
+  const checking = ref(false);
   const takenUsername = ref(false);
   let checkTimer = null;
   let checkSeq = 0;
@@ -15,7 +18,7 @@ export function useUsernameAvailability(username, { skipAvailabilityCheck = () =
   const validationError = computed(() => usernameError(username.value));
 
   function checkUsername(candidate, seq) {
-    processing.value = true;
+    checking.value = true;
     apiCheckUsername(candidate)
       .then(() => {
         // Ignore a response a newer keystroke has already superseded.
@@ -28,7 +31,7 @@ export function useUsernameAvailability(username, { skipAvailabilityCheck = () =
         takenUsername.value = err.status === 409;
       })
       .finally(() => {
-        processing.value = false;
+        checking.value = false;
       });
   }
 
@@ -43,5 +46,5 @@ export function useUsernameAvailability(username, { skipAvailabilityCheck = () =
 
   onBeforeUnmount(() => clearTimeout(checkTimer));
 
-  return { processing, takenUsername, validationError };
+  return { checking, takenUsername, validationError };
 }

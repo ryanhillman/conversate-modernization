@@ -174,10 +174,18 @@ async function selectAnswer(choice) {
     feedback.value = correct ? "correct" : "wrong";
   } catch (err) {
     console.error("Failed to submit answer:", err);
-    // Most likely cause: time ran out server-side between clicking and
-    // this request landing. Finalize with whatever's been graded so far
-    // instead of leaving the user stuck on a dead question.
-    finish();
+    if (err.status === 409) {
+      // Time ran out server-side between clicking and this request landing,
+      // or the question is out of sync. Finalize with whatever's been
+      // graded so far instead of leaving the user stuck on a dead question.
+      finish();
+      return;
+    }
+    // A network blip or server error shouldn't end the quiz — let the user
+    // retry the same question.
+    showToast("Could not submit your answer. Try again.", "error");
+    selectedChoice.value = null;
+    advancing.value = false;
     return;
   }
   setTimeout(() => {

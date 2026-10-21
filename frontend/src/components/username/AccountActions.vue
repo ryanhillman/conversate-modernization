@@ -13,7 +13,7 @@
       class="btn btn-success mb-2"
       style="width: 260px;"
       @click.prevent="updateUsername(username)"
-      :disabled="!!validationError || processing || takenUsername"
+      :disabled="!!validationError || checking || saving || takenUsername"
     >
       Update username
     </button>
@@ -21,7 +21,7 @@
       class="btn btn-warning"
       style="width: 260px;"
       @click.prevent="resetProgress()"
-      :disabled="processing"
+      :disabled="saving"
     >
       Reset progress
     </button>
@@ -46,38 +46,39 @@ const emit = defineEmits(["updated"]);
 const router = useRouter();
 
 const username = ref("");
-const { processing, takenUsername, validationError } = useUsernameAvailability(username, {
+const { checking, takenUsername, validationError } = useUsernameAvailability(username, {
   skipAvailabilityCheck: (candidate) =>
     candidate.toLowerCase() === props.currentUsername.trim().toLowerCase(),
 });
+const saving = ref(false);
 
 function updateUsername(name) {
-  processing.value = true;
+  saving.value = true;
   apiUpdateUsername(name.trim())
     .then((data) => {
       showToast("Username updated", "success");
       username.value = "";
       takenUsername.value = false;
-      processing.value = false;
+      saving.value = false;
       emit("updated", data);
     })
     .catch(() => {
-      processing.value = false;
+      saving.value = false;
       showToast("Could not update username.", "error");
     });
 }
 
 function resetProgress() {
   if (confirm("Reset your progress?")) {
-    processing.value = true;
+    saving.value = true;
     apiResetStats()
       .then(() => {
-        processing.value = false;
+        saving.value = false;
         showToast("Your progress has been reset", "success");
         router.push("/mastery");
       })
       .catch(() => {
-        processing.value = false;
+        saving.value = false;
         showToast("Could not reset your progress.", "error");
       });
   }
