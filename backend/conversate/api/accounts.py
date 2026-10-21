@@ -122,6 +122,16 @@ def update_me(record):
     return jsonify(record.serialize()), 200
 
 
+def _lock_user_for_update(user_id):
+    # A separate function so tests can monkeypatch it to hold the lock open
+    # (sleep before returning) and force a genuine, deterministic overlap
+    # with a concurrent caller, instead of hoping real threads happen to race.
+    return (
+        db.session.query(User).filter(User.id == user_id)
+        .populate_existing().with_for_update().one()
+    )
+
+
 @accounts_bp.route('/api/me/lessons/<int:lesson_id>', methods=['POST'])
 @require_auth
 @_resolve_me
@@ -132,10 +142,7 @@ def complete_my_lesson(record, lesson_id):
     # full read-modify-write: without the lock, two concurrent completions
     # can both read the same starting list and the second commit silently
     # overwrites the first's addition.
-    record = (
-        db.session.query(User).filter(User.id == record.id)
-        .populate_existing().with_for_update().one()
-    )
+    record = _lock_user_for_update(record.id)
     completed = list(record.lessons_completed or [])
     if lesson_id not in completed:
         completed.append(lesson_id)

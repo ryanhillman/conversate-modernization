@@ -19,6 +19,13 @@ TEST_AUDIENCE = 'test-audience'
 ISSUER = 'https://%s/' % TEST_DOMAIN
 KID = 'test-key'
 
+# The app fixture below calls db.drop_all()/create_all() around every test.
+# Pointed at the app's own database by mistake, that wipes its data — refuse
+# to run rather than risk it.
+_test_db_url = os.environ.get('TEST_DATABASE_URL')
+if _test_db_url and not _test_db_url.rsplit('/', 1)[-1].endswith('_test'):
+    pytest.exit('TEST_DATABASE_URL must point at a database whose name ends in _test')
+
 
 class _TestConfig:
     SQLALCHEMY_TRACK_MODIFICATIONS = False

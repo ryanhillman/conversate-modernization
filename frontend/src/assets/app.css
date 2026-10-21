@@ -63,7 +63,7 @@
     max-width: 1140px;
   }
 }
-@media (max-width: 767px) {
+@media (max-width: 1199.98px) {
   .nav-item {
     margin-bottom: 1rem;
   }

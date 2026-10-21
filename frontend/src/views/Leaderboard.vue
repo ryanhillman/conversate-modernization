@@ -80,6 +80,7 @@ onMounted(async () => {
   padding: 0.75rem 1rem;
   text-align: center;
   border-bottom: 1px solid #e5e9f0;
+  word-break: break-word;
 }
 .leaderboard-table th {
   background-color: var(--brand-navy);

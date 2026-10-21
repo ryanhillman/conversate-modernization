@@ -69,6 +69,7 @@ Create an Auth0 Single Page Application and an Auth0 API:
 
 - Add `http://localhost:3000` to Allowed Callback URLs, Logout URLs, and Web Origins.
 - API set an identifier (e.g. `https://conversate-api`) — this becomes the audience used by both frontend and backend.
+- Enable **Allow Offline Access** on the API, so refresh tokens are issued and expired sessions can silently renew instead of getting stuck.
 
 Create `frontend/.env`:
 
@@ -132,4 +133,12 @@ npm run dev
 cd backend
 pip install -r requirements-dev.txt
 pytest
+```
+
+Postgres test
+
+```bash
+docker exec conversate-postgres createdb -U conversate conversate_test
+# never point this at the app's own database — the suite drops its tables
+TEST_DATABASE_URL=postgresql://conversate:conversate@127.0.0.1:5432/conversate_test pytest
 ```
