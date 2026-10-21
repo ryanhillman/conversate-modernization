@@ -1,4 +1,6 @@
-## Changelog
+# Changelog
+
+## [1.0.0] - 2026-10-21
 
 **Framework & build (Vue 3 + Vite)**
 - Upgraded the frontend to Vue 3 and Vue Router 4.

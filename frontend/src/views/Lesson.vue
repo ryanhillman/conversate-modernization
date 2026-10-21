@@ -2,20 +2,11 @@
   <RequireProfile @loaded="user = $event">
     <div v-if="showCelebration" class="celebration">
       <div class="celebration-toast">🎉 Lesson Complete!</div>
-      <span
-        v-for="(c, i) in confetti"
-        :key="i"
-        class="confetti-piece"
-        :style="c"
-      ></span>
+      <span v-for="(c, i) in confetti" :key="i" class="confetti-piece" :style="c"></span>
     </div>
     <header class="lesson-header">Select any lesson to begin!</header>
 
-    <div
-      v-for="lesson in lessons"
-      :key="lesson.id"
-      class="individual-lesson"
-    >
+    <div v-for="lesson in lessons" :key="lesson.id" class="individual-lesson">
       <label :for="lesson.slug" class="lesson-label">{{ lesson.menuTitle }}: </label>
       <button :id="lesson.slug" class="toggle-lesson-btn" @click="selectLesson(lesson.id)">
         Toggle lesson
@@ -43,7 +34,8 @@
                 @click="speak(r[1])"
                 @keydown.enter="speak(r[1])"
                 @keydown.space.prevent="speak(r[1])"
-              >{{ r[1] }}</span>
+                >{{ r[1] }}</span
+              >
               — {{ r[2] }}
             </li>
           </ul>
@@ -93,10 +85,10 @@ import { showToast } from "../stores/toastStore";
 const lessons = LESSONS;
 
 const answers = reactive({});
-LESSONS.forEach(lesson =>
-  lesson.questions.forEach(q => {
+LESSONS.forEach((lesson) =>
+  lesson.questions.forEach((q) => {
     answers[q.id] = "";
-  })
+  }),
 );
 
 const user = ref(null);
@@ -106,7 +98,7 @@ const confetti = ref([]);
 const completing = ref(false);
 
 const currentLesson = computed(
-  () => lessons.find(lesson => lesson.id === currentLessonId.value) || null,
+  () => lessons.find((lesson) => lesson.id === currentLessonId.value) || null,
 );
 
 function selectLesson(lessonId) {
@@ -120,10 +112,10 @@ function isAnswered(question) {
 }
 function isCorrect(question) {
   const value = normalize(answers[question.id]);
-  return value !== "" && question.correctAnswers.some(a => normalize(a) === value);
+  return value !== "" && question.correctAnswers.some((a) => normalize(a) === value);
 }
 function checkAnswers(lesson) {
-  return lesson.questions.length > 0 && lesson.questions.every(q => isCorrect(q));
+  return lesson.questions.length > 0 && lesson.questions.every((q) => isCorrect(q));
 }
 function checkCurrentLesson() {
   const lesson = currentLesson.value;
@@ -132,27 +124,32 @@ function checkCurrentLesson() {
   }
 }
 function isComplete(lessonId) {
-  const completed = (user.value && user.value.lessons_completed) ? user.value.lessons_completed : [];
+  const completed = user.value && user.value.lessons_completed ? user.value.lessons_completed : [];
   return completed.includes(lessonId);
 }
 function markLessonComplete(lessonId) {
   if (completing.value) return;
-  const completed = (user.value && user.value.lessons_completed) ? user.value.lessons_completed : [];
+  const completed = user.value && user.value.lessons_completed ? user.value.lessons_completed : [];
   if (!completed.includes(lessonId)) {
     completing.value = true;
     completeLesson(lessonId)
-      .then(data => { user.value = data; launchCelebration(); })
-      .catch(err => {
+      .then((data) => {
+        user.value = data;
+        launchCelebration();
+      })
+      .catch((err) => {
         console.error("Failed to save lesson completion:", err);
         showToast("Could not save your progress.", "error");
       })
-      .finally(() => { completing.value = false; });
+      .finally(() => {
+        completing.value = false;
+      });
   }
 }
 function speak(text) {
   synthesizeSpeech(text, "it")
-    .then(({ audioContent }) => new Audio(`data:audio/mpeg;base64,${audioContent}`).play())
-    .catch(err => {
+    .then(({ audio_content }) => new Audio(`data:audio/mpeg;base64,${audio_content}`).play())
+    .catch((err) => {
       console.error("Speech synthesis failed:", err);
       showToast("Could not play audio.", "error");
     });
@@ -160,7 +157,9 @@ function speak(text) {
 function launchCelebration() {
   confetti.value = generateConfetti();
   showCelebration.value = true;
-  setTimeout(() => { showCelebration.value = false; }, 3200);
+  setTimeout(() => {
+    showCelebration.value = false;
+  }, 3200);
 }
 
 watch(answers, () => {
@@ -177,7 +176,9 @@ watch(answers, () => {
   margin: 2rem auto;
   max-width: 40rem;
   background-color: var(--card-bg);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 .individual-lesson:hover {
   transform: translateY(-3px);
@@ -224,9 +225,15 @@ watch(answers, () => {
   animation: correctPop 0.3s ease;
 }
 @keyframes correctPop {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.04); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.04);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 .speakable {
   display: inline-block;
@@ -237,7 +244,9 @@ watch(answers, () => {
   border-bottom: 2px solid var(--brand-accent-dark);
   padding: 0.05em 0.5em;
   cursor: pointer;
-  transition: background-color 0.15s, color 0.15s;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
 }
 .speakable:hover {
   background-color: rgba(224, 168, 46, 0.32);
@@ -279,14 +288,25 @@ watch(answers, () => {
   font-weight: 600;
   font-size: 1.1rem;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-  animation: toastIn 0.4s ease, toastOut 0.4s ease 2.7s forwards;
+  animation:
+    toastIn 0.4s ease,
+    toastOut 0.4s ease 2.7s forwards;
 }
 @keyframes toastIn {
-  from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
-  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 @keyframes toastOut {
-  to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+  to {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
 }
 .completed-badge {
   display: inline-block;

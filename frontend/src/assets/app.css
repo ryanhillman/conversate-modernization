@@ -50,9 +50,6 @@
 .nav-item.dropdown .dropdown-item:last-child {
   border-bottom: 0;
 }
-.navbar {
-  padding: 1.375rem 0;
-}
 @media (min-width: 992px) {
   .container {
     max-width: 960px;

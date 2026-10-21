@@ -1,4 +1,4 @@
-from decouple import config, UndefinedValueError
+from decouple import UndefinedValueError, config
 
 
 class ConfigError(RuntimeError):
@@ -22,9 +22,7 @@ class Config:
         self.GOOGLE_CLOUD_API_KEY = required('GOOGLE_CLOUD_API_KEY')
 
         if missing:
-            raise ConfigError(
-                'Missing required environment variables: %s' % ', '.join(missing)
-            )
+            raise ConfigError(f'Missing required environment variables: {", ".join(missing)}')
 
         self.SQLALCHEMY_TRACK_MODIFICATIONS = False
         self.SQLALCHEMY_ENGINE_OPTIONS = {'pool_pre_ping': True}

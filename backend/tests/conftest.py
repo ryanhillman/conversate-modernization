@@ -16,7 +16,7 @@ from conversate.models import User
 
 TEST_DOMAIN = 'test-tenant.auth0.com'
 TEST_AUDIENCE = 'test-audience'
-ISSUER = 'https://%s/' % TEST_DOMAIN
+ISSUER = f'https://{TEST_DOMAIN}/'
 KID = 'test-key'
 
 # The app fixture below calls db.drop_all()/create_all() around every test.
@@ -80,7 +80,7 @@ def app(tmp_path):
     # suite against the real database engine.
     config = _TestConfig()
     config.SQLALCHEMY_DATABASE_URI = os.environ.get(
-        'TEST_DATABASE_URL', 'sqlite:///%s' % (tmp_path / 'test.db').as_posix()
+        'TEST_DATABASE_URL', f'sqlite:///{(tmp_path / "test.db").as_posix()}'
     )
     application = create_app(config=config)
     with application.app_context():
@@ -126,8 +126,7 @@ def auth_headers(make_token):
 
 @pytest.fixture
 def create_user(app):
-    def _create(sub='auth0|test', email='user@example.com', user_name='tester',
-                lessons=None):
+    def _create(sub='auth0|test', email='user@example.com', user_name='tester', lessons=None):
         user = User(sub, email, user_name)
         user.lessons_completed = [] if lessons is None else lessons
         db.session.add(user)
@@ -204,7 +203,7 @@ def rate_limited_client(tmp_path):
     config = _TestConfig()
     config.RATELIMIT_ENABLED = True
     config.SQLALCHEMY_DATABASE_URI = os.environ.get(
-        'TEST_DATABASE_URL', 'sqlite:///%s' % (tmp_path / 'ratelimit.db').as_posix()
+        'TEST_DATABASE_URL', f'sqlite:///{(tmp_path / "ratelimit.db").as_posix()}'
     )
     application = create_app(config=config)
     with application.app_context():

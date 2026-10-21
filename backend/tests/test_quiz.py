@@ -1,8 +1,8 @@
 import threading
 from datetime import timedelta
 
+from conversate.api.common import utcnow
 from conversate.api.quiz import _build_quiz
-from conversate.api.common import _utcnow
 from conversate.extensions import db
 from conversate.models import QuizAttempt
 
@@ -41,7 +41,9 @@ def test_start_issues_fifty_questions_without_answers(client, auth_headers, crea
     assert body['seconds_remaining'] <= 250
 
 
-def test_concurrent_first_starts_returns_409_not_500(client, auth_headers, create_user, monkeypatch):
+def test_concurrent_first_starts_returns_409_not_500(
+    client, auth_headers, create_user, monkeypatch
+):
     # Unlike the answer-race test, real threads can't reliably reproduce this
     # one: restarting a quiz that already has an attempt is valid (it just
     # overwrites it), so if the two requests don't truly overlap, both
@@ -54,7 +56,7 @@ def test_concurrent_first_starts_returns_409_not_500(client, auth_headers, creat
     user = create_user()
 
     def find_attempt_then_let_a_rival_insert(user_id):
-        db.session.add(QuizAttempt(user_id=user_id, started_at=_utcnow(), quiz_state=[]))
+        db.session.add(QuizAttempt(user_id=user_id, started_at=utcnow(), quiz_state=[]))
         db.session.commit()
         return None
 
@@ -68,7 +70,7 @@ def test_answer_out_of_order_is_409(client, auth_headers, create_user):
     user = create_user()
     client.post(START, headers=auth_headers())
     attempt = _attempt_for(user.id)
-    attempt.started_at = _utcnow() - timedelta(seconds=10)
+    attempt.started_at = utcnow() - timedelta(seconds=10)
     db.session.commit()
     response = client.post(ANSWER, json={'index': 1, 'answer': 'x'}, headers=auth_headers())
     assert response.status_code == 409
@@ -78,17 +80,16 @@ def test_answer_grades_against_the_servers_answer_key(client, auth_headers, crea
     user = create_user()
     client.post(START, headers=auth_headers())
     attempt = _attempt_for(user.id)
-    attempt.started_at = _utcnow() - timedelta(seconds=10)
+    attempt.started_at = utcnow() - timedelta(seconds=10)
     db.session.commit()
     correct_word = attempt.quiz_state[0]['correct']
 
-    right = client.post(
-        ANSWER, json={'index': 0, 'answer': correct_word}, headers=auth_headers()
-    )
+    right = client.post(ANSWER, json={'index': 0, 'answer': correct_word}, headers=auth_headers())
     assert right.get_json() == {'correct': True}
 
     wrong = client.post(
-        ANSWER, json={'index': 1, 'answer': 'definitely not a real answer'},
+        ANSWER,
+        json={'index': 1, 'answer': 'definitely not a real answer'},
         headers=auth_headers(),
     )
     assert wrong.get_json() == {'correct': False}
@@ -104,11 +105,13 @@ def test_answering_too_fast_is_429(client, auth_headers, create_user):
     client.post(START, headers=auth_headers())
     attempt = _attempt_for(user.id)
     client.post(
-        ANSWER, json={'index': 0, 'answer': attempt.quiz_state[0]['correct']},
+        ANSWER,
+        json={'index': 0, 'answer': attempt.quiz_state[0]['correct']},
         headers=auth_headers(),
     )
     response = client.post(
-        ANSWER, json={'index': 1, 'answer': attempt.quiz_state[1]['correct']},
+        ANSWER,
+        json={'index': 1, 'answer': attempt.quiz_state[1]['correct']},
         headers=auth_headers(),
     )
     assert response.status_code == 429
@@ -124,11 +127,12 @@ def test_answer_after_time_is_up_is_rejected(client, auth_headers, create_user):
     user = create_user()
     client.post(START, headers=auth_headers())
     attempt = _attempt_for(user.id)
-    attempt.started_at = _utcnow() - timedelta(seconds=300)
+    attempt.started_at = utcnow() - timedelta(seconds=300)
     db.session.commit()
 
     response = client.post(
-        ANSWER, json={'index': 0, 'answer': attempt.quiz_state[0]['correct']},
+        ANSWER,
+        json={'index': 0, 'answer': attempt.quiz_state[0]['correct']},
         headers=auth_headers(),
     )
 
@@ -136,7 +140,9 @@ def test_answer_after_time_is_up_is_rejected(client, auth_headers, create_user):
     assert _attempt_for(user.id).correct_count == 0
 
 
-def test_concurrent_guesses_for_one_question_only_score_once(app, client, auth_headers, create_user):
+def test_concurrent_guesses_for_one_question_only_score_once(
+    app, client, auth_headers, create_user
+):
     # This must use genuine concurrency, not four sequential calls: the
     # earlier "index != attempt.next_index" check already rejects a second
     # *sequential* call by itself, regardless of whether the atomic update
@@ -179,7 +185,8 @@ def test_answer_while_paused_is_rejected(client, auth_headers, create_user):
     attempt = _attempt_for(user.id)
 
     response = client.post(
-        ANSWER, json={'index': 0, 'answer': attempt.quiz_state[0]['correct']},
+        ANSWER,
+        json={'index': 0, 'answer': attempt.quiz_state[0]['correct']},
         headers=auth_headers(),
     )
 
@@ -209,12 +216,10 @@ def test_submit_uses_the_accumulated_correct_count(client, auth_headers, create_
     user = create_user()
     client.post(START, headers=auth_headers())
     attempt = _attempt_for(user.id)
-    attempt.started_at = _utcnow() - timedelta(seconds=10)
+    attempt.started_at = utcnow() - timedelta(seconds=10)
     db.session.commit()
     for i, q in enumerate(attempt.quiz_state[:3]):
-        client.post(
-            ANSWER, json={'index': i, 'answer': q['correct']}, headers=auth_headers()
-        )
+        client.post(ANSWER, json={'index': i, 'answer': q['correct']}, headers=auth_headers())
 
     response = client.post(SUBMIT, headers=auth_headers())
 

@@ -23,7 +23,7 @@ def test_synthesizes_successfully(client, auth_headers, google_stub):
     google_stub.respond({'audioContent': 'ZmFrZS1hdWRpbw=='})
     response = client.post(TTS, json=VALID, headers=auth_headers())
     assert response.status_code == 200
-    assert response.get_json() == {'audioContent': 'ZmFrZS1hdWRpbw=='}
+    assert response.get_json() == {'audio_content': 'ZmFrZS1hdWRpbw=='}
 
 
 def test_upstream_failure_is_502(client, auth_headers, google_stub):

@@ -18,7 +18,7 @@ def test_translates_successfully(client, auth_headers, google_stub):
     google_stub.respond({'data': {'translations': [{'translatedText': 'hello'}]}})
     response = client.post(TRANSLATE, json=VALID, headers=auth_headers())
     assert response.status_code == 200
-    assert response.get_json() == {'translatedText': 'hello'}
+    assert response.get_json() == {'translated_text': 'hello'}
 
 
 def test_upstream_failure_is_502(client, auth_headers, google_stub):
