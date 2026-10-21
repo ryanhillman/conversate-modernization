@@ -120,6 +120,14 @@ def update_me(record):
 def complete_my_lesson(record, lesson_id):
     if lesson_id not in VALID_LESSON_IDS:
         return jsonify(error='Invalid lesson id'), 400
+    # lessons_completed is a JSON blob, not a set of rows, so writing it is a
+    # full read-modify-write: without the lock, two concurrent completions
+    # can both read the same starting list and the second commit silently
+    # overwrites the first's addition.
+    record = (
+        db.session.query(User).filter(User.id == record.id)
+        .populate_existing().with_for_update().one()
+    )
     completed = list(record.lessons_completed or [])
     if lesson_id not in completed:
         completed.append(lesson_id)

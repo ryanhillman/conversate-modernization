@@ -1,4 +1,5 @@
 import json
+import time
 import urllib.request
 from functools import wraps
 from flask import request, jsonify, current_app, g
@@ -6,8 +7,14 @@ from jose import jwt
 from jose.exceptions import JWTError
 
 _jwks_cache = {}
+_jwks_last_fetch = {}
 
 JWKS_TIMEOUT_SECONDS = 5
+# A forced refresh is normally triggered by a token naming an unknown key ID.
+# An attacker can trigger that for free on every request with a forged kid,
+# so this cooldown caps how often a single domain's keys are re-downloaded
+# regardless of how many such requests arrive.
+JWKS_REFRESH_COOLDOWN_SECONDS = 60
 
 
 class JwksUnavailable(Exception):
@@ -15,11 +22,14 @@ class JwksUnavailable(Exception):
 
 
 def _get_jwks(domain, force_refresh=False):
-    if force_refresh or domain not in _jwks_cache:
+    last_fetch = _jwks_last_fetch.get(domain, 0)
+    on_cooldown = (time.monotonic() - last_fetch) < JWKS_REFRESH_COOLDOWN_SECONDS
+    if domain not in _jwks_cache or (force_refresh and not on_cooldown):
         url = f'https://{domain}/.well-known/jwks.json'
         try:
             with urllib.request.urlopen(url, timeout=JWKS_TIMEOUT_SECONDS) as r:
                 _jwks_cache[domain] = json.loads(r.read())
+            _jwks_last_fetch[domain] = time.monotonic()
         except Exception as e:
             raise JwksUnavailable(str(e)) from e
     return _jwks_cache[domain]

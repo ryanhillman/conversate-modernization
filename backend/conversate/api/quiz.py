@@ -1,6 +1,9 @@
 import random
+from datetime import timedelta
 
 from flask import Blueprint, jsonify
+from sqlalchemy import update
+from sqlalchemy.exc import IntegrityError
 
 from ..extensions import db
 from ..models import User, QuizAttempt
@@ -13,6 +16,15 @@ quiz_bp = Blueprint('quiz_bp', __name__)
 TOTAL_QUIZ_QUESTIONS = len(QUIZ_WORDS)
 QUIZ_TIME_LIMIT_SECONDS = 250
 MAX_QUIZ_PAUSES = 1
+# A human never answers this fast — the UI itself holds each answer on
+# screen for 500ms before advancing. This slows down a script racing
+# through the quiz without a real answer key; it can't stop one, since
+# a script can simply pace itself slower than this.
+MIN_SECONDS_PER_ANSWER = 0.5
+# How much of a pause actually gets excluded from the 250s clock. Longer than
+# this and the clock resumes running anyway, so stepping away can't be used
+# to buy unlimited time to look up answers before resuming.
+MAX_PAUSE_CREDIT_SECONDS = 120
 
 
 def _build_quiz():
@@ -66,7 +78,14 @@ def start_quiz(record):
     attempt.correct_count = 0
     attempt.paused_at = None
     attempt.pauses_used = 0
-    db.session.commit()
+    try:
+        db.session.commit()
+    except IntegrityError:
+        # Two simultaneous first-time starts both saw no existing attempt and
+        # both tried to insert one; the unique index on user_id lets only one
+        # through.
+        db.session.rollback()
+        return jsonify(error='Quiz already starting'), 409
 
     client_questions = [{'it': q['it'], 'choices': q['choices']} for q in questions]
     seconds_remaining = _seconds_remaining(started_at)
@@ -91,18 +110,38 @@ def answer_quiz(record):
     attempt = _find_attempt(record.id)
     if attempt is None:
         return jsonify(error='No quiz in progress; call /api/me/quiz/start first'), 409
+    if attempt.paused_at is not None:
+        return jsonify(error='Quiz is paused; call /api/me/quiz/resume first'), 409
     if _seconds_remaining(attempt.started_at) <= 0:
         return jsonify(error='Time is up; call /api/me/quiz/submit'), 409
+    if (_utcnow() - attempt.started_at).total_seconds() < index * MIN_SECONDS_PER_ANSWER:
+        return jsonify(error='Answering too fast'), 429
     if attempt.next_index >= len(attempt.quiz_state):
         return jsonify(error='All questions have already been answered'), 409
     if index != attempt.next_index:
         return jsonify(error='index does not match the current question'), 409
 
     correct = body.get('answer') == attempt.quiz_state[index]['correct']
-    attempt.next_index += 1
-    if correct:
-        attempt.correct_count += 1
+
+    # Checking next_index and incrementing it must be one atomic operation:
+    # separate read-then-write steps let concurrent requests for the same
+    # index all pass the check before any of them commits, so every
+    # simultaneous guess would score.
+    result = db.session.execute(
+        update(QuizAttempt)
+        .where(
+            QuizAttempt.id == attempt.id,
+            QuizAttempt.next_index == index,
+            QuizAttempt.paused_at.is_(None),
+        )
+        .values(
+            next_index=QuizAttempt.next_index + 1,
+            correct_count=QuizAttempt.correct_count + int(correct),
+        )
+    )
     db.session.commit()
+    if result.rowcount == 0:
+        return jsonify(error='index does not match the current question'), 409
 
     return jsonify(correct=correct), 200
 
@@ -135,8 +174,12 @@ def resume_quiz(record):
         return jsonify(error='No quiz in progress; call /api/me/quiz/start first'), 409
     if attempt.paused_at is not None:
         # Shift the anchor forward by however long the pause lasted, so the
-        # paused time is never counted against the 250s cap.
-        attempt.started_at += _utcnow() - attempt.paused_at
+        # paused time is never counted against the 250s cap — but only up to
+        # a cap, so a pause can't be stretched out into unlimited extra time.
+        paused_duration = min(
+            (_utcnow() - attempt.paused_at).total_seconds(), MAX_PAUSE_CREDIT_SECONDS
+        )
+        attempt.started_at += timedelta(seconds=paused_duration)
         attempt.paused_at = None
         db.session.commit()
     return jsonify(
@@ -159,15 +202,24 @@ def submit_quiz(record):
     )
     db.session.delete(attempt)
 
-    is_new_best = (
-        record.quiz_best_score is None
-        or score > record.quiz_best_score
-        or (score == record.quiz_best_score and time_seconds < record.quiz_best_time_seconds)
+    # Same atomicity concern as /answer: two concurrent submits must not
+    # both read the old best, decide "I'm better", and write — the second
+    # write would silently clobber the first with a stale is_new_best.
+    result = db.session.execute(
+        update(User)
+        .where(
+            User.id == record.id,
+            (User.quiz_best_score.is_(None))
+            | (User.quiz_best_score < score)
+            | (
+                (User.quiz_best_score == score)
+                & (User.quiz_best_time_seconds > time_seconds)
+            ),
+        )
+        .values(quiz_best_score=score, quiz_best_time_seconds=time_seconds)
     )
-    if is_new_best:
-        record.quiz_best_score = score
-        record.quiz_best_time_seconds = time_seconds
     db.session.commit()
+    is_new_best = result.rowcount > 0
 
     return jsonify(
         score=score, time_seconds=time_seconds, is_new_best=is_new_best

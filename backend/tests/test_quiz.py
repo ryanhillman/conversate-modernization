@@ -1,3 +1,4 @@
+import threading
 from datetime import timedelta
 
 from conversate.api.quiz import _build_quiz
@@ -40,9 +41,35 @@ def test_start_issues_fifty_questions_without_answers(client, auth_headers, crea
     assert body['seconds_remaining'] <= 250
 
 
+def test_concurrent_first_starts_returns_409_not_500(client, auth_headers, create_user, monkeypatch):
+    # Unlike the answer-race test, real threads can't reliably reproduce this
+    # one: restarting a quiz that already has an attempt is valid (it just
+    # overwrites it), so if the two requests don't truly overlap, both
+    # legitimately get 200 — that's not a bug, just this test failing to hit
+    # the narrow window. Simulate the window deterministically instead: let
+    # start_quiz's own "no existing attempt" check see None, while a
+    # "concurrent" request slips in and actually commits one first.
+    import conversate.api.quiz as quiz_module
+
+    user = create_user()
+
+    def find_attempt_then_let_a_rival_insert(user_id):
+        db.session.add(QuizAttempt(user_id=user_id, started_at=_utcnow(), quiz_state=[]))
+        db.session.commit()
+        return None
+
+    monkeypatch.setattr(quiz_module, '_find_attempt', find_attempt_then_let_a_rival_insert)
+
+    response = client.post(START, headers=auth_headers(sub=user.auth0_sub))
+    assert response.status_code == 409
+
+
 def test_answer_out_of_order_is_409(client, auth_headers, create_user):
-    create_user()
+    user = create_user()
     client.post(START, headers=auth_headers())
+    attempt = _attempt_for(user.id)
+    attempt.started_at = _utcnow() - timedelta(seconds=10)
+    db.session.commit()
     response = client.post(ANSWER, json={'index': 1, 'answer': 'x'}, headers=auth_headers())
     assert response.status_code == 409
 
@@ -51,6 +78,8 @@ def test_answer_grades_against_the_servers_answer_key(client, auth_headers, crea
     user = create_user()
     client.post(START, headers=auth_headers())
     attempt = _attempt_for(user.id)
+    attempt.started_at = _utcnow() - timedelta(seconds=10)
+    db.session.commit()
     correct_word = attempt.quiz_state[0]['correct']
 
     right = client.post(
@@ -65,6 +94,25 @@ def test_answer_grades_against_the_servers_answer_key(client, auth_headers, crea
     assert wrong.get_json() == {'correct': False}
 
     assert _attempt_for(user.id).correct_count == 1
+
+
+def test_answering_too_fast_is_429(client, auth_headers, create_user):
+    # A human never hits this — the UI itself holds each answer on screen
+    # for 500ms. This exists to slow down a script racing through the
+    # quiz without a real answer key.
+    user = create_user()
+    client.post(START, headers=auth_headers())
+    attempt = _attempt_for(user.id)
+    client.post(
+        ANSWER, json={'index': 0, 'answer': attempt.quiz_state[0]['correct']},
+        headers=auth_headers(),
+    )
+    response = client.post(
+        ANSWER, json={'index': 1, 'answer': attempt.quiz_state[1]['correct']},
+        headers=auth_headers(),
+    )
+    assert response.status_code == 429
+    assert _attempt_for(user.id).next_index == 1
 
 
 def test_answer_after_time_is_up_is_rejected(client, auth_headers, create_user):
@@ -88,6 +136,66 @@ def test_answer_after_time_is_up_is_rejected(client, auth_headers, create_user):
     assert _attempt_for(user.id).correct_count == 0
 
 
+def test_concurrent_guesses_for_one_question_only_score_once(app, client, auth_headers, create_user):
+    # This must use genuine concurrency, not four sequential calls: the
+    # earlier "index != attempt.next_index" check already rejects a second
+    # *sequential* call by itself, regardless of whether the atomic update
+    # exists. The bug this guards against only shows up when multiple
+    # requests' reads of next_index overlap before any of them commits.
+    user = create_user()
+    client.post(START, headers=auth_headers())
+    attempt = _attempt_for(user.id)
+    choices = attempt.quiz_state[0]['choices']
+    headers = auth_headers()
+
+    barrier = threading.Barrier(len(choices))
+    statuses = [None] * len(choices)
+
+    def guess(i, choice):
+        barrier.wait()
+        resp = client.post(ANSWER, json={'index': 0, 'answer': choice}, headers=headers)
+        statuses[i] = resp.status_code
+
+    threads = [
+        threading.Thread(target=guess, args=(i, choice)) for i, choice in enumerate(choices)
+    ]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    assert statuses.count(200) == 1
+    assert statuses.count(409) == len(choices) - 1
+    with app.app_context():
+        attempt = _attempt_for(user.id)
+        assert attempt.next_index == 1
+        assert attempt.correct_count <= 1
+
+
+def test_answer_while_paused_is_rejected(client, auth_headers, create_user):
+    user = create_user()
+    client.post(START, headers=auth_headers())
+    client.post(PAUSE, headers=auth_headers())
+    attempt = _attempt_for(user.id)
+
+    response = client.post(
+        ANSWER, json={'index': 0, 'answer': attempt.quiz_state[0]['correct']},
+        headers=auth_headers(),
+    )
+
+    assert response.status_code == 409
+    assert _attempt_for(user.id).correct_count == 0
+
+
+def test_pausing_again_after_the_limit_is_409(client, auth_headers, create_user):
+    create_user()
+    client.post(START, headers=auth_headers())
+    client.post(PAUSE, headers=auth_headers())
+    client.post(RESUME, headers=auth_headers())
+    response = client.post(PAUSE, headers=auth_headers())
+    assert response.status_code == 409
+
+
 def test_pause_and_resume_works(client, auth_headers, create_user):
     create_user()
     client.post(START, headers=auth_headers())
@@ -101,6 +209,8 @@ def test_submit_uses_the_accumulated_correct_count(client, auth_headers, create_
     user = create_user()
     client.post(START, headers=auth_headers())
     attempt = _attempt_for(user.id)
+    attempt.started_at = _utcnow() - timedelta(seconds=10)
+    db.session.commit()
     for i, q in enumerate(attempt.quiz_state[:3]):
         client.post(
             ANSWER, json={'index': i, 'answer': q['correct']}, headers=auth_headers()

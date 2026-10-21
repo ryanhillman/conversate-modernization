@@ -3,7 +3,7 @@ from flask_cors import CORS
 from werkzeug.exceptions import HTTPException
 
 from .api import api_blueprints
-from .extensions import db, migrate
+from .extensions import db, migrate, limiter
 
 
 def _register_error_handlers(app):
@@ -26,6 +26,11 @@ def create_app(config):
     CORS(app, resources={"/*": {"origins": config.ALLOWED_ORIGIN}})
     db.init_app(app)
     migrate.init_app(app, db)
+    # Rate limiting relies on real elapsed time between requests, which the
+    # test suite's rapid-fire calls don't reflect; disable it under TESTING
+    # so limits don't accumulate across unrelated tests.
+    app.config.setdefault('RATELIMIT_ENABLED', not app.config.get('TESTING', False))
+    limiter.init_app(app)
     _register_error_handlers(app)
     for blueprint in api_blueprints:
         app.register_blueprint(blueprint)

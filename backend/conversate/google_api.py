@@ -1,6 +1,5 @@
 import json
 import urllib.error
-import urllib.parse
 import urllib.request
 
 from flask import current_app
@@ -17,10 +16,15 @@ class GoogleServiceError(Exception):
 
 
 def post(base_url, payload):
-    url = base_url + '?key=' + urllib.parse.quote(current_app.config['GOOGLE_CLOUD_API_KEY'])
+    # The key goes in a header rather than the ?key= query string so it
+    # never ends up in URL logs (access logs, proxies, browser history).
     req = urllib.request.Request(
-        url, data=json.dumps(payload).encode(),
-        headers={'Content-Type': 'application/json'}, method='POST',
+        base_url, data=json.dumps(payload).encode(),
+        headers={
+            'Content-Type': 'application/json',
+            'X-goog-api-key': current_app.config['GOOGLE_CLOUD_API_KEY'],
+        },
+        method='POST',
     )
     try:
         with urllib.request.urlopen(req, timeout=GOOGLE_API_TIMEOUT_SECONDS) as r:

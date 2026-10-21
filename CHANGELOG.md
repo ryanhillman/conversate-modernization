@@ -78,6 +78,7 @@
 - Replaced full-table scans with indexed queries and database-side sorting.
 - Added timeouts for outbound requests.
 - Added server-side validation for API request bodies.
+- Capped the maximum request body size.
 
 **Cleanup**
 - Removed unused games components, routes, and imports.
