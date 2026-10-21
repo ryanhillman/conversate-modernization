@@ -20,15 +20,15 @@ export function useUsernameAvailability(username, { skipAvailabilityCheck = () =
   function checkUsername(candidate, seq) {
     checking.value = true;
     apiCheckUsername(candidate)
-      .then(() => {
+      .then((data) => {
         // Ignore a response a newer keystroke has already superseded.
-        if (seq === checkSeq) takenUsername.value = false;
+        if (seq === checkSeq) takenUsername.value = !data.available;
       })
-      .catch((err) => {
+      .catch(() => {
         if (seq !== checkSeq) return;
-        // Only a 409 means the name is taken; auth failures, outages, and
-        // network errors must not masquerade as "taken".
-        takenUsername.value = err.status === 409;
+        // Auth failures, outages, and network errors must not masquerade as
+        // "taken" — only an explicit available:false does.
+        takenUsername.value = false;
       })
       .finally(() => {
         checking.value = false;

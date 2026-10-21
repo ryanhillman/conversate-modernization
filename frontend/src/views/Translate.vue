@@ -9,16 +9,13 @@
           <label for="selectInputLanguage">Select Input Language</label>
           <br />
           <select
+            id="selectInputLanguage"
             v-model="inputLanguage"
             name="selectInputLanguage"
             class="form-select lang-select"
             aria-label="Select input language"
           >
-            <option
-              v-for="language in languages"
-              :key="language.code"
-              :value="language.code"
-            >
+            <option v-for="language in languages" :key="language.code" :value="language.code">
               {{ language.name }}
             </option>
           </select>
@@ -27,16 +24,13 @@
           <label for="selectOutputLanguage">Select Output Language</label>
           <br />
           <select
+            id="selectOutputLanguage"
             v-model="outputLanguage"
             name="selectOutputLanguage"
             class="form-select lang-select"
             aria-label="Select output language"
           >
-            <option
-              v-for="language in languages"
-              :key="language.code"
-              :value="language.code"
-            >
+            <option v-for="language in languages" :key="language.code" :value="language.code">
               {{ language.name }}
             </option>
           </select>
@@ -78,10 +72,7 @@
         <br />
         <button
           :disabled="
-            inputLanguage === null ||
-            outputLanguage === null ||
-            textToTranslate.length < 1 ||
-            busy
+            inputLanguage === null || outputLanguage === null || textToTranslate.length < 1 || busy
           "
           class="btn btn-accent m-3"
           @click="translateEnteredText()"
@@ -154,7 +145,7 @@ onBeforeUnmount(() => {
 async function translateEnteredText() {
   busy.value = true;
   try {
-    const { translatedText: result } = await translateText(
+    const { translated_text: result } = await translateText(
       textToTranslate.value,
       inputLanguage.value,
       outputLanguage.value,
@@ -208,9 +199,7 @@ async function transcribeRecording() {
     textToTranslate.value = transcript;
   } catch (err) {
     console.error("Transcription failed:", err);
-    const message = err.status === 422
-      ? "No speech detected."
-      : "Could not transcribe audio.";
+    const message = err.status === 422 ? "No speech detected." : "Could not transcribe audio.";
     showToast(message, "error");
   } finally {
     busy.value = false;
@@ -220,8 +209,8 @@ async function transcribeRecording() {
 async function startTxtToSpeech() {
   busy.value = true;
   try {
-    const { audioContent } = await synthesizeSpeech(translatedText.value, outputLanguage.value);
-    await new Audio(`data:audio/mpeg;base64,${audioContent}`).play();
+    const { audio_content } = await synthesizeSpeech(translatedText.value, outputLanguage.value);
+    await new Audio(`data:audio/mpeg;base64,${audio_content}`).play();
   } catch (err) {
     console.error("Speech synthesis failed:", err);
     showToast("Could not play audio.", "error");
@@ -273,7 +262,9 @@ async function startTxtToSpeech() {
   background-repeat: no-repeat;
   background-position: right 0.9rem center;
   background-size: 0.7rem;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
 }
 .lang-select:hover {
   border-color: var(--brand-accent);

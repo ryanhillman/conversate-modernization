@@ -2,8 +2,9 @@ import json
 import time
 import urllib.request
 from functools import wraps
-from flask import request, jsonify, current_app, g
+
 import jwt
+from flask import current_app, g, jsonify, request
 from jwt import PyJWTError
 
 _jwks_cache = {}
@@ -57,10 +58,11 @@ def _verify_token():
     kid = jwt.get_unverified_header(token).get('kid')
     jwk = _signing_key(domain, kid)
     if jwk is None:
-        raise PyJWTError('no signing key matches token kid %r' % kid)
+        raise PyJWTError(f'no signing key matches token kid {kid!r}')
     signing_key = jwt.PyJWK(jwk).key
-    return jwt.decode(token, signing_key, algorithms=['RS256'], audience=audience,
-                      issuer=f'https://{domain}/')
+    return jwt.decode(
+        token, signing_key, algorithms=['RS256'], audience=audience, issuer=f'https://{domain}/'
+    )
 
 
 def require_auth(f):
@@ -78,4 +80,5 @@ def require_auth(f):
         g.jwt_claims = claims
         g.current_user_sub = claims['sub']
         return f(*args, **kwargs)
+
     return decorated

@@ -17,10 +17,14 @@ def test_requires_a_token(client):
 
 
 def test_create_stores_body_email(client, auth_headers):
-    response = client.post(ME, json={
-        'user_name': 'tester',
-        'email': 'real@example.com',
-    }, headers=auth_headers())
+    response = client.post(
+        ME,
+        json={
+            'user_name': 'tester',
+            'email': 'real@example.com',
+        },
+        headers=auth_headers(),
+    )
     assert response.status_code == 201
     assert response.get_json()['email'] == 'real@example.com'
 
@@ -34,15 +38,17 @@ def test_create_allows_a_missing_email(client, auth_headers):
 
 
 def test_create_rejects_a_malformed_email(client, auth_headers):
-    response = client.post(ME, json={'user_name': 'tester', 'email': 'notanemail'},
-                           headers=auth_headers())
+    response = client.post(
+        ME, json={'user_name': 'tester', 'email': 'notanemail'}, headers=auth_headers()
+    )
     assert response.status_code == 400
 
 
 def test_create_rejects_a_duplicate(client, auth_headers, create_user):
     create_user(sub='auth0|test', user_name='tester')
-    response = client.post(ME, json={'user_name': 'other', 'email': 'a@b.com'},
-                           headers=auth_headers(sub='auth0|test'))
+    response = client.post(
+        ME, json={'user_name': 'other', 'email': 'a@b.com'}, headers=auth_headers(sub='auth0|test')
+    )
     assert response.status_code == 409
 
 
@@ -50,7 +56,9 @@ def test_get_without_profile_is_404(client, auth_headers):
     assert client.get(ME, headers=auth_headers()).status_code == 404
 
 
-def test_get_resolves_to_the_authenticated_user_not_just_any_user(client, auth_headers, create_user):
+def test_get_resolves_to_the_authenticated_user_not_just_any_user(
+    client, auth_headers, create_user
+):
     create_user(sub='auth0|a', user_name='alice')
     create_user(sub='auth0|b', user_name='bob')
     body = client.get(ME, headers=auth_headers(sub='auth0|b')).get_json()
@@ -75,8 +83,12 @@ def test_rename(client, auth_headers, create_user):
 def test_rename_to_a_taken_username_is_409(client, auth_headers, create_user):
     create_user(sub='auth0|me', user_name='tester')
     create_user(sub='auth0|other', user_name='taken')
-    assert client.put(ME, json={'user_name': 'taken'},
-                      headers=auth_headers(sub='auth0|me')).status_code == 409
+    assert (
+        client.put(
+            ME, json={'user_name': 'taken'}, headers=auth_headers(sub='auth0|me')
+        ).status_code
+        == 409
+    )
 
 
 def test_completing_a_lesson_twice_does_not_double_count(client, auth_headers, create_user):
@@ -90,8 +102,8 @@ def test_completing_a_lesson_twice_does_not_double_count(client, auth_headers, c
 @pytest.mark.skipif(
     not os.environ.get('TEST_DATABASE_URL'),
     reason="SQLite silently ignores SELECT ... FOR UPDATE (no FOR UPDATE clause "
-           "is even generated), so the lock this test depends on has no effect "
-           "there. Run with TEST_DATABASE_URL pointing at Postgres to exercise it.",
+    "is even generated), so the lock this test depends on has no effect "
+    "there. Run with TEST_DATABASE_URL pointing at Postgres to exercise it.",
 )
 def test_concurrent_lesson_completions_do_not_lose_one(
     app, client, auth_headers, create_user, monkeypatch
@@ -130,7 +142,7 @@ def test_concurrent_lesson_completions_do_not_lose_one(
     monkeypatch.setattr(accounts_module, '_lock_user_for_update', hold_lock_open)
 
     def complete(lesson_id):
-        client.post(ME + '/lessons/%d' % lesson_id, headers=headers)
+        client.post(f'{ME}/lessons/{lesson_id}', headers=headers)
 
     threads = [threading.Thread(target=complete, args=(lesson_id,)) for lesson_id in (1, 2)]
     for t in threads:
@@ -141,6 +153,7 @@ def test_concurrent_lesson_completions_do_not_lose_one(
     with app.app_context():
         from conversate.extensions import db
         from conversate.models import User
+
         refreshed = db.session.query(User).filter(User.id == user.id).one()
         assert sorted(refreshed.lessons_completed) == [1, 2]
 

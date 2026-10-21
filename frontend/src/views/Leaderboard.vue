@@ -8,9 +8,7 @@
       <div v-if="loading" class="loading-state">
         <p>Loading…</p>
       </div>
-      <p v-else-if="!rows.length" class="text-muted">
-        No quiz results yet — be the first!
-      </p>
+      <p v-else-if="!rows.length" class="text-muted">No quiz results yet — be the first!</p>
       <div v-else class="leaderboard-wrap">
         <table class="leaderboard-table">
           <thead>
@@ -80,7 +78,7 @@ onMounted(async () => {
   padding: 0.75rem 1rem;
   text-align: center;
   border-bottom: 1px solid #e5e9f0;
-  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 .leaderboard-table th {
   background-color: var(--brand-navy);

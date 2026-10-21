@@ -1,12 +1,12 @@
 import re
 
-from flask import Blueprint, jsonify, g
+from flask import Blueprint, g, jsonify
 from sqlalchemy.exc import IntegrityError
 
+from ..auth import require_auth
 from ..extensions import db
 from ..models import User
-from ..auth import require_auth
-from .common import _json_body, _find_user, _resolve_me
+from .common import find_user, json_body, resolve_me
 
 accounts_bp = Blueprint('accounts_bp', __name__)
 
@@ -26,9 +26,9 @@ def _username_error(name):
     if not name:
         return 'user_name is required'
     if len(name) < MIN_USERNAME_LENGTH:
-        return 'user_name must be at least %d characters' % MIN_USERNAME_LENGTH
+        return f'user_name must be at least {MIN_USERNAME_LENGTH} characters'
     if len(name) > MAX_USERNAME_LENGTH:
-        return 'user_name must be at most %d characters' % MAX_USERNAME_LENGTH
+        return f'user_name must be at most {MAX_USERNAME_LENGTH} characters'
     if not _USERNAME_RE.match(name):
         return 'user_name may only contain letters, numbers, and _ . -'
     return None
@@ -50,9 +50,7 @@ def _body_email(body):
 
 
 def _username_taken(name, exclude_id=None):
-    query = db.session.query(User.id).filter(
-        db.func.lower(User.user_name) == name.lower()
-    )
+    query = db.session.query(User.id).filter(db.func.lower(User.user_name) == name.lower())
     if exclude_id is not None:
         query = query.filter(User.id != exclude_id)
     return query.first() is not None
@@ -72,14 +70,14 @@ def _validate_username(name, conflict_message, exclude_id=None):
 @require_auth
 def create_me():
     sub = g.current_user_sub
-    body = _json_body()
+    body = json_body()
     if body is None:
         return jsonify(error='Request body must be a JSON object'), 400
     user_name = (body.get('user_name') or '').strip()
     email = _body_email(body)
     if email is _EMAIL_INVALID:
         return jsonify(error='email must be a valid address'), 400
-    if _find_user(sub) is not None:
+    if find_user(sub) is not None:
         return jsonify(error='User already exists'), 409
     error = _validate_username(user_name, 'User already exists')
     if error:
@@ -96,21 +94,20 @@ def create_me():
 
 @accounts_bp.route('/api/me', methods=['GET'])
 @require_auth
-@_resolve_me
+@resolve_me
 def get_me(record):
     return jsonify(record.serialize()), 200
 
 
 @accounts_bp.route('/api/me', methods=['PUT'])
 @require_auth
-@_resolve_me
+@resolve_me
 def update_me(record):
-    body = _json_body()
+    body = json_body()
     if body is None:
         return jsonify(error='Request body must be a JSON object'), 400
     new_name = (body.get('user_name') or '').strip()
-    error = _validate_username(new_name, 'user_name already exists',
-                               exclude_id=record.id)
+    error = _validate_username(new_name, 'user_name already exists', exclude_id=record.id)
     if error:
         return error
     record.user_name = new_name
@@ -127,14 +124,17 @@ def _lock_user_for_update(user_id):
     # (sleep before returning) and force a genuine, deterministic overlap
     # with a concurrent caller, instead of hoping real threads happen to race.
     return (
-        db.session.query(User).filter(User.id == user_id)
-        .populate_existing().with_for_update().one()
+        db.session.query(User)
+        .filter(User.id == user_id)
+        .populate_existing()
+        .with_for_update()
+        .one()
     )
 
 
 @accounts_bp.route('/api/me/lessons/<int:lesson_id>', methods=['POST'])
 @require_auth
-@_resolve_me
+@resolve_me
 def complete_my_lesson(record, lesson_id):
     if lesson_id not in VALID_LESSON_IDS:
         return jsonify(error='Invalid lesson id'), 400
@@ -153,7 +153,7 @@ def complete_my_lesson(record, lesson_id):
 
 @accounts_bp.route('/api/me/reset', methods=['POST'])
 @require_auth
-@_resolve_me
+@resolve_me
 def reset_me(record):
     record.lessons_completed = []
     record.quiz_best_score = None
@@ -169,6 +169,4 @@ def username_available(user_name):
     name_error = _username_error(user_name)
     if name_error:
         return jsonify(error=name_error), 400
-    if _username_taken(user_name):
-        return jsonify(error='user_name already exists'), 409
-    return jsonify(message='Success'), 200
+    return jsonify(available=not _username_taken(user_name)), 200

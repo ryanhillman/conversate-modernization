@@ -44,6 +44,7 @@ Vocabulary quiz with user scores and times ranked on a leaderboard.
 - SQLAlchemy 2.0
 - Flask-Migrate 4.1 + Alembic 1.18
 - Flask-SQLAlchemy 3.1
+- Flask-Limiter 4.1
 - PostgreSQL
 - Gunicorn 26.0
 
@@ -56,6 +57,7 @@ Vocabulary quiz with user scores and times ranked on a leaderboard.
 
 **Authentication**
 - Auth0
+- PyJWT 2.15
 
 ---
 
@@ -108,7 +110,7 @@ Start a local Postgres (Docker):
 docker run -d --name conversate-postgres -p 5432:5432 -e POSTGRES_USER=conversate -e POSTGRES_PASSWORD=conversate -e POSTGRES_DB=conversate postgres:18
 ```
 
-Start backend
+#### Start backend
 
 ```bash
 cd backend
@@ -135,7 +137,7 @@ pip install -r requirements-dev.txt
 pytest
 ```
 
-Postgres test
+#### Postgres test
 
 ```bash
 docker exec conversate-postgres createdb -U conversate conversate_test

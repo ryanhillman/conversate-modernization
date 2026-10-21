@@ -2,7 +2,7 @@ import urllib.error
 
 STT = '/api/stt'
 
-VALID = {'audio': 'ZmFrZS1hdWRpbw==', 'mimeType': 'audio/webm;codecs=opus', 'language': 'it'}
+VALID = {'audio': 'ZmFrZS1hdWRpbw==', 'mime_type': 'audio/webm;codecs=opus', 'language': 'it'}
 
 
 def test_requires_a_token(client):
@@ -10,7 +10,7 @@ def test_requires_a_token(client):
 
 
 def test_unsupported_mime_type_is_400(client, auth_headers):
-    body = dict(VALID, mimeType='audio/mp4')
+    body = dict(VALID, mime_type='audio/mp4')
     assert client.post(STT, json=body, headers=auth_headers()).status_code == 400
 
 
