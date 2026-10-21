@@ -17,6 +17,16 @@ def test_malformed_token_is_401(client):
     assert client.get(URL, headers=headers).status_code == 401
 
 
+def test_wrong_audience_is_401(client, auth_headers):
+    headers = auth_headers(audience='another-api')
+    assert client.get(URL, headers=headers).status_code == 401
+
+
+def test_wrong_issuer_is_401(client, auth_headers):
+    headers = auth_headers(issuer='https://evil.example.com/')
+    assert client.get(URL, headers=headers).status_code == 401
+
+
 def test_jwks_unreachable_is_503_not_401(client, auth_headers, monkeypatch):
     headers = auth_headers()
 

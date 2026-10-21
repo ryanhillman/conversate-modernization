@@ -93,14 +93,14 @@ def client(app):
 def make_token(signing_key):
     pem, _ = signing_key
 
-    def _make(sub='auth0|test'):
+    def _make(sub='auth0|test', audience=TEST_AUDIENCE, issuer=ISSUER):
         # An Auth0 API access token identifies the user by `sub`; it does not
         # carry email.
         now = int(time.time())
         claims = {
             'sub': sub,
-            'aud': TEST_AUDIENCE,
-            'iss': ISSUER,
+            'aud': audience,
+            'iss': issuer,
             'iat': now,
             'exp': now + 3600,
         }
@@ -111,8 +111,8 @@ def make_token(signing_key):
 
 @pytest.fixture
 def auth_headers(make_token):
-    def _headers(sub='auth0|test'):
-        return {'Authorization': 'Bearer ' + make_token(sub)}
+    def _headers(sub='auth0|test', **kwargs):
+        return {'Authorization': 'Bearer ' + make_token(sub, **kwargs)}
 
     return _headers
 
@@ -144,16 +144,30 @@ class _FakeResponse:
         return False
 
 
+class _RecordedCall:
+    def __init__(self, req, timeout):
+        self.url = req.full_url
+        self.payload = json.loads(req.data)
+        # Header names go through urllib's Request.add_header(), which stores
+        # them capitalize()-cased ('Content-type', not 'Content-Type') —
+        # lowercase the keys here so callers don't have to know that.
+        self.headers = {k.lower(): v for k, v in req.header_items()}
+        self.timeout = timeout
+
+
 class GoogleApiStub:
-    """Monkeypatches urllib.request.urlopen so tests can simulate a Google API
-    response or failure without making a real network call."""
+    """Monkeypatches urllib.request.urlopen and records every outbound call,
+    so tests can simulate a Google API response/failure and assert on what
+    the app actually sent (the key header, the request body)."""
 
     def __init__(self, monkeypatch):
+        self.calls = []
         self._response = None
         self._error = None
         monkeypatch.setattr(urllib.request, 'urlopen', self._urlopen)
 
     def _urlopen(self, req, timeout=None):
+        self.calls.append(_RecordedCall(req, timeout))
         if self._error is not None:
             raise self._error
         return _FakeResponse(self._response)
@@ -164,7 +178,33 @@ class GoogleApiStub:
     def fail(self, error):
         self._error = error
 
+    @property
+    def last_call(self):
+        return self.calls[-1]
+
 
 @pytest.fixture
 def google_stub(monkeypatch):
     return GoogleApiStub(monkeypatch)
+
+
+@pytest.fixture
+def rate_limited_client(tmp_path):
+    # A dedicated app/client (own db, own user) with rate limiting left on,
+    # for the one test that needs it; the standard `app`/`client` fixtures
+    # disable it so the rest of the suite isn't order-dependent on shared
+    # hit counts. Separate from `create_user`, which is wired to `app`.
+    config = _TestConfig()
+    config.RATELIMIT_ENABLED = True
+    config.SQLALCHEMY_DATABASE_URI = os.environ.get(
+        'TEST_DATABASE_URL', 'sqlite:///%s' % (tmp_path / 'ratelimit.db').as_posix()
+    )
+    application = create_app(config=config)
+    with application.app_context():
+        db.drop_all()
+        db.create_all()
+        db.session.add(User('auth0|ratelimit', 'ratelimit@example.com', 'ratelimited'))
+        db.session.commit()
+        yield application.test_client()
+        db.session.remove()
+        db.drop_all()

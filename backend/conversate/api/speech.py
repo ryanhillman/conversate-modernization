@@ -2,9 +2,14 @@ from flask import Blueprint, jsonify, current_app
 
 from .. import google_api
 from ..auth import require_auth
+from ..extensions import limiter
 from .common import _json_body
 
 speech_bp = Blueprint('speech_bp', __name__)
+
+# Each of these endpoints calls a paid Google Cloud API; without a limit, an
+# Auth0 account (free to create) can run up the bill without restriction.
+GOOGLE_API_RATE_LIMIT = '30 per minute'
 
 TRANSLATE_LANGUAGES = frozenset({'en', 'it'})
 MAX_TRANSLATE_TEXT_LENGTH = 5000
@@ -20,6 +25,7 @@ MAX_STT_AUDIO_BYTES = 1_000_000
 
 @speech_bp.route('/api/translate', methods=['POST'])
 @require_auth
+@limiter.limit(GOOGLE_API_RATE_LIMIT)
 def translate_text():
     body = _json_body()
     if body is None:
@@ -53,6 +59,7 @@ def translate_text():
 
 @speech_bp.route('/api/tts', methods=['POST'])
 @require_auth
+@limiter.limit(GOOGLE_API_RATE_LIMIT)
 def synthesize_speech():
     body = _json_body()
     if body is None:
@@ -84,6 +91,7 @@ def synthesize_speech():
 
 @speech_bp.route('/api/stt', methods=['POST'])
 @require_auth
+@limiter.limit(GOOGLE_API_RATE_LIMIT)
 def transcribe_speech():
     body = _json_body()
     if body is None:
