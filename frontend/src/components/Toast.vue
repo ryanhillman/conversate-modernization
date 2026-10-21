@@ -12,16 +12,11 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { computed } from "vue";
 import { toastState } from "../stores/toastStore";
-export default {
-  name: "Toast",
-  computed: {
-    toasts() {
-      return toastState.toasts;
-    },
-  },
-};
+
+const toasts = computed(() => toastState.toasts);
 </script>
 
 <style scoped>

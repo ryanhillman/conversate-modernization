@@ -22,30 +22,20 @@
   </RequireProfile>
 </template>
 
-<script>
+<script setup>
+import { ref, computed } from "vue";
 import RequireProfile from "../components/RequireProfile.vue";
 import { LESSONS } from "../data/lessons.js";
-export default {
-  name: "Mastery",
-  components: {
-    RequireProfile,
-  },
-  data() {
-    return {
-      user: null,
-      LESSONS,
-    };
-  },
-  computed: {
-    completedLessons() {
-      const completed = (this.user && this.user.lessons_completed) || [];
-      return LESSONS.filter((lesson) => completed.includes(lesson.id));
-    },
-    masteryPercent() {
-      return Math.round((this.completedLessons.length / LESSONS.length) * 100);
-    },
-  },
-};
+
+const user = ref(null);
+
+const completedLessons = computed(() => {
+  const completed = (user.value && user.value.lessons_completed) || [];
+  return LESSONS.filter((lesson) => completed.includes(lesson.id));
+});
+const masteryPercent = computed(() =>
+  Math.round((completedLessons.value.length / LESSONS.length) * 100),
+);
 </script>
 
 <style scoped>

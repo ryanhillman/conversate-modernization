@@ -28,59 +28,58 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 import {
   updateUsername as apiUpdateUsername,
   resetStats as apiResetStats,
 } from "../../api/users";
-import usernameAvailability from "../../mixins/usernameAvailability";
+import { useUsernameAvailability } from "../../composables/useUsernameAvailability";
 import { showToast } from "../../stores/toastStore";
-export default {
-  name: "AccountActions",
-  mixins: [usernameAvailability],
-  props: {
-    currentUsername: { type: String, default: "" },
-  },
-  emits: ["updated"],
-  data() {
-    return {
-      username: "",
-    };
-  },
-  methods: {
-    skipAvailabilityCheck(candidate) {
-      return candidate.toLowerCase() === this.currentUsername.trim().toLowerCase();
-    },
-    updateUsername(username) {
-      this.processing = true;
-      apiUpdateUsername(username.trim())
-        .then((data) => {
-          showToast("Username updated", "success");
-          this.username = "";
-          this.takenUsername = false;
-          this.processing = false;
-          this.$emit("updated", data);
-        })
-        .catch(() => {
-          this.processing = false;
-          showToast("Could not update username.", "error");
-        });
-    },
-    resetProgress() {
-      if (confirm("Reset your progress?")) {
-        this.processing = true;
-        apiResetStats()
-          .then(() => {
-            this.processing = false;
-            showToast("Your progress has been reset", "success");
-            this.$router.push("/mastery");
-          })
-          .catch(() => {
-            this.processing = false;
-            showToast("Could not reset your progress.", "error");
-          });
-      }
-    },
-  },
-};
+
+const props = defineProps({
+  currentUsername: { type: String, default: "" },
+});
+const emit = defineEmits(["updated"]);
+
+const router = useRouter();
+
+const username = ref("");
+const { processing, takenUsername, validationError } = useUsernameAvailability(username, {
+  skipAvailabilityCheck: (candidate) =>
+    candidate.toLowerCase() === props.currentUsername.trim().toLowerCase(),
+});
+
+function updateUsername(name) {
+  processing.value = true;
+  apiUpdateUsername(name.trim())
+    .then((data) => {
+      showToast("Username updated", "success");
+      username.value = "";
+      takenUsername.value = false;
+      processing.value = false;
+      emit("updated", data);
+    })
+    .catch(() => {
+      processing.value = false;
+      showToast("Could not update username.", "error");
+    });
+}
+
+function resetProgress() {
+  if (confirm("Reset your progress?")) {
+    processing.value = true;
+    apiResetStats()
+      .then(() => {
+        processing.value = false;
+        showToast("Your progress has been reset", "success");
+        router.push("/mastery");
+      })
+      .catch(() => {
+        processing.value = false;
+        showToast("Could not reset your progress.", "error");
+      });
+  }
+}
 </script>

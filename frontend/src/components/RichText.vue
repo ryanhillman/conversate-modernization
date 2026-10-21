@@ -8,27 +8,25 @@
   >
 </template>
 
-<script>
+<script setup>
+import { computed } from "vue";
+
 const INLINE_TAGS = /(<\/?(?:i|strong)>)/g;
 
-export default {
-  name: "RichText",
-  props: {
-    text: { type: String, default: "" },
-  },
-  computed: {
-    segments() {
-      const parts = this.text.split(INLINE_TAGS).filter((part) => part !== "");
-      const segments = [];
-      let tag = null;
-      for (const part of parts) {
-        if (part === "<i>") tag = "i";
-        else if (part === "<strong>") tag = "strong";
-        else if (part === "</i>" || part === "</strong>") tag = null;
-        else segments.push({ tag, text: part });
-      }
-      return segments;
-    },
-  },
-};
+const props = defineProps({
+  text: { type: String, default: "" },
+});
+
+const segments = computed(() => {
+  const parts = props.text.split(INLINE_TAGS).filter((part) => part !== "");
+  const segments = [];
+  let tag = null;
+  for (const part of parts) {
+    if (part === "<i>") tag = "i";
+    else if (part === "<strong>") tag = "strong";
+    else if (part === "</i>" || part === "</strong>") tag = null;
+    else segments.push({ tag, text: part });
+  }
+  return segments;
+});
 </script>

@@ -2,6 +2,7 @@
 
 **Framework & build (Vue 3 + Vite)**
 - Upgraded the frontend to Vue 3 and Vue Router 4.
+- Converted all components from the Options API to the Composition API (`<script setup>`), replacing the shared username-availability mixin with a composable.
 - Replaced Vue CLI/webpack with Vite.
 - Removed unused Babel, Sass, and related build dependencies.
 - Migrated ESLint to a flat configuration compatible with Vue 3.

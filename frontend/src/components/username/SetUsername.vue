@@ -21,33 +21,32 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 import { createMe } from "../../api/users";
-import usernameAvailability from "../../mixins/usernameAvailability";
+import { useUsernameAvailability } from "../../composables/useUsernameAvailability";
+import { useAuth } from "../../composables/useAuth";
 import { showToast } from "../../stores/toastStore";
-export default {
-  name: "SetUsername",
-  mixins: [usernameAvailability],
-  data() {
-    return {
-      username: "",
-    };
-  },
-  methods: {
-    saveUsername(username) {
-      this.processing = true;
-      createMe(username.trim(), this.$auth.user.email)
-        .then(() => {
-          showToast("Welcome to Conversate!", "success");
-          this.$router.push("/");
-        })
-        .catch(() => {
-          this.processing = false;
-          showToast("Could not save username.", "error");
-        });
-    },
-  },
-};
+
+const router = useRouter();
+const auth = useAuth();
+
+const username = ref("");
+const { processing, takenUsername, validationError } = useUsernameAvailability(username);
+
+function saveUsername(name) {
+  processing.value = true;
+  createMe(name.trim(), auth.user.email)
+    .then(() => {
+      showToast("Welcome to Conversate!", "success");
+      router.push("/");
+    })
+    .catch(() => {
+      processing.value = false;
+      showToast("Could not save username.", "error");
+    });
+}
 </script>
 
 <style scoped>

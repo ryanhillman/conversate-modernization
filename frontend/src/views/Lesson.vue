@@ -80,7 +80,8 @@
   </RequireProfile>
 </template>
 
-<script>
+<script setup>
+import { ref, reactive, computed, watch } from "vue";
 import { completeLesson } from "../api/users";
 import { generateConfetti } from "../utils/confetti";
 import RequireProfile from "../components/RequireProfile.vue";
@@ -89,98 +90,82 @@ import { LESSONS } from "../data/lessons";
 import { synthesizeSpeech } from "../api/tts";
 import { showToast } from "../stores/toastStore";
 
-export default {
-  name: "Lesson",
-  components: {
-    RequireProfile,
-    RichText,
-  },
-  data() {
-    const answers = {};
-    LESSONS.forEach(lesson =>
-      lesson.questions.forEach(q => {
-        answers[q.id] = "";
+const lessons = LESSONS;
+
+const answers = reactive({});
+LESSONS.forEach(lesson =>
+  lesson.questions.forEach(q => {
+    answers[q.id] = "";
+  })
+);
+
+const user = ref(null);
+const currentLessonId = ref(null);
+const showCelebration = ref(false);
+const confetti = ref([]);
+const completing = ref(false);
+
+const currentLesson = computed(
+  () => lessons.find(lesson => lesson.id === currentLessonId.value) || null,
+);
+
+function selectLesson(lessonId) {
+  currentLessonId.value = currentLessonId.value === lessonId ? null : lessonId;
+}
+function normalize(value) {
+  return (value || "").trim().toLowerCase();
+}
+function isAnswered(question) {
+  return normalize(answers[question.id]) !== "";
+}
+function isCorrect(question) {
+  const value = normalize(answers[question.id]);
+  return value !== "" && question.correctAnswers.some(a => normalize(a) === value);
+}
+function checkAnswers(lesson) {
+  return lesson.questions.length > 0 && lesson.questions.every(q => isCorrect(q));
+}
+function checkCurrentLesson() {
+  const lesson = currentLesson.value;
+  if (lesson && checkAnswers(lesson)) {
+    markLessonComplete(lesson.id);
+  }
+}
+function isComplete(lessonId) {
+  const completed = (user.value && user.value.lessons_completed) ? user.value.lessons_completed : [];
+  return completed.includes(lessonId);
+}
+function markLessonComplete(lessonId) {
+  if (completing.value) return;
+  const completed = (user.value && user.value.lessons_completed) ? user.value.lessons_completed : [];
+  if (!completed.includes(lessonId)) {
+    completing.value = true;
+    completeLesson(lessonId)
+      .then(data => { user.value = data; launchCelebration(); })
+      .catch(err => {
+        console.error("Failed to save lesson completion:", err);
+        showToast("Could not save your progress.", "error");
       })
-    );
-    return {
-      user: null,
-      lessons: LESSONS,
-      answers,
-      currentLessonId: null,
-      showCelebration: false,
-      confetti: [],
-      completing: false,
-    };
-  },
-  computed: {
-    currentLesson() {
-      return this.lessons.find(lesson => lesson.id === this.currentLessonId) || null;
-    },
-  },
-  watch: {
-    answers: {
-      deep: true,
-      handler() {
-        this.checkCurrentLesson();
-      },
-    },
-  },
-  methods: {
-    selectLesson(lessonId) {
-      this.currentLessonId = this.currentLessonId === lessonId ? null : lessonId;
-    },
-    normalize(value) {
-      return (value || "").trim().toLowerCase();
-    },
-    isAnswered(question) {
-      return this.normalize(this.answers[question.id]) !== "";
-    },
-    isCorrect(question) {
-      const value = this.normalize(this.answers[question.id]);
-      return value !== "" && question.correctAnswers.some(a => this.normalize(a) === value);
-    },
-    checkAnswers(lesson) {
-      return lesson.questions.length > 0 && lesson.questions.every(q => this.isCorrect(q));
-    },
-    checkCurrentLesson() {
-      const lesson = this.currentLesson;
-      if (lesson && this.checkAnswers(lesson)) {
-        this.markLessonComplete(lesson.id);
-      }
-    },
-    isComplete(lessonId) {
-      const completed = (this.user && this.user.lessons_completed) ? this.user.lessons_completed : [];
-      return completed.includes(lessonId);
-    },
-    markLessonComplete(lessonId) {
-      if (this.completing) return;
-      const completed = (this.user && this.user.lessons_completed) ? this.user.lessons_completed : [];
-      if (!completed.includes(lessonId)) {
-        this.completing = true;
-        completeLesson(lessonId)
-          .then(data => { this.user = data; this.launchCelebration(); })
-          .catch(err => {
-            console.error("Failed to save lesson completion:", err);
-            showToast("Could not save your progress.", "error");
-          })
-          .finally(() => { this.completing = false; });
-      }
-    },
-    speak(text) {
-      synthesizeSpeech(text, "it")
-        .then(({ audioContent }) => new Audio(`data:audio/mpeg;base64,${audioContent}`).play())
-        .catch(err => {
-          console.error("Speech synthesis failed:", err);
-          showToast("Could not play audio.", "error");
-        });
-    },
-    launchCelebration() {
-      this.confetti = generateConfetti();
-      this.showCelebration = true;
-      setTimeout(() => { this.showCelebration = false; }, 3200);
-    },
-  },
-};
+      .finally(() => { completing.value = false; });
+  }
+}
+function speak(text) {
+  synthesizeSpeech(text, "it")
+    .then(({ audioContent }) => new Audio(`data:audio/mpeg;base64,${audioContent}`).play())
+    .catch(err => {
+      console.error("Speech synthesis failed:", err);
+      showToast("Could not play audio.", "error");
+    });
+}
+function launchCelebration() {
+  confetti.value = generateConfetti();
+  showCelebration.value = true;
+  setTimeout(() => { showCelebration.value = false; }, 3200);
+}
+
+watch(answers, () => {
+  checkCurrentLesson();
+});
 </script>
 
 <style scoped>

@@ -33,18 +33,8 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import RequireProfile from "../components/RequireProfile.vue";
 import AccountActions from "../components/username/AccountActions.vue";
-import { formatTime } from "../utils/formatTime";
-export default {
-  name: "Profile",
-  components: {
-    RequireProfile,
-    AccountActions,
-  },
-  methods: {
-    formattedTime: formatTime,
-  },
-};
+import { formatTime as formattedTime } from "../utils/formatTime";
 </script>

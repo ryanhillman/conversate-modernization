@@ -5,23 +5,20 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "AuthError",
-  data() {
-    return { dismissed: false };
-  },
-  computed: {
-    msg() {
-      const error = this.$auth.error;
-      if (!error) return "";
-      return error.message || String(error);
-    },
-  },
-  watch: {
-    msg() {
-      this.dismissed = false;
-    },
-  },
-};
+<script setup>
+import { ref, computed, watch } from "vue";
+import { useAuth } from "../composables/useAuth";
+
+const auth = useAuth();
+const dismissed = ref(false);
+
+const msg = computed(() => {
+  const error = auth.error;
+  if (!error) return "";
+  return error.message || String(error);
+});
+
+watch(msg, () => {
+  dismissed.value = false;
+});
 </script>
