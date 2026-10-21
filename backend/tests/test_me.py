@@ -1,5 +1,6 @@
 import os
 import threading
+import time
 
 import pytest
 
@@ -92,19 +93,43 @@ def test_completing_a_lesson_twice_does_not_double_count(client, auth_headers, c
            "is even generated), so the lock this test depends on has no effect "
            "there. Run with TEST_DATABASE_URL pointing at Postgres to exercise it.",
 )
-def test_concurrent_lesson_completions_do_not_lose_one(app, client, auth_headers, create_user):
+def test_concurrent_lesson_completions_do_not_lose_one(
+    app, client, auth_headers, create_user, monkeypatch
+):
     # lessons_completed is a JSON blob, so completing two different lessons
     # "at once" is a read-modify-write race: without a lock, both requests
     # can read the same starting list and the second commit overwrites the
-    # first's addition. The row lock makes the outcome correct regardless of
-    # how the two requests actually interleave, so real threads (unlike the
-    # quiz-start race) give a reliable test here.
+    # first's addition.
+    #
+    # Just starting two threads together doesn't reliably hit that window —
+    # each request does real work (JWT verification, etc.) before reaching
+    # the locked query, so the two rarely arrive at the same instant. Instead,
+    # make whichever request wins the lock hold it open (sleep before
+    # returning, transaction still uncommitted) long enough that the other
+    # request's own with_for_update() genuinely blocks on it at the database
+    # level — a deterministic overlap instead of a timing hope.
+    import conversate.api.accounts as accounts_module
+
     user = create_user()
     headers = auth_headers()
-    barrier = threading.Barrier(2)
+
+    real_lock = accounts_module._lock_user_for_update
+    winner_assigned = threading.Lock()
+    winner_decided = False
+
+    def hold_lock_open(user_id):
+        nonlocal winner_decided
+        record = real_lock(user_id)
+        with winner_assigned:
+            is_winner = not winner_decided
+            winner_decided = True
+        if is_winner:
+            time.sleep(0.5)
+        return record
+
+    monkeypatch.setattr(accounts_module, '_lock_user_for_update', hold_lock_open)
 
     def complete(lesson_id):
-        barrier.wait()
         client.post(ME + '/lessons/%d' % lesson_id, headers=headers)
 
     threads = [threading.Thread(target=complete, args=(lesson_id,)) for lesson_id in (1, 2)]

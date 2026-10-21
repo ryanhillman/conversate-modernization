@@ -1,6 +1,6 @@
 <template>
   <div class="mb-3">
-    <nav class="navbar navbar-expand-md navbar-light bg-light">
+    <nav class="navbar navbar-expand-xl navbar-light bg-light">
       <div class="container" :class="{ 'nav-guest': !$auth.isAuthenticated }">
         <div class="nav-side nav-left">
           <img src="/logo.png" alt="Conversate logo" width="100" height="100" />
@@ -52,7 +52,7 @@
           </ul>
 
           <ul
-            class="navbar-nav d-md-none"
+            class="navbar-nav d-xl-none"
             v-if="!$auth.isAuthenticated && !$auth.loading"
           >
             <li class="nav-item">
@@ -64,7 +64,7 @@
 
           <ul
             id="mobileAuthNavBar"
-            class="navbar-nav d-md-none d-flex"
+            class="navbar-nav d-xl-none d-flex"
             v-if="$auth.isAuthenticated"
           >
             <li class="nav-item">
@@ -86,7 +86,7 @@
           </ul>
         </div>
 
-        <ul class="navbar-nav nav-side nav-right d-none d-md-flex">
+        <ul class="navbar-nav nav-side nav-right d-none d-xl-flex">
           <li
             v-if="!$auth.isAuthenticated && !$auth.loading"
             class="nav-item"
@@ -212,7 +212,7 @@ function logout() {
 .router-link-active .nav-label {
   border-bottom-color: var(--brand-accent);
 }
-@media (min-width: 768px) {
+@media (min-width: 1200px) {
   .container {
     position: relative;
   }
