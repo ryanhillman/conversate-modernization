@@ -4,7 +4,7 @@
 - Upgraded the frontend to Vue 3 and Vue Router 4.
 - Converted all components from the Options API to the Composition API (`<script setup>`), replacing the shared username-availability mixin with a composable.
 - Replaced Vue CLI/webpack with Vite.
-- Removed unused Babel, Sass, and related build dependencies.
+- Removed Babel, Sass, and related build dependencies, which Vite doesn't need.
 - Migrated ESLint to a flat configuration compatible with Vue 3.
 - Upgraded Bootstrap 4 to 5.
 - Moved Bootstrap from a CDN to a local dependency.
@@ -28,7 +28,7 @@
 
 **Authentication**
 - Replaced the custom Auth0 wrapper with the official Vue SDK.
-- Secured the API with Auth0 access-token authentication, JWT validation, and automatic signing-key rotation.
+- Secured the API with Auth0 access-token authentication and JWT validation, automatically picking up Auth0's rotated signing keys.
 - Changed account identity from email addresses to immutable Auth0 sub identifiers.
 - Replaced user-specific account endpoints with /api/me.
 - Required authentication for the username-availability check.
@@ -87,7 +87,7 @@
 - Centralized user API calls in a shared module.
 - Centralized profile loading and account setup in a shared component.
 - Extracted shared styles from component style blocks.
-- Removed unused user-list and account deletion API endpoints.
+- Removed the unused user-list endpoint and replaced full account deletion with a progress reset.
 - Renamed functions, identifiers, and methods for clearer intent and maintainability.
 - Removed outdated project references.
 - Made HTML element IDs unique across lesson questions.
