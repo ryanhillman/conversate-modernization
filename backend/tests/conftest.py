@@ -59,12 +59,6 @@ def signing_key():
     return pem, jwk
 
 
-@pytest.fixture(scope='session')
-def foreign_pem():
-    _, pem = _generate_pem()
-    return pem
-
-
 @pytest.fixture(autouse=True)
 def stub_jwks(monkeypatch, signing_key):
     _, jwk = signing_key
@@ -99,27 +93,26 @@ def client(app):
 def make_token(signing_key):
     pem, _ = signing_key
 
-    def _make(sub='auth0|test', audience=TEST_AUDIENCE, issuer=ISSUER,
-              expires_in=3600, kid=KID, key=None):
+    def _make(sub='auth0|test'):
         # An Auth0 API access token identifies the user by `sub`; it does not
         # carry email.
         now = int(time.time())
         claims = {
             'sub': sub,
-            'aud': audience,
-            'iss': issuer,
+            'aud': TEST_AUDIENCE,
+            'iss': ISSUER,
             'iat': now,
-            'exp': now + expires_in,
+            'exp': now + 3600,
         }
-        return jwt.encode(claims, key or pem, algorithm='RS256', headers={'kid': kid})
+        return jwt.encode(claims, pem, algorithm='RS256', headers={'kid': KID})
 
     return _make
 
 
 @pytest.fixture
 def auth_headers(make_token):
-    def _headers(sub='auth0|test', **kwargs):
-        return {'Authorization': 'Bearer ' + make_token(sub, **kwargs)}
+    def _headers(sub='auth0|test'):
+        return {'Authorization': 'Bearer ' + make_token(sub)}
 
     return _headers
 
@@ -151,30 +144,16 @@ class _FakeResponse:
         return False
 
 
-class _RecordedCall:
-    def __init__(self, req, timeout):
-        self.url = req.full_url
-        self.payload = json.loads(req.data)
-        # Header names go through urllib's Request.add_header(), which stores
-        # them capitalize()-cased ('Content-type', not 'Content-Type') —
-        # lowercase the keys here so callers don't have to know that.
-        self.headers = {k.lower(): v for k, v in req.header_items()}
-        self.timeout = timeout
-
-
 class GoogleApiStub:
-    """Monkeypatches urllib.request.urlopen and records every outbound call,
-    so tests can assert on the URL/payload/headers/timeout the app actually
-    sent, instead of only on the app's response to a canned reply."""
+    """Monkeypatches urllib.request.urlopen so tests can simulate a Google API
+    response or failure without making a real network call."""
 
     def __init__(self, monkeypatch):
-        self.calls = []
         self._response = None
         self._error = None
         monkeypatch.setattr(urllib.request, 'urlopen', self._urlopen)
 
     def _urlopen(self, req, timeout=None):
-        self.calls.append(_RecordedCall(req, timeout))
         if self._error is not None:
             raise self._error
         return _FakeResponse(self._response)
@@ -184,10 +163,6 @@ class GoogleApiStub:
 
     def fail(self, error):
         self._error = error
-
-    @property
-    def last_call(self):
-        return self.calls[-1]
 
 
 @pytest.fixture
