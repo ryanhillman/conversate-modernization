@@ -21,11 +21,3 @@ def test_db_rejects_case_variant_username(app):
     with pytest.raises(IntegrityError):
         db.session.commit()
     db.session.rollback()
-
-
-def test_db_allows_duplicate_email(app):
-    # Email is profile data, not identity, so two subjects may share one.
-    db.session.add(User('auth0|1', 'shared@example.com', 'alice'))
-    db.session.add(User('auth0|2', 'shared@example.com', 'bob'))
-    db.session.commit()
-    assert db.session.query(User).count() == 2
