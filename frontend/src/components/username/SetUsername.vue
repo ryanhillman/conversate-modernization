@@ -14,7 +14,7 @@
     <button
       class="btn btn-success"
       @click.prevent="saveUsername(username)"
-      :disabled="!!validationError || processing || takenUsername"
+      :disabled="!!validationError || checking || saving || takenUsername"
     >
       Save username
     </button>
@@ -33,17 +33,18 @@ const router = useRouter();
 const auth = useAuth();
 
 const username = ref("");
-const { processing, takenUsername, validationError } = useUsernameAvailability(username);
+const { checking, takenUsername, validationError } = useUsernameAvailability(username);
+const saving = ref(false);
 
 function saveUsername(name) {
-  processing.value = true;
+  saving.value = true;
   createMe(name.trim(), auth.user.email)
     .then(() => {
       showToast("Welcome to Conversate!", "success");
       router.push("/");
     })
     .catch(() => {
-      processing.value = false;
+      saving.value = false;
       showToast("Could not save username.", "error");
     });
 }

@@ -201,9 +201,9 @@ async function toggleRecording() {
 
 async function transcribeRecording() {
   busy.value = true;
-  const blob = new Blob(audioChunks, { type: MIC_MIME_TYPE });
-  const audio = await blobToBase64(blob);
   try {
+    const blob = new Blob(audioChunks, { type: MIC_MIME_TYPE });
+    const audio = await blobToBase64(blob);
     const { transcript } = await transcribeSpeech(audio, MIC_MIME_TYPE, inputLanguage.value);
     textToTranslate.value = transcript;
   } catch (err) {
