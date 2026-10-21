@@ -3,8 +3,8 @@ import time
 import urllib.request
 from functools import wraps
 from flask import request, jsonify, current_app, g
-from jose import jwt
-from jose.exceptions import JWTError
+import jwt
+from jwt import PyJWTError
 
 _jwks_cache = {}
 _jwks_last_fetch = {}
@@ -55,10 +55,11 @@ def _verify_token():
     domain = current_app.config['AUTH0_DOMAIN']
     audience = current_app.config['AUTH0_AUDIENCE']
     kid = jwt.get_unverified_header(token).get('kid')
-    key = _signing_key(domain, kid)
-    if key is None:
-        raise JWTError('no signing key matches token kid %r' % kid)
-    return jwt.decode(token, key, algorithms=['RS256'], audience=audience,
+    jwk = _signing_key(domain, kid)
+    if jwk is None:
+        raise PyJWTError('no signing key matches token kid %r' % kid)
+    signing_key = jwt.PyJWK(jwk).key
+    return jwt.decode(token, signing_key, algorithms=['RS256'], audience=audience,
                       issuer=f'https://{domain}/')
 
 
