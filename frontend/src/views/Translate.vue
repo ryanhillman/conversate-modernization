@@ -92,7 +92,8 @@
     </RequireProfile>
   </div>
 </template>
-<script>
+<script setup>
+import { ref, computed, onBeforeUnmount } from "vue";
 import Icon from "../components/Icon.vue";
 import RequireProfile from "../components/RequireProfile.vue";
 import { translateText } from "../api/translate";
@@ -112,129 +113,122 @@ function blobToBase64(blob) {
   });
 }
 
-export default {
-  name: "Translate",
-  components: {
-    Icon,
-    RequireProfile,
-  },
-  data() {
-    return {
-      recording: false,
-      busy: false,
-      textToTranslate: "",
-      translatedText: null,
-      inputLanguage: "en",
-      outputLanguage: "it",
-      mediaRecorder: null,
-      audioChunks: [],
-      micStream: null,
-      recordingTimeout: null,
-      languages: [
-        { code: "en", name: "English" },
-        { code: "it", name: "Italian" },
-      ],
-    };
-  },
-  computed: {
-    micSupported() {
-      return !!(
-        navigator.mediaDevices &&
-        window.MediaRecorder &&
-        MediaRecorder.isTypeSupported(MIC_MIME_TYPE)
-      );
-    },
-    translatedTextTooLong() {
-      if (!this.translatedText) return false;
-      // Google's TTS limit is measured in UTF-8 bytes, not JS string length
-      // (UTF-16 code units) — accented characters take more than one byte.
-      return new TextEncoder().encode(this.translatedText).length > MAX_TTS_LENGTH;
-    },
-  },
-  beforeUnmount() {
-    clearTimeout(this.recordingTimeout);
-    if (this.micStream) {
-      this.micStream.getTracks().forEach((track) => track.stop());
-    }
-  },
-  methods: {
-    async translateEnteredText() {
-      this.busy = true;
-      try {
-        const { translatedText } = await translateText(
-          this.textToTranslate,
-          this.inputLanguage,
-          this.outputLanguage,
-        );
-        this.translatedText = translatedText;
-      } catch (err) {
-        console.error("Translation failed:", err);
-        this.translatedText = null;
-        showToast("Could not translate.", "error");
-      } finally {
-        this.busy = false;
-      }
-    },
-    async toggleRecording() {
-      if (this.recording) {
-        this.mediaRecorder.stop();
-        return;
-      }
-      let stream;
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      } catch (err) {
-        console.error("Microphone access denied:", err);
-        showToast("Microphone access is required to record.", "error");
-        return;
-      }
-      this.micStream = stream;
-      this.audioChunks = [];
-      this.mediaRecorder = new MediaRecorder(stream, { mimeType: MIC_MIME_TYPE });
-      this.mediaRecorder.addEventListener("dataavailable", (event) => {
-        if (event.data.size > 0) this.audioChunks.push(event.data);
-      });
-      this.mediaRecorder.addEventListener("stop", () => {
-        clearTimeout(this.recordingTimeout);
-        this.micStream.getTracks().forEach((track) => track.stop());
-        this.recording = false;
-        this.transcribeRecording();
-      });
-      this.mediaRecorder.start();
-      this.recording = true;
-      this.recordingTimeout = setTimeout(() => this.mediaRecorder.stop(), 60000);
-    },
-    async transcribeRecording() {
-      this.busy = true;
-      const blob = new Blob(this.audioChunks, { type: MIC_MIME_TYPE });
-      const audio = await blobToBase64(blob);
-      try {
-        const { transcript } = await transcribeSpeech(audio, MIC_MIME_TYPE, this.inputLanguage);
-        this.textToTranslate = transcript;
-      } catch (err) {
-        console.error("Transcription failed:", err);
-        const message = err.status === 422
-          ? "No speech detected."
-          : "Could not transcribe audio.";
-        showToast(message, "error");
-      } finally {
-        this.busy = false;
-      }
-    },
-    async startTxtToSpeech() {
-      this.busy = true;
-      try {
-        const { audioContent } = await synthesizeSpeech(this.translatedText, this.outputLanguage);
-        await new Audio(`data:audio/mpeg;base64,${audioContent}`).play();
-      } catch (err) {
-        console.error("Speech synthesis failed:", err);
-        showToast("Could not play audio.", "error");
-      } finally {
-        this.busy = false;
-      }
-    },
-  },
-};
+const recording = ref(false);
+const busy = ref(false);
+const textToTranslate = ref("");
+const translatedText = ref(null);
+const inputLanguage = ref("en");
+const outputLanguage = ref("it");
+const languages = [
+  { code: "en", name: "English" },
+  { code: "it", name: "Italian" },
+];
+
+let mediaRecorder = null;
+let audioChunks = [];
+let micStream = null;
+let recordingTimeout = null;
+
+const micSupported = computed(
+  () =>
+    !!(
+      navigator.mediaDevices &&
+      window.MediaRecorder &&
+      MediaRecorder.isTypeSupported(MIC_MIME_TYPE)
+    ),
+);
+const translatedTextTooLong = computed(() => {
+  if (!translatedText.value) return false;
+  // Google's TTS limit is measured in UTF-8 bytes, not JS string length
+  // (UTF-16 code units) — accented characters take more than one byte.
+  return new TextEncoder().encode(translatedText.value).length > MAX_TTS_LENGTH;
+});
+
+onBeforeUnmount(() => {
+  clearTimeout(recordingTimeout);
+  if (micStream) {
+    micStream.getTracks().forEach((track) => track.stop());
+  }
+});
+
+async function translateEnteredText() {
+  busy.value = true;
+  try {
+    const { translatedText: result } = await translateText(
+      textToTranslate.value,
+      inputLanguage.value,
+      outputLanguage.value,
+    );
+    translatedText.value = result;
+  } catch (err) {
+    console.error("Translation failed:", err);
+    translatedText.value = null;
+    showToast("Could not translate.", "error");
+  } finally {
+    busy.value = false;
+  }
+}
+
+async function toggleRecording() {
+  if (recording.value) {
+    mediaRecorder.stop();
+    return;
+  }
+  let stream;
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  } catch (err) {
+    console.error("Microphone access denied:", err);
+    showToast("Microphone access is required to record.", "error");
+    return;
+  }
+  micStream = stream;
+  audioChunks = [];
+  mediaRecorder = new MediaRecorder(stream, { mimeType: MIC_MIME_TYPE });
+  mediaRecorder.addEventListener("dataavailable", (event) => {
+    if (event.data.size > 0) audioChunks.push(event.data);
+  });
+  mediaRecorder.addEventListener("stop", () => {
+    clearTimeout(recordingTimeout);
+    micStream.getTracks().forEach((track) => track.stop());
+    recording.value = false;
+    transcribeRecording();
+  });
+  mediaRecorder.start();
+  recording.value = true;
+  recordingTimeout = setTimeout(() => mediaRecorder.stop(), 60000);
+}
+
+async function transcribeRecording() {
+  busy.value = true;
+  const blob = new Blob(audioChunks, { type: MIC_MIME_TYPE });
+  const audio = await blobToBase64(blob);
+  try {
+    const { transcript } = await transcribeSpeech(audio, MIC_MIME_TYPE, inputLanguage.value);
+    textToTranslate.value = transcript;
+  } catch (err) {
+    console.error("Transcription failed:", err);
+    const message = err.status === 422
+      ? "No speech detected."
+      : "Could not transcribe audio.";
+    showToast(message, "error");
+  } finally {
+    busy.value = false;
+  }
+}
+
+async function startTxtToSpeech() {
+  busy.value = true;
+  try {
+    const { audioContent } = await synthesizeSpeech(translatedText.value, outputLanguage.value);
+    await new Audio(`data:audio/mpeg;base64,${audioContent}`).play();
+  } catch (err) {
+    console.error("Speech synthesis failed:", err);
+    showToast("Could not play audio.", "error");
+  } finally {
+    busy.value = false;
+  }
+}
 </script>
 <style scoped>
 .translate-textarea {

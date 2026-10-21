@@ -39,38 +39,27 @@
   </RequireProfile>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted } from "vue";
 import RequireProfile from "../components/RequireProfile.vue";
 import { getLeaderboard } from "../api/leaderboard";
 import { showToast } from "../stores/toastStore";
-import { formatTime } from "../utils/formatTime";
+import { formatTime as formattedTime } from "../utils/formatTime";
 
-export default {
-  name: "Leaderboard",
-  components: {
-    RequireProfile,
-  },
-  data() {
-    return {
-      user: null,
-      rows: [],
-      loading: true,
-    };
-  },
-  async mounted() {
-    try {
-      this.rows = await getLeaderboard();
-    } catch (err) {
-      console.error("Failed to load leaderboard:", err);
-      showToast("Could not load the leaderboard.", "error");
-    } finally {
-      this.loading = false;
-    }
-  },
-  methods: {
-    formattedTime: formatTime,
-  },
-};
+const user = ref(null);
+const rows = ref([]);
+const loading = ref(true);
+
+onMounted(async () => {
+  try {
+    rows.value = await getLeaderboard();
+  } catch (err) {
+    console.error("Failed to load leaderboard:", err);
+    showToast("Could not load the leaderboard.", "error");
+  } finally {
+    loading.value = false;
+  }
+});
 </script>
 
 <style scoped>

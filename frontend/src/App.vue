@@ -18,18 +18,10 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import NavBar from "./components/NavBar.vue";
 import AuthError from "./components/AuthError.vue";
 import Toast from "./components/Toast.vue";
-export default {
-  name: "App",
-  components: {
-    NavBar,
-    AuthError,
-    Toast,
-  },
-};
 </script>
 
 <style>

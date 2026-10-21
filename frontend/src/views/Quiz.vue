@@ -71,150 +71,140 @@
   </RequireProfile>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, onBeforeUnmount } from "vue";
 import RequireProfile from "../components/RequireProfile.vue";
 import { startQuiz, answerQuiz, pauseQuiz, resumeQuiz, submitQuiz } from "../api/quiz";
 import { showToast } from "../stores/toastStore";
-import { formatTime } from "../utils/formatTime";
+import { formatTime as formattedTime } from "../utils/formatTime";
 
 const FEEDBACK_DISPLAY_MS = 500;
 
-export default {
-  name: "Quiz",
-  components: {
-    RequireProfile,
-  },
-  data() {
-    return {
-      phase: "ready",
-      questions: [],
-      currentIndex: 0,
-      result: null,
-      advancing: false,
-      selectedChoice: null,
-      feedback: null,
-      displayStart: 0,
-      secondsRemainingAtStart: 0,
-      remainingSeconds: 0,
-      pausesRemaining: 0,
-      tickTimer: null,
-    };
-  },
-  computed: {
-    currentQuestion() {
-      return this.questions[this.currentIndex];
-    },
-    formattedRemaining() {
-      return this.formattedTime(this.remainingSeconds);
-    },
-  },
-  beforeUnmount() {
-    clearInterval(this.tickTimer);
-  },
-  methods: {
-    formattedTime: formatTime,
-    choiceClass(choice) {
-      if (choice !== this.selectedChoice || !this.feedback) return "";
-      return this.feedback === "correct" ? "quiz-choice-correct" : "quiz-choice-wrong";
-    },
-    resetDisplayClock(secondsRemaining) {
-      this.displayStart = Date.now();
-      this.secondsRemainingAtStart = secondsRemaining;
-      this.remainingSeconds = secondsRemaining;
-    },
-    async start() {
-      clearInterval(this.tickTimer);
-      this.phase = "loading";
-      try {
-        const data = await startQuiz();
-        this.resetDisplayClock(data.seconds_remaining);
-        this.questions = data.questions;
-        this.currentIndex = 0;
-        this.advancing = false;
-        this.selectedChoice = null;
-        this.feedback = null;
-        this.pausesRemaining = data.pauses_remaining;
-        this.phase = "active";
-        this.tickTimer = setInterval(this.tick, 1000);
-      } catch (err) {
-        console.error("Failed to start quiz:", err);
-        this.phase = "error";
-      }
-    },
-    tick() {
-      const elapsed = Math.floor((Date.now() - this.displayStart) / 1000);
-      this.remainingSeconds = Math.max(0, this.secondsRemainingAtStart - elapsed);
-      if (this.remainingSeconds === 0) {
-        this.finish();
-      }
-    },
-    async pause() {
-      if (this.phase !== "active") return;
-      try {
-        const data = await pauseQuiz();
-        clearInterval(this.tickTimer);
-        this.phase = "paused";
-        this.remainingSeconds = data.seconds_remaining;
-        this.pausesRemaining = data.pauses_remaining;
-      } catch (err) {
-        console.error("Failed to pause quiz:", err);
-        showToast("Could not pause the quiz.", "error");
-      }
-    },
-    async resume() {
-      if (this.phase !== "paused") return;
-      try {
-        const data = await resumeQuiz();
-        this.resetDisplayClock(data.seconds_remaining);
-        this.pausesRemaining = data.pauses_remaining;
-        this.phase = "active";
-        this.tickTimer = setInterval(this.tick, 1000);
-      } catch (err) {
-        console.error("Failed to resume quiz:", err);
-        showToast("Could not resume the quiz.", "error");
-      }
-    },
-    async selectAnswer(choice) {
-      if (this.advancing) return;
-      this.advancing = true;
-      this.selectedChoice = choice;
-      try {
-        const { correct } = await answerQuiz(this.currentIndex, choice);
-        this.feedback = correct ? "correct" : "wrong";
-      } catch (err) {
-        console.error("Failed to submit answer:", err);
-        // Most likely cause: time ran out server-side between clicking and
-        // this request landing. Finalize with whatever's been graded so far
-        // instead of leaving the user stuck on a dead question.
-        this.finish();
-        return;
-      }
-      setTimeout(() => {
-        this.selectedChoice = null;
-        this.feedback = null;
-        if (this.currentIndex < this.questions.length - 1) {
-          this.currentIndex += 1;
-          this.advancing = false;
-        } else {
-          this.finish();
-        }
-      }, FEEDBACK_DISPLAY_MS);
-    },
-    async finish() {
-      if (this.phase !== "active" && this.phase !== "paused") return;
-      clearInterval(this.tickTimer);
-      this.phase = "loading";
-      try {
-        this.result = await submitQuiz();
-        this.phase = "results";
-      } catch (err) {
-        console.error("Failed to submit quiz:", err);
-        showToast("Could not submit your quiz result.", "error");
-        this.phase = "error";
-      }
-    },
-  },
-};
+const phase = ref("ready");
+const questions = ref([]);
+const currentIndex = ref(0);
+const result = ref(null);
+const advancing = ref(false);
+const selectedChoice = ref(null);
+const feedback = ref(null);
+const displayStart = ref(0);
+const secondsRemainingAtStart = ref(0);
+const remainingSeconds = ref(0);
+const pausesRemaining = ref(0);
+let tickTimer = null;
+
+const currentQuestion = computed(() => questions.value[currentIndex.value]);
+const formattedRemaining = computed(() => formattedTime(remainingSeconds.value));
+
+onBeforeUnmount(() => clearInterval(tickTimer));
+
+function choiceClass(choice) {
+  if (choice !== selectedChoice.value || !feedback.value) return "";
+  return feedback.value === "correct" ? "quiz-choice-correct" : "quiz-choice-wrong";
+}
+
+function resetDisplayClock(secondsRemaining) {
+  displayStart.value = Date.now();
+  secondsRemainingAtStart.value = secondsRemaining;
+  remainingSeconds.value = secondsRemaining;
+}
+
+function tick() {
+  const elapsed = Math.floor((Date.now() - displayStart.value) / 1000);
+  remainingSeconds.value = Math.max(0, secondsRemainingAtStart.value - elapsed);
+  if (remainingSeconds.value === 0) {
+    finish();
+  }
+}
+
+async function start() {
+  clearInterval(tickTimer);
+  phase.value = "loading";
+  try {
+    const data = await startQuiz();
+    resetDisplayClock(data.seconds_remaining);
+    questions.value = data.questions;
+    currentIndex.value = 0;
+    advancing.value = false;
+    selectedChoice.value = null;
+    feedback.value = null;
+    pausesRemaining.value = data.pauses_remaining;
+    phase.value = "active";
+    tickTimer = setInterval(tick, 1000);
+  } catch (err) {
+    console.error("Failed to start quiz:", err);
+    phase.value = "error";
+  }
+}
+
+async function pause() {
+  if (phase.value !== "active") return;
+  try {
+    const data = await pauseQuiz();
+    clearInterval(tickTimer);
+    phase.value = "paused";
+    remainingSeconds.value = data.seconds_remaining;
+    pausesRemaining.value = data.pauses_remaining;
+  } catch (err) {
+    console.error("Failed to pause quiz:", err);
+    showToast("Could not pause the quiz.", "error");
+  }
+}
+
+async function resume() {
+  if (phase.value !== "paused") return;
+  try {
+    const data = await resumeQuiz();
+    resetDisplayClock(data.seconds_remaining);
+    pausesRemaining.value = data.pauses_remaining;
+    phase.value = "active";
+    tickTimer = setInterval(tick, 1000);
+  } catch (err) {
+    console.error("Failed to resume quiz:", err);
+    showToast("Could not resume the quiz.", "error");
+  }
+}
+
+async function selectAnswer(choice) {
+  if (advancing.value) return;
+  advancing.value = true;
+  selectedChoice.value = choice;
+  try {
+    const { correct } = await answerQuiz(currentIndex.value, choice);
+    feedback.value = correct ? "correct" : "wrong";
+  } catch (err) {
+    console.error("Failed to submit answer:", err);
+    // Most likely cause: time ran out server-side between clicking and
+    // this request landing. Finalize with whatever's been graded so far
+    // instead of leaving the user stuck on a dead question.
+    finish();
+    return;
+  }
+  setTimeout(() => {
+    selectedChoice.value = null;
+    feedback.value = null;
+    if (currentIndex.value < questions.value.length - 1) {
+      currentIndex.value += 1;
+      advancing.value = false;
+    } else {
+      finish();
+    }
+  }, FEEDBACK_DISPLAY_MS);
+}
+
+async function finish() {
+  if (phase.value !== "active" && phase.value !== "paused") return;
+  clearInterval(tickTimer);
+  phase.value = "loading";
+  try {
+    result.value = await submitQuiz();
+    phase.value = "results";
+  } catch (err) {
+    console.error("Failed to submit quiz:", err);
+    showToast("Could not submit your quiz result.", "error");
+    phase.value = "error";
+  }
+}
 </script>
 
 <style scoped>

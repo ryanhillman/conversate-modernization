@@ -14,8 +14,8 @@
   </div>
 </template>
 
-<script>
-const CARDS = [
+<script setup>
+const cards = [
   { img: "/profile.png", alt: "Profile", to: "/profile", label: "Profile" },
   { img: "/mastery.png", alt: "Mastery", to: "/mastery", label: "Mastery" },
   { img: "/study.png", alt: "Learn", to: "/lesson", label: "Lessons" },
@@ -23,13 +23,6 @@ const CARDS = [
   { img: "/quiz.png", alt: "Quiz", to: "/quiz", label: "Quiz" },
   { img: "/leaderboard.png", alt: "Leaderboard", to: "/leaderboard", label: "Leaderboard" },
 ];
-
-export default {
-  name: "Home",
-  data() {
-    return { cards: CARDS };
-  },
-};
 </script>
 
 <style scoped>

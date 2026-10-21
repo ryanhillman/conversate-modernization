@@ -141,46 +141,46 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, watch, onMounted, onBeforeUnmount } from "vue";
+import { useRoute } from "vue-router";
 import Icon from "./Icon.vue";
-export default {
-  name: "NavBar",
-  components: {
-    Icon,
+import { useAuth } from "../composables/useAuth";
+
+const auth = useAuth();
+const route = useRoute();
+
+const navOpen = ref(false);
+const dropdownOpen = ref(false);
+const dropdown = ref(null);
+
+watch(
+  () => route.fullPath,
+  () => {
+    navOpen.value = false;
+    dropdownOpen.value = false;
   },
-  data() {
-    return {
-      navOpen: false,
-      dropdownOpen: false,
-    };
-  },
-  watch: {
-    $route() {
-      this.navOpen = false;
-      this.dropdownOpen = false;
-    },
-  },
-  mounted() {
-    document.addEventListener("click", this.onDocumentClick);
-  },
-  beforeUnmount() {
-    document.removeEventListener("click", this.onDocumentClick);
-  },
-  methods: {
-    onDocumentClick(event) {
-      const dropdown = this.$refs.dropdown;
-      if (this.dropdownOpen && dropdown && !dropdown.contains(event.target)) {
-        this.dropdownOpen = false;
-      }
-    },
-    login() {
-      this.$auth.loginWithRedirect();
-    },
-    logout() {
-      this.$auth.logout();
-    },
-  },
-};
+);
+
+function onDocumentClick(event) {
+  if (dropdownOpen.value && dropdown.value && !dropdown.value.contains(event.target)) {
+    dropdownOpen.value = false;
+  }
+}
+
+onMounted(() => {
+  document.addEventListener("click", onDocumentClick);
+});
+onBeforeUnmount(() => {
+  document.removeEventListener("click", onDocumentClick);
+});
+
+function login() {
+  auth.loginWithRedirect();
+}
+function logout() {
+  auth.logout();
+}
 </script>
 
 <style scoped>
