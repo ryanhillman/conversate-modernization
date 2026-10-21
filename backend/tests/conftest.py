@@ -4,10 +4,10 @@ import os
 import time
 import urllib.request
 
+import jwt
 import pytest
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
-from jose import jwt
 
 from conversate import auth as auth_module
 from conversate.app import create_app
