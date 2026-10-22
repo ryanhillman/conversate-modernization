@@ -27,6 +27,17 @@ def test_wrong_issuer_is_401(client, auth_headers):
     assert client.get(URL, headers=headers).status_code == 401
 
 
+def test_small_clock_skew_in_the_future_is_still_accepted(client, auth_headers, create_user):
+    create_user()
+    headers = auth_headers(iat_offset=30)
+    assert client.get(URL, headers=headers).status_code == 200
+
+
+def test_large_clock_skew_in_the_future_is_401(client, auth_headers):
+    headers = auth_headers(iat_offset=300)
+    assert client.get(URL, headers=headers).status_code == 401
+
+
 def test_jwks_unreachable_is_503_not_401(client, auth_headers, monkeypatch):
     headers = auth_headers()
 
