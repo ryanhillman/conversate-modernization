@@ -14,6 +14,11 @@ def test_unsupported_mime_type_is_400(client, auth_headers):
     assert client.post(STT, json=body, headers=auth_headers()).status_code == 400
 
 
+def test_rejects_a_list_mime_type(client, auth_headers):
+    body = dict(VALID, mime_type=['audio/webm;codecs=opus'])
+    assert client.post(STT, json=body, headers=auth_headers()).status_code == 400
+
+
 def test_transcribes_successfully(client, auth_headers, google_stub):
     google_stub.respond({'results': [{'alternatives': [{'transcript': 'ciao'}]}]})
     response = client.post(STT, json=VALID, headers=auth_headers())

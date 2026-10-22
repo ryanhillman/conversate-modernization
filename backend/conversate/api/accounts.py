@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from ..auth import require_auth
 from ..extensions import db
 from ..models import User
-from .common import find_user, json_body, resolve_me
+from .common import find_user, json_body, resolve_me, str_field
 
 accounts_bp = Blueprint('accounts_bp', __name__)
 
@@ -41,7 +41,7 @@ def _body_email(body):
     """None if the client didn't supply one (email is optional — some Auth0
     connections never return one). _EMAIL_INVALID if one was supplied but
     doesn't look like an address."""
-    email = (body.get('email') or '').strip()
+    email = str_field(body, 'email')
     if not email:
         return None
     if not _EMAIL_RE.match(email) or len(email) > MAX_EMAIL_LENGTH:
@@ -73,7 +73,7 @@ def create_me():
     body = json_body()
     if body is None:
         return jsonify(error='Request body must be a JSON object'), 400
-    user_name = (body.get('user_name') or '').strip()
+    user_name = str_field(body, 'user_name')
     email = _body_email(body)
     if email is _EMAIL_INVALID:
         return jsonify(error='email must be a valid address'), 400
@@ -106,7 +106,7 @@ def update_me(record):
     body = json_body()
     if body is None:
         return jsonify(error='Request body must be a JSON object'), 400
-    new_name = (body.get('user_name') or '').strip()
+    new_name = str_field(body, 'user_name')
     error = _validate_username(new_name, 'user_name already exists', exclude_id=record.id)
     if error:
         return error

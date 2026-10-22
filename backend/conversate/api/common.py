@@ -12,6 +12,14 @@ def json_body():
     return body if isinstance(body, dict) else None
 
 
+def str_field(body, key):
+    """A JSON body field as a stripped string, or '' if missing or not a
+    string (e.g. a number, list, or object) — never raises, so callers can
+    validate the result the same way regardless of what the client sent."""
+    value = body.get(key)
+    return value.strip() if isinstance(value, str) else ''
+
+
 def find_user(sub):
     return db.session.query(User).filter(User.auth0_sub == sub).one_or_none()
 
