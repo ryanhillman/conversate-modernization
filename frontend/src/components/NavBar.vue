@@ -16,17 +16,15 @@
           <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div
-          id="navbarNav"
-          class="collapse navbar-collapse"
-          :class="{ show: navOpen }"
-        >
+        <div id="navbarNav" class="collapse navbar-collapse" :class="{ show: navOpen }">
           <ul class="navbar-nav">
             <li v-if="$auth.isAuthenticated" class="nav-item">
               <router-link to="/" class="nav-link"><span class="nav-label">Home</span></router-link>
             </li>
             <li v-if="$auth.isAuthenticated" class="nav-item">
-              <router-link to="/profile" class="nav-link"><span class="nav-label">Profile</span></router-link>
+              <router-link to="/profile" class="nav-link"
+                ><span class="nav-label">Profile</span></router-link
+              >
             </li>
             <li v-if="$auth.isAuthenticated" class="nav-item">
               <router-link to="/mastery" class="nav-link"
@@ -34,7 +32,9 @@
               >
             </li>
             <li v-if="$auth.isAuthenticated" class="nav-item">
-              <router-link to="/lesson" class="nav-link"><span class="nav-label">Lessons</span></router-link>
+              <router-link to="/lesson" class="nav-link"
+                ><span class="nav-label">Lessons</span></router-link
+              >
             </li>
             <li v-if="$auth.isAuthenticated" class="nav-item">
               <router-link to="/translate" class="nav-link"
@@ -42,7 +42,9 @@
               >
             </li>
             <li v-if="$auth.isAuthenticated" class="nav-item">
-              <router-link to="/quiz" class="nav-link"><span class="nav-label">Quiz</span></router-link>
+              <router-link to="/quiz" class="nav-link"
+                ><span class="nav-label">Quiz</span></router-link
+              >
             </li>
             <li v-if="$auth.isAuthenticated" class="nav-item">
               <router-link to="/leaderboard" class="nav-link"
@@ -51,14 +53,9 @@
             </li>
           </ul>
 
-          <ul
-            class="navbar-nav d-xl-none"
-            v-if="!$auth.isAuthenticated && !$auth.loading"
-          >
+          <ul class="navbar-nav d-xl-none" v-if="!$auth.isAuthenticated && !$auth.loading">
             <li class="nav-item">
-              <button class="btn btn-primary w-100" @click="login">
-                Log in
-              </button>
+              <button class="btn btn-primary w-100" @click="login">Log in</button>
             </li>
           </ul>
 
@@ -87,16 +84,8 @@
         </div>
 
         <ul class="navbar-nav nav-side nav-right d-none d-xl-flex">
-          <li
-            v-if="!$auth.isAuthenticated && !$auth.loading"
-            class="nav-item"
-          >
-            <button
-              class="btn btn-primary"
-              @click.prevent="login"
-            >
-              Log in
-            </button>
+          <li v-if="!$auth.isAuthenticated && !$auth.loading" class="nav-item">
+            <button class="btn btn-primary" @click.prevent="login">Log in</button>
           </li>
 
           <li
@@ -126,11 +115,7 @@
               aria-labelledby="profileDropDown"
             >
               <div class="dropdown-header">{{ $auth.user.name }}</div>
-              <a
-                href="#"
-                class="dropdown-item"
-                @click.prevent="logout"
-              >
+              <a href="#" class="dropdown-item" @click.prevent="logout">
                 <Icon name="power-off" class="me-3" />Log out
               </a>
             </div>

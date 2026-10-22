@@ -5,7 +5,9 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     auth0_sub = db.Column(db.String(255), nullable=False)
     user_name = db.Column(db.String(100), nullable=False)
-    lessons_completed = db.Column(db.JSON, nullable=False, default=list, server_default=db.text("'[]'"))
+    lessons_completed = db.Column(
+        db.JSON, nullable=False, default=list, server_default=db.text("'[]'")
+    )
     quiz_best_score = db.Column(db.Integer, nullable=True)
     quiz_best_time_seconds = db.Column(db.Integer, nullable=True)
 
@@ -35,6 +37,7 @@ class QuizAttempt(db.Model):
     """An in-flight, single-use quiz: the server's private answer key and start
     time for one user. Created by /api/me/quiz/start, consumed and deleted by
     /api/me/quiz/submit. Never serialized to the client."""
+
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     started_at = db.Column(db.DateTime, nullable=False)
@@ -44,6 +47,4 @@ class QuizAttempt(db.Model):
     paused_at = db.Column(db.DateTime, nullable=True)
     pauses_used = db.Column(db.Integer, nullable=False, default=0)
 
-    __table_args__ = (
-        db.Index('uq_quiz_attempt_user_id', user_id, unique=True),
-    )
+    __table_args__ = (db.Index('uq_quiz_attempt_user_id', user_id, unique=True),)

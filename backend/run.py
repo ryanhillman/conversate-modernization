@@ -1,6 +1,7 @@
 import logging
-from conversate.config import Config
+
 from conversate.app import create_app
+from conversate.config import Config
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(name)s %(message)s')
 

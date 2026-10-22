@@ -11,8 +11,10 @@ logger = logging.getLogger('alembic.env')
 
 config.set_main_option(
     'sqlalchemy.url',
-    current_app.extensions['migrate'].db.engine.url.render_as_string(
-        hide_password=False).replace('%', '%%'))
+    current_app.extensions['migrate']
+    .db.engine.url.render_as_string(hide_password=False)
+    .replace('%', '%%'),
+)
 target_metadata = current_app.extensions['migrate'].db.metadata
 
 
@@ -45,7 +47,7 @@ def run_migrations_online():
             connection=connection,
             target_metadata=target_metadata,
             process_revision_directives=process_revision_directives,
-            **current_app.extensions['migrate'].configure_args
+            **current_app.extensions['migrate'].configure_args,
         )
         with context.begin_transaction():
             context.run_migrations()

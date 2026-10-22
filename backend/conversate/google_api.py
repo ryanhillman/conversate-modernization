@@ -19,7 +19,8 @@ def post(base_url, payload):
     # The key goes in a header rather than the ?key= query string so it
     # never ends up in URL logs (access logs, proxies, browser history).
     req = urllib.request.Request(
-        base_url, data=json.dumps(payload).encode(),
+        base_url,
+        data=json.dumps(payload).encode(),
         headers={
             'Content-Type': 'application/json',
             'X-goog-api-key': current_app.config['GOOGLE_CLOUD_API_KEY'],

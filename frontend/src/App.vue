@@ -28,19 +28,24 @@ import Toast from "./components/Toast.vue";
 :root {
   --brand-navy: #16335c;
   --brand-navy-dark: #0f2547;
-  --brand-accent: #E0A82E;
+  --brand-accent: #e0a82e;
   --brand-accent-dark: #c8901a;
   --page-bg: #d8dee8;
   --text-color: #1f2937;
   --text-muted: #6b7280;
-  --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.10), 0 10px 24px rgba(0, 0, 0, 0.18);
+  --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 10px 24px rgba(0, 0, 0, 0.18);
   --card-border: 1px solid #bcc5d2;
   --card-bg: #ffffff;
   --radius: 12px;
 }
 
 body {
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
   background-color: var(--page-bg);
   color: var(--text-color);
 }
@@ -50,7 +55,12 @@ body {
   color: var(--text-color);
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: "Poppins", sans-serif;
   font-weight: 600;
 }

@@ -8,8 +8,9 @@ Single baseline matching the models: accounts keyed on the Auth0 subject,
 email as optional profile data, and case-insensitive username uniqueness.
 
 """
-from alembic import op
+
 import sqlalchemy as sa
+from alembic import op
 
 revision = '0001'
 down_revision = None
@@ -24,13 +25,11 @@ def upgrade():
         sa.Column('auth0_sub', sa.String(length=255), nullable=False),
         sa.Column('email', sa.String(length=100), nullable=True),
         sa.Column('user_name', sa.String(length=100), nullable=False),
-        sa.Column('lessons_completed', sa.JSON(), nullable=False,
-                  server_default=sa.text("'[]'")),
+        sa.Column('lessons_completed', sa.JSON(), nullable=False, server_default=sa.text("'[]'")),
         sa.PrimaryKeyConstraint('id'),
     )
     op.create_index('uq_user_auth0_sub', 'user', ['auth0_sub'], unique=True)
-    op.create_index('uq_user_user_name_lower', 'user',
-                    [sa.text('lower(user_name)')], unique=True)
+    op.create_index('uq_user_user_name_lower', 'user', [sa.text('lower(user_name)')], unique=True)
 
 
 def downgrade():

@@ -32,9 +32,7 @@ def test_create_rejects_a_non_string_user_name(client, auth_headers):
 
 def test_create_rejects_a_duplicate(client, auth_headers, create_user):
     create_user(sub='auth0|test', user_name='tester')
-    response = client.post(
-        ME, json={'user_name': 'other'}, headers=auth_headers(sub='auth0|test')
-    )
+    response = client.post(ME, json={'user_name': 'other'}, headers=auth_headers(sub='auth0|test'))
     assert response.status_code == 409
 
 
