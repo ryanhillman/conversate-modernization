@@ -23,7 +23,7 @@ def _register_error_handlers(app):
 def create_app(config):
     app = Flask(__name__)
     app.config.from_object(config)
-    CORS(app, resources={"/*": {"origins": config.ALLOWED_ORIGIN}})
+    CORS(app, resources={'/*': {'origins': config.ALLOWED_ORIGIN}})
     db.init_app(app)
     migrate.init_app(app, db)
     # Rate limiting relies on real elapsed time between requests, which the

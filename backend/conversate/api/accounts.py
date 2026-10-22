@@ -79,7 +79,7 @@ def create_me():
         return jsonify(error='email must be a valid address'), 400
     if find_user(sub) is not None:
         return jsonify(error='User already exists'), 409
-    error = _validate_username(user_name, 'User already exists')
+    error = _validate_username(user_name, 'user_name already exists')
     if error:
         return error
     new_user = User(sub, email, user_name)
