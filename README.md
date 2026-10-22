@@ -47,6 +47,7 @@ Vocabulary quiz with user scores and times ranked on a leaderboard.
 - Flask-Limiter 4.1
 - PostgreSQL
 - Gunicorn 26.0
+- Docker
 
 **Frontend**
 - Vue.js 3
@@ -63,7 +64,7 @@ Vocabulary quiz with user scores and times ranked on a leaderboard.
 
 ## How to Run
 
-Requires Python 3.14, Node 22, Auth0, and Google Cloud.
+Requires Python 3.14, Node 22, Docker, Auth0, and Google Cloud.
 
 ### Auth0
 
@@ -115,10 +116,18 @@ docker run -d --name conversate-postgres -p 5432:5432 -e POSTGRES_USER=conversat
 ```bash
 cd backend
 python -m venv venv
-venv\Scripts\activate #macOS/Linux: source venv/bin/activate
+source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 flask --app run.py db upgrade
-python run.py
+python run.py  # macOS: if this fails to bind, disable AirPlay Receiver (System Settings → General → AirDrop & Handoff) — it also uses port 5000
+```
+
+#### Docker
+
+```bash
+docker build -t conversate-backend backend
+docker run -p 5000:5000 --env-file backend/.env conversate-backend
+# migrations don't run automatically — run `flask --app run.py db upgrade` separately first
 ```
 
 ### Frontend
