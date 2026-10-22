@@ -126,8 +126,8 @@ def auth_headers(make_token):
 
 @pytest.fixture
 def create_user(app):
-    def _create(sub='auth0|test', email='user@example.com', user_name='tester', lessons=None):
-        user = User(sub, email, user_name)
+    def _create(sub='auth0|test', user_name='tester', lessons=None):
+        user = User(sub, user_name)
         user.lessons_completed = [] if lessons is None else lessons
         db.session.add(user)
         db.session.commit()
@@ -209,7 +209,7 @@ def rate_limited_client(tmp_path):
     with application.app_context():
         db.drop_all()
         db.create_all()
-        db.session.add(User('auth0|ratelimit', 'ratelimit@example.com', 'ratelimited'))
+        db.session.add(User('auth0|ratelimit', 'ratelimited'))
         db.session.commit()
         yield application.test_client()
         db.session.remove()
