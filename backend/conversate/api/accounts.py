@@ -12,8 +12,6 @@ accounts_bp = Blueprint('accounts_bp', __name__)
 
 MIN_USERNAME_LENGTH = 3
 MAX_USERNAME_LENGTH = 100
-MAX_EMAIL_LENGTH = 100
-_EMAIL_RE = re.compile(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
 # Usernames appear in a URL path (the availability route), so restrict them to
 # characters that are unambiguous as a path segment — no '/', space, or '?'.
 _USERNAME_RE = re.compile(r'^[A-Za-z0-9_.-]+$')
@@ -33,21 +31,6 @@ def _username_error(name):
     if not _USERNAME_RE.match(name):
         return 'user_name may only contain letters, numbers, and _ . -'
     return None
-
-
-_EMAIL_INVALID = object()
-
-
-def _body_email(body):
-    """None if the client didn't supply one (email is optional — some Auth0
-    connections never return one). _EMAIL_INVALID if one was supplied but
-    doesn't look like an address."""
-    email = str_field(body, 'email')
-    if not email:
-        return None
-    if not _EMAIL_RE.match(email) or len(email) > MAX_EMAIL_LENGTH:
-        return _EMAIL_INVALID
-    return email
 
 
 def _username_taken(name, exclude_id=None):
@@ -75,15 +58,12 @@ def create_me():
     if body is None:
         return jsonify(error='Request body must be a JSON object'), 400
     user_name = str_field(body, 'user_name')
-    email = _body_email(body)
-    if email is _EMAIL_INVALID:
-        return jsonify(error='email must be a valid address'), 400
     if find_user(sub) is not None:
         return jsonify(error='User already exists'), 409
     error = _validate_username(user_name, 'user_name already exists')
     if error:
         return error
-    new_user = User(sub, email, user_name)
+    new_user = User(sub, user_name)
     db.session.add(new_user)
     try:
         db.session.commit()

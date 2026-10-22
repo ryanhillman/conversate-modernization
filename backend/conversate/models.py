@@ -4,7 +4,6 @@ from .extensions import db
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     auth0_sub = db.Column(db.String(255), nullable=False)
-    email = db.Column(db.String(100), nullable=True)
     user_name = db.Column(db.String(100), nullable=False)
     lessons_completed = db.Column(db.JSON, nullable=False, default=list, server_default=db.text("'[]'"))
     quiz_best_score = db.Column(db.Integer, nullable=True)
@@ -12,26 +11,21 @@ class User(db.Model):
 
     # Identity is the Auth0 subject, so that's the unique key. user_name is
     # compared case-insensitively in the app, so it's enforced the same way in
-    # the database. Email is profile data now, not an identity, so it isn't
-    # unique.
+    # the database.
     __table_args__ = (
         db.Index('uq_user_auth0_sub', auth0_sub, unique=True),
         db.Index('uq_user_user_name_lower', db.func.lower(user_name), unique=True),
     )
 
-    def __init__(self, auth0_sub, email, user_name):
+    def __init__(self, auth0_sub, user_name):
         self.auth0_sub = auth0_sub
-        self.email = email
         self.user_name = user_name
 
     def serialize(self):
-        lessons = self.lessons_completed or []
         return {
             'id': self.id,
             'user_name': self.user_name,
-            'email': self.email,
-            'score': len(lessons),
-            'lessons_completed': lessons,
+            'lessons_completed': self.lessons_completed or [],
             'quiz_best_score': self.quiz_best_score,
             'quiz_best_time_seconds': self.quiz_best_time_seconds,
         }

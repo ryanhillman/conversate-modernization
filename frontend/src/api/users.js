@@ -4,8 +4,8 @@ export function getMe() {
   return api("/api/me");
 }
 
-export function createMe(username, email) {
-  return api("/api/me", { method: "POST", body: { user_name: username, email } });
+export function createMe(username) {
+  return api("/api/me", { method: "POST", body: { user_name: username } });
 }
 
 export function updateUsername(username) {

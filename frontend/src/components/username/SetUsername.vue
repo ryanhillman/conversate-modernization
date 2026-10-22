@@ -26,11 +26,9 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { createMe } from "../../api/users";
 import { useUsernameAvailability } from "../../composables/useUsernameAvailability";
-import { useAuth } from "../../composables/useAuth";
 import { showToast } from "../../stores/toastStore";
 
 const router = useRouter();
-const auth = useAuth();
 
 const username = ref("");
 const { checking, takenUsername, validationError } = useUsernameAvailability(username);
@@ -39,7 +37,7 @@ const saving = ref(false);
 async function saveUsername(name) {
   saving.value = true;
   try {
-    await createMe(name.trim(), auth.user.email);
+    await createMe(name.trim());
     showToast("Welcome to Conversate!", "success");
     router.push("/");
   } catch {

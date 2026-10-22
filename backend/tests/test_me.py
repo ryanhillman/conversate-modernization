@@ -9,7 +9,7 @@ from conversate.models import QuizAttempt
 
 ME = '/api/me'
 
-VALID = {'user_name': 'tester', 'email': 'real@example.com'}
+VALID = {'user_name': 'tester'}
 
 
 def test_requires_a_token(client):
@@ -19,32 +19,10 @@ def test_requires_a_token(client):
     assert client.post(ME + '/lessons/1').status_code == 401
 
 
-def test_create_stores_body_email(client, auth_headers):
-    response = client.post(
-        ME,
-        json={
-            'user_name': 'tester',
-            'email': 'real@example.com',
-        },
-        headers=auth_headers(),
-    )
-    assert response.status_code == 201
-    assert response.get_json()['email'] == 'real@example.com'
-
-
-def test_create_allows_a_missing_email(client, auth_headers):
-    # Some Auth0 connections never return an email; account creation must
-    # not depend on one.
+def test_create_stores_the_username(client, auth_headers):
     response = client.post(ME, json={'user_name': 'tester'}, headers=auth_headers())
     assert response.status_code == 201
-    assert response.get_json()['email'] is None
-
-
-def test_create_rejects_a_malformed_email(client, auth_headers):
-    response = client.post(
-        ME, json={'user_name': 'tester', 'email': 'notanemail'}, headers=auth_headers()
-    )
-    assert response.status_code == 400
+    assert response.get_json()['user_name'] == 'tester'
 
 
 def test_create_rejects_a_non_string_user_name(client, auth_headers):
@@ -52,17 +30,10 @@ def test_create_rejects_a_non_string_user_name(client, auth_headers):
     assert response.status_code == 400
 
 
-def test_create_treats_a_non_string_email_as_missing(client, auth_headers):
-    response = client.post(
-        ME, json={'user_name': 'tester', 'email': 42}, headers=auth_headers()
-    )
-    assert response.status_code == 201
-
-
 def test_create_rejects_a_duplicate(client, auth_headers, create_user):
     create_user(sub='auth0|test', user_name='tester')
     response = client.post(
-        ME, json={'user_name': 'other', 'email': 'a@b.com'}, headers=auth_headers(sub='auth0|test')
+        ME, json={'user_name': 'other'}, headers=auth_headers(sub='auth0|test')
     )
     assert response.status_code == 409
 
@@ -117,7 +88,6 @@ def test_completing_a_lesson_twice_does_not_double_count(client, auth_headers, c
     client.post(ME + '/lessons/1', headers=auth_headers())
     body = client.post(ME + '/lessons/1', headers=auth_headers()).get_json()
     assert body['lessons_completed'] == [1]
-    assert body['score'] == 1
 
 
 def test_completing_lesson_zero_is_400(client, auth_headers, create_user):
@@ -189,10 +159,9 @@ def test_concurrent_lesson_completions_do_not_lose_one(
         assert sorted(refreshed.lessons_completed) == [1, 2]
 
 
-def test_reset_clears_score_and_lessons(client, auth_headers, create_user):
+def test_reset_clears_lessons(client, auth_headers, create_user):
     create_user(lessons=[1, 2, 3])
     body = client.post(ME + '/reset', headers=auth_headers()).get_json()
-    assert body['score'] == 0
     assert body['lessons_completed'] == []
 
 
