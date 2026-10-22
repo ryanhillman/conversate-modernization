@@ -154,6 +154,18 @@ docker exec conversate-postgres createdb -U conversate conversate_test
 TEST_DATABASE_URL=postgresql://conversate:conversate@127.0.0.1:5432/conversate_test pytest
 ```
 
+### Lint & format
+
+```bash
+# Backend
+ruff check .
+ruff format .
+
+# Frontend
+npm run lint
+npm run format
+```
+
 ---
 
 ## Credits

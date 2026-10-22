@@ -1,6 +1,7 @@
 # Normalize line endings to LF in the repo and on checkout, regardless of
-# platform/core.autocrlf, so Windows checkouts don't show every text file as
-# changed just from a CRLF/LF mismatch.
+# platform/core.autocrlf. Without this, files checked out with CRLF on
+# Windows make tools like `prettier --check`/`ruff format --check` report
+# false differences even when the content is identical.
 * text=auto eol=lf
 
 # Known binary types: never touch line endings in these.

@@ -8,6 +8,7 @@
 - Replaced Vue CLI/webpack with Vite.
 - Removed Babel, Sass, and related build dependencies, which Vite doesn't need.
 - Migrated ESLint to a flat configuration compatible with Vue 3.
+- Added Prettier (frontend) and ruff (backend) for consistent formatting and import order.
 - Upgraded Bootstrap 4 to 5.
 - Moved Bootstrap from a CDN to a local dependency.
 - Removed jQuery and Bootstrap JavaScript by replacing the navbar's mobile collapse and profile dropdown with Vue state, then added click-outside handling for the profile dropdown.
@@ -37,7 +38,7 @@
 - Added a global route guard that requires authentication by default.
 
 **Lessons & UX**
-- Rewrote the Lessons view as a single data-driven template (~1,380 → ~600 lines).
+- Rewrote the Lessons view as a single data-driven template (~1,380 → ~600 lines, measured before formatting with Prettier).
 - Lesson answers are now keyed per question.
 - Made lesson answer checking ignore capitalization.
 - Added the option to hear Italian conjugations in lessons.
