@@ -5,7 +5,7 @@ from sqlalchemy.exc import IntegrityError
 
 from ..auth import require_auth
 from ..extensions import db
-from ..models import User
+from ..models import QuizAttempt, User
 from .common import find_user, json_body, resolve_me, str_field
 
 accounts_bp = Blueprint('accounts_bp', __name__)
@@ -158,6 +158,10 @@ def reset_me(record):
     record.lessons_completed = []
     record.quiz_best_score = None
     record.quiz_best_time_seconds = None
+    # An in-progress attempt must not survive a reset — submitting it
+    # afterward would otherwise record a "new best" of whatever it had
+    # scored so far (0, if nothing was answered yet).
+    db.session.query(QuizAttempt).filter(QuizAttempt.user_id == record.id).delete()
     db.session.commit()
     return jsonify(record.serialize()), 200
 

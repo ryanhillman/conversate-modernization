@@ -4,6 +4,9 @@ import time
 
 import pytest
 
+from conversate.extensions import db
+from conversate.models import QuizAttempt
+
 ME = '/api/me'
 
 VALID = {'user_name': 'tester', 'email': 'real@example.com'}
@@ -181,3 +184,14 @@ def test_reset_clears_score_and_lessons(client, auth_headers, create_user):
     body = client.post(ME + '/reset', headers=auth_headers()).get_json()
     assert body['score'] == 0
     assert body['lessons_completed'] == []
+
+
+def test_reset_discards_an_in_progress_quiz_attempt(client, auth_headers, create_user):
+    user = create_user()
+    client.post('/api/me/quiz/start', headers=auth_headers())
+    client.post(ME + '/reset', headers=auth_headers())
+
+    assert db.session.query(QuizAttempt).filter(QuizAttempt.user_id == user.id).count() == 0
+    # Without the attempt, submitting can no longer record a bogus "new best".
+    submit = client.post('/api/me/quiz/submit', headers=auth_headers())
+    assert submit.status_code == 409
