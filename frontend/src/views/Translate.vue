@@ -123,6 +123,7 @@ let mediaRecorder = null;
 let audioChunks = [];
 let micStream = null;
 let recordingTimeout = null;
+let leavingPage = false;
 
 const micSupported = computed(
   () =>
@@ -141,6 +142,10 @@ const translatedTextTooLong = computed(() => {
 const sameLanguageOnBothSides = computed(() => inputLanguage.value === outputLanguage.value);
 
 onBeforeUnmount(() => {
+  // Stopping the tracks below fires the recorder's own "stop" handler,
+  // which would otherwise still kick off a paid transcription call for a
+  // page the user has already left.
+  leavingPage = true;
   clearTimeout(recordingTimeout);
   if (micStream) {
     micStream.getTracks().forEach((track) => track.stop());
@@ -190,7 +195,7 @@ async function toggleRecording() {
     clearTimeout(recordingTimeout);
     micStream.getTracks().forEach((track) => track.stop());
     recording.value = false;
-    transcribeRecording();
+    if (!leavingPage) transcribeRecording();
   });
   mediaRecorder.start();
   recording.value = true;
