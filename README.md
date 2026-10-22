@@ -144,3 +144,9 @@ docker exec conversate-postgres createdb -U conversate conversate_test
 # never point this at the app's own database — the suite drops its tables
 TEST_DATABASE_URL=postgresql://conversate:conversate@127.0.0.1:5432/conversate_test pytest
 ```
+
+---
+
+## Credits
+
+Icons by [Icons8](https://icons8.com).
