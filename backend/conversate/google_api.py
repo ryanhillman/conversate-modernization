@@ -29,5 +29,10 @@ def post(base_url, payload):
     try:
         with urllib.request.urlopen(req, timeout=GOOGLE_API_TIMEOUT_SECONDS) as r:
             return json.loads(r.read())
+    except urllib.error.HTTPError as e:
+        # The error body carries Google's actual reason (e.g. a bad API key
+        # or an invalid parameter); str(e) alone is just "HTTP Error 403".
+        body = e.read().decode('utf-8', errors='replace')
+        raise GoogleServiceError(f'{e}: {body}') from e
     except (urllib.error.URLError, TimeoutError, ValueError) as e:
         raise GoogleServiceError(str(e)) from e
