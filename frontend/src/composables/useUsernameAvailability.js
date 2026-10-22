@@ -17,22 +17,20 @@ export function useUsernameAvailability(username, { skipAvailabilityCheck = () =
 
   const validationError = computed(() => usernameError(username.value));
 
-  function checkUsername(candidate, seq) {
+  async function checkUsername(candidate, seq) {
     checking.value = true;
-    apiCheckUsername(candidate)
-      .then((data) => {
-        // Ignore a response a newer keystroke has already superseded.
-        if (seq === checkSeq) takenUsername.value = !data.available;
-      })
-      .catch(() => {
-        if (seq !== checkSeq) return;
-        // Auth failures, outages, and network errors must not masquerade as
-        // "taken" — only an explicit available:false does.
-        takenUsername.value = false;
-      })
-      .finally(() => {
-        checking.value = false;
-      });
+    try {
+      const data = await apiCheckUsername(candidate);
+      // Ignore a response a newer keystroke has already superseded.
+      if (seq === checkSeq) takenUsername.value = !data.available;
+    } catch {
+      if (seq !== checkSeq) return;
+      // Auth failures, outages, and network errors must not masquerade as
+      // "taken" — only an explicit available:false does.
+      takenUsername.value = false;
+    } finally {
+      checking.value = false;
+    }
   }
 
   watch(username, (val) => {

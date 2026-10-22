@@ -127,32 +127,31 @@ function isComplete(lessonId) {
   const completed = user.value && user.value.lessons_completed ? user.value.lessons_completed : [];
   return completed.includes(lessonId);
 }
-function markLessonComplete(lessonId) {
+async function markLessonComplete(lessonId) {
   if (completing.value) return;
   const completed = user.value && user.value.lessons_completed ? user.value.lessons_completed : [];
   if (!completed.includes(lessonId)) {
     completing.value = true;
-    completeLesson(lessonId)
-      .then((data) => {
-        user.value = data;
-        launchCelebration();
-      })
-      .catch((err) => {
-        console.error("Failed to save lesson completion:", err);
-        showToast("Could not save your progress.", "error");
-      })
-      .finally(() => {
-        completing.value = false;
-      });
+    try {
+      const data = await completeLesson(lessonId);
+      user.value = data;
+      launchCelebration();
+    } catch (err) {
+      console.error("Failed to save lesson completion:", err);
+      showToast("Could not save your progress.", "error");
+    } finally {
+      completing.value = false;
+    }
   }
 }
-function speak(text) {
-  synthesizeSpeech(text, "it")
-    .then(({ audio_content }) => new Audio(`data:audio/mpeg;base64,${audio_content}`).play())
-    .catch((err) => {
-      console.error("Speech synthesis failed:", err);
-      showToast("Could not play audio.", "error");
-    });
+async function speak(text) {
+  try {
+    const { audio_content } = await synthesizeSpeech(text, "it");
+    await new Audio(`data:audio/mpeg;base64,${audio_content}`).play();
+  } catch (err) {
+    console.error("Speech synthesis failed:", err);
+    showToast("Could not play audio.", "error");
+  }
 }
 function launchCelebration() {
   confetti.value = generateConfetti();
