@@ -36,17 +36,16 @@ const username = ref("");
 const { checking, takenUsername, validationError } = useUsernameAvailability(username);
 const saving = ref(false);
 
-function saveUsername(name) {
+async function saveUsername(name) {
   saving.value = true;
-  createMe(name.trim(), auth.user.email)
-    .then(() => {
-      showToast("Welcome to Conversate!", "success");
-      router.push("/");
-    })
-    .catch(() => {
-      saving.value = false;
-      showToast("Could not save username.", "error");
-    });
+  try {
+    await createMe(name.trim(), auth.user.email);
+    showToast("Welcome to Conversate!", "success");
+    router.push("/");
+  } catch {
+    saving.value = false;
+    showToast("Could not save username.", "error");
+  }
 }
 </script>
 

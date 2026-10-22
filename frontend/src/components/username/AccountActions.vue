@@ -3,23 +3,20 @@
     <input
       v-model="username"
       placeholder="Edit username"
-      class="form-control mb-2"
+      class="form-control mb-2 account-actions-field"
       maxlength="100"
-      style="width: 260px;"
     />
     <p v-if="username && validationError" class="text-danger small mb-2">{{ validationError }}</p>
     <p v-else-if="takenUsername" class="text-danger small mb-2">That username is taken</p>
     <button
-      class="btn btn-success mb-2"
-      style="width: 260px;"
+      class="btn btn-success mb-2 account-actions-field"
       @click.prevent="updateUsername(username)"
       :disabled="!!validationError || checking || saving || takenUsername"
     >
       Update username
     </button>
     <button
-      class="btn btn-warning"
-      style="width: 260px;"
+      class="btn btn-warning account-actions-field"
       @click.prevent="resetProgress()"
       :disabled="saving"
     >
@@ -52,35 +49,39 @@ const { checking, takenUsername, validationError } = useUsernameAvailability(use
 });
 const saving = ref(false);
 
-function updateUsername(name) {
+async function updateUsername(name) {
   saving.value = true;
-  apiUpdateUsername(name.trim())
-    .then((data) => {
-      showToast("Username updated", "success");
-      username.value = "";
-      takenUsername.value = false;
-      saving.value = false;
-      emit("updated", data);
-    })
-    .catch(() => {
-      saving.value = false;
-      showToast("Could not update username.", "error");
-    });
+  try {
+    const data = await apiUpdateUsername(name.trim());
+    showToast("Username updated", "success");
+    username.value = "";
+    takenUsername.value = false;
+    emit("updated", data);
+  } catch {
+    showToast("Could not update username.", "error");
+  } finally {
+    saving.value = false;
+  }
 }
 
-function resetProgress() {
+async function resetProgress() {
   if (confirm("Reset your progress?")) {
     saving.value = true;
-    apiResetStats()
-      .then(() => {
-        saving.value = false;
-        showToast("Your progress has been reset", "success");
-        router.push("/mastery");
-      })
-      .catch(() => {
-        saving.value = false;
-        showToast("Could not reset your progress.", "error");
-      });
+    try {
+      await apiResetStats();
+      showToast("Your progress has been reset", "success");
+      router.push("/mastery");
+    } catch {
+      showToast("Could not reset your progress.", "error");
+    } finally {
+      saving.value = false;
+    }
   }
 }
 </script>
+
+<style scoped>
+.account-actions-field {
+  width: 260px;
+}
+</style>
