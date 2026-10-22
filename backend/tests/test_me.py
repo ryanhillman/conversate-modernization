@@ -52,7 +52,7 @@ def test_create_rejects_a_non_string_user_name(client, auth_headers):
     assert response.status_code == 400
 
 
-def test_create_rejects_a_non_string_email(client, auth_headers):
+def test_create_treats_a_non_string_email_as_missing(client, auth_headers):
     response = client.post(
         ME, json={'user_name': 'tester', 'email': 42}, headers=auth_headers()
     )
