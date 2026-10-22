@@ -35,10 +35,14 @@
             </option>
           </select>
         </div>
+        <p v-if="sameLanguageOnBothSides" class="text-danger small m-2">
+          Input and output language must be different.
+        </p>
         <div>
           <textarea
             class="m-2 translate-textarea"
             rows="10"
+            maxlength="5000"
             placeholder="Type here to translate…"
             v-model="textToTranslate"
           ></textarea>
@@ -69,7 +73,7 @@
         </div>
         <br />
         <button
-          :disabled="textToTranslate.length < 1 || busy"
+          :disabled="!textToTranslate.trim() || sameLanguageOnBothSides || busy"
           class="btn btn-accent m-3"
           @click="translateEnteredText()"
         >
@@ -130,6 +134,7 @@ const translatedTextTooLong = computed(() => {
   // (UTF-16 code units) — accented characters take more than one byte.
   return new TextEncoder().encode(translatedText.value).length > MAX_TTS_LENGTH;
 });
+const sameLanguageOnBothSides = computed(() => inputLanguage.value === outputLanguage.value);
 
 onBeforeUnmount(() => {
   clearTimeout(recordingTimeout);
