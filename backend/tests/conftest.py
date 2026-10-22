@@ -100,10 +100,10 @@ def client(app):
 def make_token(signing_key):
     pem, _ = signing_key
 
-    def _make(sub='auth0|test', audience=TEST_AUDIENCE, issuer=ISSUER):
+    def _make(sub='auth0|test', audience=TEST_AUDIENCE, issuer=ISSUER, iat_offset=0):
         # An Auth0 API access token identifies the user by `sub`; it does not
         # carry email.
-        now = int(time.time())
+        now = int(time.time()) + iat_offset
         claims = {
             'sub': sub,
             'aud': audience,

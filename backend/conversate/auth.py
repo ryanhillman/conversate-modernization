@@ -61,7 +61,15 @@ def _verify_token():
         raise PyJWTError(f'no signing key matches token kid {kid!r}')
     signing_key = jwt.PyJWK(jwk).key
     return jwt.decode(
-        token, signing_key, algorithms=['RS256'], audience=audience, issuer=f'https://{domain}/'
+        token,
+        signing_key,
+        algorithms=['RS256'],
+        audience=audience,
+        issuer=f'https://{domain}/',
+        # Tolerate small clock differences between this server and Auth0's —
+        # without it, a token's iat/exp can fail validation purely from
+        # clock skew, with no actual timing problem.
+        leeway=60,
     )
 
 
