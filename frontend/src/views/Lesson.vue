@@ -59,6 +59,7 @@
           </div>
         </template>
         <div v-else-if="!isComplete(lesson.id)" class="complete-lesson">
+          <!-- Navy comes from this view's scoped `button` style, which overrides btn-success -->
           <button
             class="btn btn-success"
             :disabled="completing"
