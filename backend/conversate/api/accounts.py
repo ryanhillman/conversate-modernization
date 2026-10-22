@@ -17,9 +17,10 @@ _EMAIL_RE = re.compile(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
 # Usernames appear in a URL path (the availability route), so restrict them to
 # characters that are unambiguous as a path segment — no '/', space, or '?'.
 _USERNAME_RE = re.compile(r'^[A-Za-z0-9_.-]+$')
-# Must match the lesson count in frontend/src/data/lessons.js, or new lessons 400 on completion.
-TOTAL_LESSONS = 10
-VALID_LESSON_IDS = frozenset(range(1, TOTAL_LESSONS + 1))
+# A generous sanity bound rather than the exact lesson count, so this never
+# needs to track frontend/src/data/lessons.js — the frontend is the only
+# client and never sends an id outside its own lesson list.
+MAX_LESSON_ID = 999
 
 
 def _username_error(name):
@@ -136,7 +137,7 @@ def _lock_user_for_update(user_id):
 @require_auth
 @resolve_me
 def complete_my_lesson(record, lesson_id):
-    if lesson_id not in VALID_LESSON_IDS:
+    if not (1 <= lesson_id <= MAX_LESSON_ID):
         return jsonify(error='Invalid lesson id'), 400
     # lessons_completed is a JSON blob, not a set of rows, so writing it is a
     # full read-modify-write: without the lock, two concurrent completions

@@ -120,6 +120,16 @@ def test_completing_a_lesson_twice_does_not_double_count(client, auth_headers, c
     assert body['score'] == 1
 
 
+def test_completing_lesson_zero_is_400(client, auth_headers, create_user):
+    create_user()
+    assert client.post(ME + '/lessons/0', headers=auth_headers()).status_code == 400
+
+
+def test_completing_a_lesson_past_the_sanity_bound_is_400(client, auth_headers, create_user):
+    create_user()
+    assert client.post(ME + '/lessons/1000', headers=auth_headers()).status_code == 400
+
+
 @pytest.mark.skipif(
     not os.environ.get('TEST_DATABASE_URL'),
     reason='SQLite silently ignores SELECT ... FOR UPDATE (no FOR UPDATE clause '
