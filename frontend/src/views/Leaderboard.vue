@@ -28,7 +28,7 @@
               <td>{{ index + 1 }}</td>
               <td>{{ row.user_name }}</td>
               <td>{{ row.score }}</td>
-              <td>{{ formattedTime(row.time_seconds) }}</td>
+              <td>{{ formatTime(row.time_seconds) }}</td>
             </tr>
           </tbody>
         </table>
@@ -42,7 +42,7 @@ import { ref, onMounted } from "vue";
 import RequireProfile from "../components/RequireProfile.vue";
 import { getLeaderboard } from "../api/leaderboard";
 import { showToast } from "../stores/toastStore";
-import { formatTime as formattedTime } from "../utils/formatTime";
+import { formatTime } from "../utils/formatTime";
 
 const user = ref(null);
 const rows = ref([]);

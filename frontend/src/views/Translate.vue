@@ -39,7 +39,6 @@
           <textarea
             class="m-2 translate-textarea"
             rows="10"
-            style="resize: none"
             placeholder="Type here to translate…"
             v-model="textToTranslate"
           ></textarea>
@@ -53,7 +52,7 @@
             />
             <Icon
               v-if="translatedText && !translatedTextTooLong && !busy"
-              @click="startTxtToSpeech"
+              @click="startTextToSpeech"
               name="volume-up"
               class="icon-3x m-2 translate-icon"
             />
@@ -66,7 +65,6 @@
             disabled
             v-model="translatedText"
             rows="10"
-            style="resize: none"
           ></textarea>
         </div>
         <br />
@@ -206,7 +204,7 @@ async function transcribeRecording() {
   }
 }
 
-async function startTxtToSpeech() {
+async function startTextToSpeech() {
   busy.value = true;
   try {
     const { audio_content } = await synthesizeSpeech(translatedText.value, outputLanguage.value);
@@ -224,6 +222,7 @@ async function startTxtToSpeech() {
   width: 100%;
   max-width: 30rem;
   box-sizing: border-box;
+  resize: none;
 }
 .translate-icon {
   color: var(--brand-accent);
@@ -254,7 +253,7 @@ async function startTxtToSpeech() {
   border: 1px solid #ccd3dd;
   border-radius: 8px;
   background-color: #fff;
-  color: #1f2937;
+  color: var(--text-color);
   font-family: "Poppins", sans-serif;
   font-weight: 500;
   cursor: pointer;

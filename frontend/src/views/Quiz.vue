@@ -56,7 +56,7 @@
       <div v-else-if="phase === 'results'" class="card-style quiz-results">
         <h3 v-if="result.is_new_best">New best!</h3>
         <p>Score: {{ result.score }} / {{ questions.length }}</p>
-        <p>Time: {{ formattedTime(result.time_seconds) }}</p>
+        <p>Time: {{ formatTime(result.time_seconds) }}</p>
         <button class="btn btn-accent m-2" @click="start">Play again</button>
         <router-link to="/leaderboard" class="btn btn-primary m-2">
           View leaderboard
@@ -76,7 +76,7 @@ import { ref, computed, onBeforeUnmount } from "vue";
 import RequireProfile from "../components/RequireProfile.vue";
 import { startQuiz, answerQuiz, pauseQuiz, resumeQuiz, submitQuiz } from "../api/quiz";
 import { showToast } from "../stores/toastStore";
-import { formatTime as formattedTime } from "../utils/formatTime";
+import { formatTime } from "../utils/formatTime";
 
 const FEEDBACK_DISPLAY_MS = 500;
 
@@ -94,7 +94,7 @@ const pausesRemaining = ref(0);
 let tickTimer = null;
 
 const currentQuestion = computed(() => questions.value[currentIndex.value]);
-const formattedRemaining = computed(() => formattedTime(remainingSeconds.value));
+const formattedRemaining = computed(() => formatTime(remainingSeconds.value));
 
 onBeforeUnmount(() => clearInterval(tickTimer));
 

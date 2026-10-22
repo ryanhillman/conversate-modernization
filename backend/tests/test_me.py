@@ -101,9 +101,9 @@ def test_completing_a_lesson_twice_does_not_double_count(client, auth_headers, c
 
 @pytest.mark.skipif(
     not os.environ.get('TEST_DATABASE_URL'),
-    reason="SQLite silently ignores SELECT ... FOR UPDATE (no FOR UPDATE clause "
-    "is even generated), so the lock this test depends on has no effect "
-    "there. Run with TEST_DATABASE_URL pointing at Postgres to exercise it.",
+    reason='SQLite silently ignores SELECT ... FOR UPDATE (no FOR UPDATE clause '
+    'is even generated), so the lock this test depends on has no effect '
+    'there. Run with TEST_DATABASE_URL pointing at Postgres to exercise it.',
 )
 def test_concurrent_lesson_completions_do_not_lose_one(
     app, client, auth_headers, create_user, monkeypatch

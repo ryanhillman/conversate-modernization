@@ -19,7 +19,7 @@
           </p>
           <p class="mb-2">
             <strong>Time:</strong>
-            {{ user.quiz_best_score != null ? formattedTime(user.quiz_best_time_seconds) : "—" }}
+            {{ user.quiz_best_score != null ? formatTime(user.quiz_best_time_seconds) : "—" }}
           </p>
         </div>
         <div class="col-md text-center text-md-start">
@@ -36,5 +36,5 @@
 <script setup>
 import RequireProfile from "../components/RequireProfile.vue";
 import AccountActions from "../components/username/AccountActions.vue";
-import { formatTime as formattedTime } from "../utils/formatTime";
+import { formatTime } from "../utils/formatTime";
 </script>

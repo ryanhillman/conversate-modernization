@@ -75,7 +75,7 @@ h1, h2, h3, h4, h5, h6 {
 .btn-accent {
   background-color: var(--brand-accent);
   border-color: var(--brand-accent);
-  color: #1f2937;
+  color: var(--text-color);
   font-family: "Poppins", sans-serif;
   font-weight: 500;
   border-radius: 8px;
@@ -84,7 +84,7 @@ h1, h2, h3, h4, h5, h6 {
 .btn-accent:hover {
   background-color: var(--brand-accent-dark);
   border-color: var(--brand-accent-dark);
-  color: #1f2937;
+  color: var(--text-color);
 }
 
 .card-style {

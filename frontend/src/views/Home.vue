@@ -65,7 +65,7 @@ const cards = [
   white-space: normal;
   background-color: var(--brand-accent);
   border-color: var(--brand-accent);
-  color: #1f2937;
+  color: var(--text-color);
 }
 .card .btn-primary:hover {
   background-color: var(--brand-accent-dark);
