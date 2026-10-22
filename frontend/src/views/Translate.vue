@@ -69,9 +69,7 @@
         </div>
         <br />
         <button
-          :disabled="
-            inputLanguage === null || outputLanguage === null || textToTranslate.length < 1 || busy
-          "
+          :disabled="textToTranslate.length < 1 || busy"
           class="btn btn-accent m-3"
           @click="translateEnteredText()"
         >
