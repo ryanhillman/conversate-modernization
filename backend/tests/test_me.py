@@ -44,6 +44,18 @@ def test_create_rejects_a_malformed_email(client, auth_headers):
     assert response.status_code == 400
 
 
+def test_create_rejects_a_non_string_user_name(client, auth_headers):
+    response = client.post(ME, json={'user_name': 123}, headers=auth_headers())
+    assert response.status_code == 400
+
+
+def test_create_rejects_a_non_string_email(client, auth_headers):
+    response = client.post(
+        ME, json={'user_name': 'tester', 'email': 42}, headers=auth_headers()
+    )
+    assert response.status_code == 201
+
+
 def test_create_rejects_a_duplicate(client, auth_headers, create_user):
     create_user(sub='auth0|test', user_name='tester')
     response = client.post(
@@ -78,6 +90,12 @@ def test_rename(client, auth_headers, create_user):
     response = client.put(ME, json={'user_name': 'renamed'}, headers=auth_headers())
     assert response.status_code == 200
     assert response.get_json()['user_name'] == 'renamed'
+
+
+def test_rename_rejects_a_non_string_user_name(client, auth_headers, create_user):
+    create_user()
+    response = client.put(ME, json={'user_name': ['not', 'a', 'string']}, headers=auth_headers())
+    assert response.status_code == 400
 
 
 def test_rename_to_a_taken_username_is_409(client, auth_headers, create_user):

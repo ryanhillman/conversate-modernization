@@ -3,7 +3,7 @@ from flask import Blueprint, current_app, jsonify
 from .. import google_api
 from ..auth import require_auth
 from ..extensions import limiter
-from .common import json_body
+from .common import json_body, str_field
 
 speech_bp = Blueprint('speech_bp', __name__)
 
@@ -30,9 +30,9 @@ def translate_text():
     body = json_body()
     if body is None:
         return jsonify(error='Request body must be a JSON object'), 400
-    text = (body.get('text') or '').strip()
-    source = body.get('source')
-    target = body.get('target')
+    text = str_field(body, 'text')
+    source = str_field(body, 'source')
+    target = str_field(body, 'target')
     if not text or len(text) > MAX_TRANSLATE_TEXT_LENGTH:
         return jsonify(
             error=f'text is required and must be at most {MAX_TRANSLATE_TEXT_LENGTH} characters'
@@ -67,8 +67,8 @@ def synthesize_speech():
     body = json_body()
     if body is None:
         return jsonify(error='Request body must be a JSON object'), 400
-    text = (body.get('text') or '').strip()
-    voice = TTS_VOICES.get(body.get('language'))
+    text = str_field(body, 'text')
+    voice = TTS_VOICES.get(str_field(body, 'language'))
     if not text or len(text.encode('utf-8')) > MAX_TTS_TEXT_LENGTH:
         return jsonify(
             error=f'text is required and must be at most {MAX_TTS_TEXT_LENGTH} characters'
@@ -100,9 +100,9 @@ def transcribe_speech():
     body = json_body()
     if body is None:
         return jsonify(error='Request body must be a JSON object'), 400
-    audio_b64 = body.get('audio')
-    encoding = STT_ENCODINGS.get(body.get('mime_type'))
-    language_code = STT_LANGUAGES.get(body.get('language'))
+    audio_b64 = str_field(body, 'audio')
+    encoding = STT_ENCODINGS.get(str_field(body, 'mime_type'))
+    language_code = STT_LANGUAGES.get(str_field(body, 'language'))
     if not audio_b64 or encoding is None or language_code is None:
         return jsonify(error='audio, a supported mime_type, and language are required'), 400
     if len(audio_b64) > MAX_STT_AUDIO_BYTES * 4 // 3:

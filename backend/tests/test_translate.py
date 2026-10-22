@@ -14,6 +14,16 @@ def test_requires_text(client, auth_headers):
     assert client.post(TRANSLATE, json=body, headers=auth_headers()).status_code == 400
 
 
+def test_rejects_a_non_string_text(client, auth_headers):
+    body = dict(VALID, text=5)
+    assert client.post(TRANSLATE, json=body, headers=auth_headers()).status_code == 400
+
+
+def test_rejects_a_list_source(client, auth_headers):
+    body = dict(VALID, source=['it'])
+    assert client.post(TRANSLATE, json=body, headers=auth_headers()).status_code == 400
+
+
 def test_translates_successfully(client, auth_headers, google_stub):
     google_stub.respond({'data': {'translations': [{'translatedText': 'hello'}]}})
     response = client.post(TRANSLATE, json=VALID, headers=auth_headers())
