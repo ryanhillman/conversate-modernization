@@ -108,6 +108,10 @@ const recording = ref(false);
 const busy = ref(false);
 const textToTranslate = ref("");
 const translatedText = ref(null);
+// The language translatedText is actually written in, captured at
+// translation time — not the live picker, which the user can change
+// afterward without re-translating.
+const translatedTextLanguage = ref(null);
 const inputLanguage = ref("en");
 const outputLanguage = ref("it");
 const languages = [
@@ -152,9 +156,11 @@ async function translateEnteredText() {
       outputLanguage.value,
     );
     translatedText.value = result;
+    translatedTextLanguage.value = outputLanguage.value;
   } catch (err) {
     console.error("Translation failed:", err);
     translatedText.value = null;
+    translatedTextLanguage.value = null;
     showToast("Could not translate.", "error");
   } finally {
     busy.value = false;
@@ -210,7 +216,10 @@ async function transcribeRecording() {
 async function startTextToSpeech() {
   busy.value = true;
   try {
-    const { audio_content } = await synthesizeSpeech(translatedText.value, outputLanguage.value);
+    const { audio_content } = await synthesizeSpeech(
+      translatedText.value,
+      translatedTextLanguage.value,
+    );
     await new Audio(`data:audio/mpeg;base64,${audio_content}`).play();
   } catch (err) {
     console.error("Speech synthesis failed:", err);
