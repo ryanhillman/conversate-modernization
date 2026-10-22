@@ -21,6 +21,7 @@
           <button
             v-if="phase === 'active' && pausesRemaining > 0"
             class="btn btn-sm btn-outline-primary"
+            :disabled="advancing"
             @click="pause"
           >
             Pause
