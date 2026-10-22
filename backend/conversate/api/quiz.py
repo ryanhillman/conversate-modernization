@@ -20,9 +20,9 @@ MAX_QUIZ_PAUSES = 1
 # through the quiz without a real answer key; it can't stop one, since
 # a script can simply pace itself slower than this.
 MIN_SECONDS_PER_ANSWER = 0.5
-# How much of a pause actually gets excluded from the 250s clock. Longer than
-# this and the clock resumes running anyway, so stepping away can't be used
-# to buy unlimited time to look up answers before resuming.
+# How much of a pause actually gets excluded from the 250s clock. Longer
+# than this and the clock resumes running anyway, capping how much total
+# time a pause can buy back.
 MAX_PAUSE_CREDIT_SECONDS = 120
 
 
