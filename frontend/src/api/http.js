@@ -39,8 +39,8 @@ export async function api(path, { method = "GET", body } = {}) {
     body: body === undefined ? undefined : JSON.stringify(body),
     signal: AbortSignal.timeout(10000),
   });
-  const data = await res.json().catch(() => null);
-  if (!res.ok) {
+  const data = await res.json().catch(() => undefined);
+  if (!res.ok || data === undefined) {
     const error = new Error((data && data.error) || `Request failed: ${res.status}`);
     error.status = res.status;
     throw error;
