@@ -1,11 +1,7 @@
 <template>
   <div class="toast-container" role="status" aria-live="polite">
     <transition-group name="toast">
-      <div
-        v-for="t in toasts"
-        :key="t.id"
-        :class="['toast-item', 'toast-' + t.type]"
-      >
+      <div v-for="t in toasts" :key="t.id" :class="['toast-item', 'toast-' + t.type]">
         {{ t.message }}
       </div>
     </transition-group>

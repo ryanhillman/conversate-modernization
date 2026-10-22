@@ -3,7 +3,7 @@ from flask_cors import CORS
 from werkzeug.exceptions import HTTPException
 
 from .api import api_blueprints
-from .extensions import db, migrate, limiter
+from .extensions import db, limiter, migrate
 
 
 def _register_error_handlers(app):
@@ -14,6 +14,7 @@ def _register_error_handlers(app):
     # In tests, let unexpected exceptions propagate so failures surface with a
     # traceback instead of a swallowed 500.
     if not app.config.get('TESTING'):
+
         @app.errorhandler(Exception)
         def handle_unexpected(error):
             app.logger.exception('Unhandled exception')

@@ -10,7 +10,10 @@ const BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5000";
 // finding a session whose refresh token can't renew the access token (never
 // issued, or itself expired) — same dead end, just a different error code.
 const RELOGIN_ERRORS = [
-  "login_required", "consent_required", "missing_refresh_token", "invalid_grant",
+  "login_required",
+  "consent_required",
+  "missing_refresh_token",
+  "invalid_grant",
 ];
 
 // Fetch wrapper for the backend API: attaches the Auth0 access token, sends

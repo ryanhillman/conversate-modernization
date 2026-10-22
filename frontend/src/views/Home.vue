@@ -45,7 +45,9 @@ const cards = [
   border-radius: 12px;
   box-shadow: var(--card-shadow);
   border-top: 4px solid var(--brand-accent);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 .card-img-top {
   height: 10rem;

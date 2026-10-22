@@ -28,10 +28,7 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import {
-  updateUsername as apiUpdateUsername,
-  resetStats as apiResetStats,
-} from "../../api/users";
+import { updateUsername as apiUpdateUsername, resetStats as apiResetStats } from "../../api/users";
 import { useUsernameAvailability } from "../../composables/useUsernameAvailability";
 import { showToast } from "../../stores/toastStore";
 

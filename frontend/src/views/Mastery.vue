@@ -3,8 +3,8 @@
     <div class="card-style">
       <h1>Mastery</h1>
       <h3>
-        You have a mastery of {{ masteryPercent }}% ({{ completedLessons.length }}
-        out of {{ LESSONS.length }})
+        You have a mastery of {{ masteryPercent }}% ({{ completedLessons.length }} out of
+        {{ LESSONS.length }})
       </h3>
       <div class="mastery-bar">
         <div class="mastery-bar-fill" :style="{ width: masteryPercent + '%' }"></div>

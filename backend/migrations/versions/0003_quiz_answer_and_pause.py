@@ -9,8 +9,9 @@ Adds per-question grading state (next_index, correct_count) and pause support
 time instead of only at final submission.
 
 """
-from alembic import op
+
 import sqlalchemy as sa
+from alembic import op
 
 revision = '0003'
 down_revision = '0002'

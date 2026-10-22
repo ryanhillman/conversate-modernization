@@ -23,10 +23,7 @@
           </p>
         </div>
         <div class="col-md text-center text-md-start">
-          <AccountActions
-            :current-username="user.user_name"
-            @updated="setUser"
-          />
+          <AccountActions :current-username="user.user_name" @updated="setUser" />
         </div>
       </div>
     </RequireProfile>

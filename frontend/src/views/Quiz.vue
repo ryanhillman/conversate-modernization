@@ -59,9 +59,7 @@
         <p>Score: {{ result.score }} / {{ questions.length }}</p>
         <p>Time: {{ formatTime(result.time_seconds) }}</p>
         <button class="btn btn-accent m-2" @click="start">Play again</button>
-        <router-link to="/leaderboard" class="btn btn-primary m-2">
-          View leaderboard
-        </router-link>
+        <router-link to="/leaderboard" class="btn btn-primary m-2"> View leaderboard </router-link>
       </div>
 
       <div v-else-if="phase === 'error'" class="card-style">
@@ -258,7 +256,10 @@ async function finish() {
 }
 .quiz-choice {
   padding: 0.75rem 1rem;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
 }
 .quiz-choice-correct {
   background-color: #1e7e34;
@@ -272,7 +273,9 @@ async function finish() {
 }
 .card-flip-enter-active,
 .card-flip-leave-active {
-  transition: transform 0.25s ease, opacity 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease;
 }
 .card-flip-enter-from {
   transform: rotateY(90deg);

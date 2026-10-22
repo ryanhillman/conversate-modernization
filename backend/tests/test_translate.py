@@ -37,9 +37,7 @@ def test_upstream_failure_is_502(client, auth_headers, google_stub):
     assert client.post(TRANSLATE, json=VALID, headers=auth_headers()).status_code == 502
 
 
-def test_logs_googles_error_body_not_just_the_status(
-    client, auth_headers, google_stub, caplog
-):
+def test_logs_googles_error_body_not_just_the_status(client, auth_headers, google_stub, caplog):
     error = urllib.error.HTTPError(
         'https://translation.googleapis.com/language/translate/v2',
         403,

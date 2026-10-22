@@ -8,8 +8,9 @@ Tracks how many times an attempt has been paused, so /pause can enforce a
 one-pause-per-quiz limit.
 
 """
-from alembic import op
+
 import sqlalchemy as sa
+from alembic import op
 
 revision = '0004'
 down_revision = '0003'
