@@ -224,7 +224,10 @@ def leaderboard():
     users = (
         db.session.query(User)
         .filter(User.quiz_best_score.isnot(None))
-        .order_by(User.quiz_best_score.desc(), User.quiz_best_time_seconds.asc())
+        # id as a final tiebreak: without it, two rows tied on both score and
+        # time have no defined relative order, so the leaderboard could show
+        # them in either order from one request to the next.
+        .order_by(User.quiz_best_score.desc(), User.quiz_best_time_seconds.asc(), User.id.asc())
         .limit(100)
         .all()
     )
