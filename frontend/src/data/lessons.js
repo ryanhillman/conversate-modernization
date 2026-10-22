@@ -182,7 +182,7 @@ export const LESSONS = [
       { t: "ul", items: ["First person singular: io → I", "Second person singular: tu → you", "Third person singular masculine: lui → he", "Third person singular feminine: lei → she", "First person plural: noi → we", "Second person plural: voi → you all", "Third person plural: loro → they"] },
       { t: "p", html: "In the third person singular there are two forms, one masculine and one feminine. Gender is an important concept in Italian — every noun is either masculine or feminine, which affects how the words around it behave. We'll cover this in more detail in a future lesson; for now, it's enough to know that a noun carries one of the two genders." },
       { t: "p", html: "An interesting feature of Italian pronouns is that when the subject is understood, you can usually drop the pronoun entirely — it's mainly kept for emphasis, or to add clarity when the subject would otherwise be ambiguous." },
-      { t: "p", html: "One other thing to note is that the third person singular forms (lei/lui) can stand in for the second person singular (tu) when speaking to someone formally, as a sign of respect." },
+      { t: "p", html: "One other thing to note is that <strong>Lei</strong> (capitalized) — the third person singular feminine form — can stand in for the second person singular (tu) when speaking to someone formally, as a sign of respect. This applies regardless of whether you're addressing a man or a woman; lui is never used this way." },
       { t: "p", html: "There isn't much to practice in this lesson — it's simply important to know what the Italian pronouns are and where they're used, so you have a strong foundation to build on." },
     ],
     questions: [],
