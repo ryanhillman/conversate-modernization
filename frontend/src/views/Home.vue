@@ -20,8 +20,8 @@ const cards = [
   { img: "/mastery.png", alt: "Mastery", to: "/mastery", label: "Mastery" },
   { img: "/study.png", alt: "Learn", to: "/lesson", label: "Lessons" },
   { img: "/translate.png", alt: "Translate", to: "/translate", label: "Translate" },
-  { img: "/quiz.png", alt: "Quiz", to: "/quiz", label: "Quiz" },
-  { img: "/leaderboard.png", alt: "Leaderboard", to: "/leaderboard", label: "Leaderboard" },
+  { img: "/quiz.webp", alt: "Quiz", to: "/quiz", label: "Quiz" },
+  { img: "/leaderboard.jpg", alt: "Leaderboard", to: "/leaderboard", label: "Leaderboard" },
 ];
 </script>
 
