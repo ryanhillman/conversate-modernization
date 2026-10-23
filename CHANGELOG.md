@@ -1,5 +1,10 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+- Added GitHub Actions CI.
+
 ## [1.0.0] - 2026-10-22
 
 ### Added
