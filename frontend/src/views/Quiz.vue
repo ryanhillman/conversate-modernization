@@ -13,7 +13,11 @@
         <p>Loading…</p>
       </div>
 
-      <div v-else-if="phase === 'active' || phase === 'paused'" class="quiz-card-wrap">
+      <div
+        v-else-if="phase === 'active' || phase === 'paused'"
+        class="quiz-card-wrap"
+        @mousedown="preventDoubleClickSelection"
+      >
         <div class="quiz-meta">
           <span>Question {{ currentIndex + 1 }} / {{ questions.length }}</span>
           <span class="quiz-timer">{{ formattedRemaining }}</span>
@@ -198,6 +202,14 @@ async function selectAnswer(choice) {
       finish();
     }
   }, FEEDBACK_DISPLAY_MS);
+}
+
+// Answer buttons are disabled the moment one is clicked, and Bootstrap gives
+// disabled buttons pointer-events: none, so a double-click's second click
+// falls through to the page and the browser's word selection jumps to the
+// footer logo. Single clicks and drag-selecting text are unaffected.
+function preventDoubleClickSelection(event) {
+  if (event.detail > 1) event.preventDefault();
 }
 
 async function finish() {
