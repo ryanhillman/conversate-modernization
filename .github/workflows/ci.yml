@@ -14,6 +14,26 @@ jobs:
     defaults:
       run:
         working-directory: backend
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: conversate
+          POSTGRES_PASSWORD: conversate
+          POSTGRES_DB: conversate_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://conversate:conversate@127.0.0.1:5432/conversate_test
+      TEST_DATABASE_URL: postgresql://conversate:conversate@127.0.0.1:5432/conversate_test
+      # Config requires these; nothing in CI calls Auth0 or Google.
+      AUTH0_DOMAIN: ci.invalid
+      AUTH0_AUDIENCE: ci
+      GOOGLE_CLOUD_API_KEY: ci
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -24,6 +44,13 @@ jobs:
       - run: pip install -r requirements-dev.txt
       - run: ruff check .
       - run: ruff format --check .
+      # Must run before pytest, which empties the database when it finishes.
+      - name: Migrations apply, match the models, and roll back
+        run: |
+          flask --app run.py db upgrade
+          flask --app run.py db check
+          flask --app run.py db downgrade base
+          flask --app run.py db upgrade
       - run: pytest
 
   frontend:
