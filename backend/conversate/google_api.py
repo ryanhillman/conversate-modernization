@@ -10,7 +10,15 @@ GOOGLE_API_TIMEOUT_SECONDS = 8
 # One client for the whole process, so calls reuse open connections instead
 # of paying for a new TCP + TLS handshake to Google every time. httpx.Client
 # is safe to share across Gunicorn's worker threads.
-_client = httpx.Client(timeout=GOOGLE_API_TIMEOUT_SECONDS)
+#
+# httpx closes idle connections after 5 seconds by default; keep them for a
+# minute so calls a few seconds apart still reuse one. A Limits() object
+# defaults its connection caps to unlimited, so restate the client's usual
+# caps (100 total, 20 idle) to change only the expiry.
+_client = httpx.Client(
+    timeout=GOOGLE_API_TIMEOUT_SECONDS,
+    limits=httpx.Limits(max_connections=100, max_keepalive_connections=20, keepalive_expiry=60),
+)
 
 
 class GoogleServiceError(Exception):

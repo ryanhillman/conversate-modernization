@@ -9,6 +9,7 @@
 - Made pages reuse the loaded profile instead of fetching it on every visit.
 - Cached text-to-speech audio, so replaying the same text doesn't call Google again.
 - Reused connections to Google's APIs instead of opening a new one for every request.
+- Kept idle connections to Google open for 60 seconds instead of 5.
 - Shrank the home page images by about 75% by resizing and converting them to WebP.
 - Added a database index for the leaderboard query and fetched only the columns it shows.
 - Made lesson completion load and lock the user in one query instead of two.
