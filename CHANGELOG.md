@@ -5,6 +5,9 @@
 ### Added
 - Added GitHub Actions CI.
 
+### Fixed
+- Edited the navy-on-navy "View leaderboard" button on the quiz results screen.
+
 ## [1.0.0] - 2026-10-22
 
 ### Added

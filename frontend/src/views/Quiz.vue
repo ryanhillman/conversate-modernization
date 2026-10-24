@@ -59,7 +59,7 @@
         <p>Score: {{ result.score }} / {{ questions.length }}</p>
         <p>Time: {{ formatTime(result.time_seconds) }}</p>
         <button class="btn btn-accent m-2" @click="start">Play again</button>
-        <router-link to="/leaderboard" class="btn btn-primary m-2"> View leaderboard </router-link>
+        <router-link to="/leaderboard" class="btn btn-accent m-2"> View leaderboard </router-link>
       </div>
 
       <div v-else-if="phase === 'error'" class="card-style">
