@@ -4,6 +4,7 @@
 
 ### Added
 - Added GitHub Actions CI.
+- Added frontend unit tests with Vitest.
 
 ### Changed
 - Made pages reuse the loaded profile instead of fetching it on every visit.

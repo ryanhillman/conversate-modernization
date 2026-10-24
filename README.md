@@ -146,6 +146,11 @@ pip install -r requirements-dev.txt
 pytest
 ```
 
+```bash
+cd frontend
+npm test
+```
+
 #### Postgres test
 
 ```bash
