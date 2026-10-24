@@ -16,12 +16,12 @@
 
 <script setup>
 const cards = [
-  { img: "/profile.png", alt: "Profile", to: "/profile", label: "Profile" },
-  { img: "/mastery.png", alt: "Mastery", to: "/mastery", label: "Mastery" },
-  { img: "/study.png", alt: "Learn", to: "/lesson", label: "Lessons" },
-  { img: "/translate.png", alt: "Translate", to: "/translate", label: "Translate" },
+  { img: "/profile.webp", alt: "Profile", to: "/profile", label: "Profile" },
+  { img: "/mastery.webp", alt: "Mastery", to: "/mastery", label: "Mastery" },
+  { img: "/study.webp", alt: "Learn", to: "/lesson", label: "Lessons" },
+  { img: "/translate.webp", alt: "Translate", to: "/translate", label: "Translate" },
   { img: "/quiz.webp", alt: "Quiz", to: "/quiz", label: "Quiz" },
-  { img: "/leaderboard.jpg", alt: "Leaderboard", to: "/leaderboard", label: "Leaderboard" },
+  { img: "/leaderboard.webp", alt: "Leaderboard", to: "/leaderboard", label: "Leaderboard" },
 ];
 </script>
 
