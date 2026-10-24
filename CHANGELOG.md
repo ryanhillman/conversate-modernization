@@ -5,6 +5,7 @@
 ### Added
 - Added GitHub Actions CI.
 - Added frontend unit tests with Vitest.
+- Added a Delete account option to the profile page.
 
 ### Changed
 - Made pages reuse the loaded profile instead of fetching it on every visit.

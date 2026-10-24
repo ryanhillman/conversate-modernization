@@ -5,7 +5,7 @@ import time
 import pytest
 
 from conversate.extensions import db
-from conversate.models import QuizAttempt
+from conversate.models import QuizAttempt, User
 
 ME = '/api/me'
 
@@ -172,3 +172,32 @@ def test_reset_discards_an_in_progress_quiz_attempt(client, auth_headers, create
     # Without the attempt, submitting can no longer record a bogus "new best".
     submit = client.post('/api/me/quiz/submit', headers=auth_headers())
     assert submit.status_code == 409
+
+
+def test_delete_requires_a_token(client):
+    assert client.delete(ME).status_code == 401
+
+
+def test_delete_removes_the_account_and_any_quiz_attempt(client, auth_headers, create_user):
+    user = create_user(lessons=[1, 2])
+    user_id = user.id
+    client.post('/api/me/quiz/start', headers=auth_headers())
+
+    assert client.delete(ME, headers=auth_headers()).status_code == 204
+    assert db.session.query(User).filter(User.id == user_id).count() == 0
+    assert db.session.query(QuizAttempt).filter(QuizAttempt.user_id == user_id).count() == 0
+    # The profile is gone, so the app treats them as a new user.
+    assert client.get(ME, headers=auth_headers()).status_code == 404
+
+
+def test_delete_does_not_touch_another_users_record(client, auth_headers, create_user):
+    create_user(sub='auth0|a', user_name='alice')
+    create_user(sub='auth0|b', user_name='bob')
+
+    client.delete(ME, headers=auth_headers(sub='auth0|a'))
+
+    assert client.get(ME, headers=auth_headers(sub='auth0|b')).status_code == 200
+
+
+def test_delete_without_a_profile_is_404(client, auth_headers):
+    assert client.delete(ME, headers=auth_headers()).status_code == 404
