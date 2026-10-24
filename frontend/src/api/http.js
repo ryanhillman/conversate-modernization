@@ -18,7 +18,7 @@ const RELOGIN_ERRORS = [
 
 // Fetch wrapper for the backend API: attaches the Auth0 access token, sends
 // JSON, and throws an Error with a `status` property on non-2xx responses.
-export async function api(path, { method = "GET", body } = {}) {
+export async function api(path, { method = "GET", body, timeoutMs = 10000 } = {}) {
   const headers = {};
   if (auth0.isAuthenticated.value) {
     try {
@@ -40,7 +40,7 @@ export async function api(path, { method = "GET", body } = {}) {
     method,
     headers,
     body: body === undefined ? undefined : JSON.stringify(body),
-    signal: AbortSignal.timeout(10000),
+    signal: AbortSignal.timeout(timeoutMs),
   });
   const data = await res.json().catch(() => undefined);
   if (!res.ok || data === undefined) {

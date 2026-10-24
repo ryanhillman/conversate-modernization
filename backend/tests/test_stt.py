@@ -31,6 +31,16 @@ def test_no_speech_detected_is_422(client, auth_headers, google_stub):
     assert client.post(STT, json=VALID, headers=auth_headers()).status_code == 422
 
 
+def test_gives_google_longer_to_transcribe(client, auth_headers, google_stub):
+    # Google replies only after transcribing the whole clip, so STT waits
+    # longer for the answer than the 8s other Google calls get.
+    google_stub.respond({'results': [{'alternatives': [{'transcript': 'ciao'}]}]})
+    client.post(STT, json=VALID, headers=auth_headers())
+    timeout = google_stub.last_call.timeout
+    assert timeout['read'] == 20
+    assert timeout['connect'] == 8
+
+
 def test_upstream_failure_is_502(client, auth_headers, google_stub):
     google_stub.fail(httpx.ConnectError('boom'))
     assert client.post(STT, json=VALID, headers=auth_headers()).status_code == 502

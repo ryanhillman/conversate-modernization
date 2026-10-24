@@ -15,6 +15,7 @@
 - Added a database index for the leaderboard query and fetched only the columns it shows.
 - Made lesson completion load and lock the user in one query instead of two.
 - Shortened the maximum speech-to-text recording from 60 to 30 seconds.
+- Extended the speech-to-text timeout from 10 to 40 seconds.
 
 ### Fixed
 - Made the "View leaderboard" button on the quiz results screen visible by switching from navy-on-navy to amber.
