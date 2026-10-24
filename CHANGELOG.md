@@ -10,6 +10,7 @@
 - Text-to-speech audio is cached, so replaying the same text doesn't call Google again.
 - Reused connections to Google's APIs instead of opening a new one per request.
 - Shrank the home page images by about 75% by resizing them and converting them to WebP.
+- Added a database index for the leaderboard query.
 
 ### Fixed
 - Edited the navy-on-navy "View leaderboard" button on the quiz results screen.

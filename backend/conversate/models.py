@@ -17,6 +17,16 @@ class User(db.Model):
     __table_args__ = (
         db.Index('uq_user_auth0_sub', auth0_sub, unique=True),
         db.Index('uq_user_user_name_lower', db.func.lower(user_name), unique=True),
+        # Matches the leaderboard's ORDER BY. Partial, because the leaderboard
+        # only ever reads users who have a best score.
+        db.Index(
+            'ix_user_leaderboard',
+            quiz_best_score.desc(),
+            quiz_best_time_seconds,
+            id,
+            postgresql_where=quiz_best_score.isnot(None),
+            sqlite_where=quiz_best_score.isnot(None),
+        ),
     )
 
     def __init__(self, auth0_sub, user_name):
