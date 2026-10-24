@@ -42,6 +42,9 @@ export async function api(path, { method = "GET", body, timeoutMs = 10000 } = {}
     body: body === undefined ? undefined : JSON.stringify(body),
     signal: AbortSignal.timeout(timeoutMs),
   });
+  // 204 No Content is a success with no body by design (e.g. deleting the
+  // account); any other success must be JSON, or something is misrouted.
+  if (res.status === 204) return undefined;
   const data = await res.json().catch(() => undefined);
   if (!res.ok || data === undefined) {
     const error = new Error((data && data.error) || `Request failed: ${res.status}`);

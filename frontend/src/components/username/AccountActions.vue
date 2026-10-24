@@ -16,11 +16,18 @@
       Update username
     </button>
     <button
-      class="btn btn-warning account-actions-field"
+      class="btn btn-warning mb-2 account-actions-field"
       @click.prevent="resetProgress()"
       :disabled="saving"
     >
       Reset progress
+    </button>
+    <button
+      class="btn btn-danger account-actions-field"
+      @click.prevent="deleteAccount()"
+      :disabled="saving"
+    >
+      Delete account
     </button>
   </div>
 </template>
@@ -28,9 +35,14 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { updateUsername as apiUpdateUsername, resetStats as apiResetStats } from "../../api/users";
+import {
+  updateUsername as apiUpdateUsername,
+  resetStats as apiResetStats,
+  deleteMe as apiDeleteMe,
+} from "../../api/users";
+import { useAuth } from "../../composables/useAuth";
 import { useUsernameAvailability } from "../../composables/useUsernameAvailability";
-import { setProfile } from "../../stores/profileStore";
+import { setProfile, clearProfile } from "../../stores/profileStore";
 import { showToast } from "../../stores/toastStore";
 
 const props = defineProps({
@@ -39,6 +51,7 @@ const props = defineProps({
 const emit = defineEmits(["updated"]);
 
 const router = useRouter();
+const auth = useAuth();
 
 const username = ref("");
 const { checking, takenUsername, validationError } = useUsernameAvailability(username, {
@@ -72,6 +85,20 @@ async function resetProgress() {
     } catch {
       showToast("Could not reset your progress.", "error");
     } finally {
+      saving.value = false;
+    }
+  }
+}
+
+async function deleteAccount() {
+  if (confirm("Delete your account?")) {
+    saving.value = true;
+    try {
+      await apiDeleteMe();
+      clearProfile();
+      auth.logout();
+    } catch {
+      showToast("Could not delete your account.", "error");
       saving.value = false;
     }
   }

@@ -93,6 +93,12 @@ describe("api requests", () => {
     });
   });
 
+  it("returns nothing for 204 No Content", async () => {
+    respond(204, undefined);
+
+    await expect(api("/api/me", { method: "DELETE" })).resolves.toBeUndefined();
+  });
+
   it("throws on a successful response that isn't JSON", async () => {
     respond(200, undefined);
 

@@ -20,6 +20,10 @@ export function resetStats() {
   return api("/api/me/reset", { method: "POST" });
 }
 
+export function deleteMe() {
+  return api("/api/me", { method: "DELETE" });
+}
+
 export function checkUsername(username) {
   return api(`/api/usernames/${encodeURIComponent(username)}`);
 }

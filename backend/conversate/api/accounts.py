@@ -144,6 +144,18 @@ def reset_me(record):
     return jsonify(record.serialize()), 200
 
 
+@accounts_bp.route('/api/me', methods=['DELETE'])
+@require_auth
+@resolve_me
+def delete_me(record):
+    # Removes everything the app stores about the user. Their Auth0 login
+    # identity is separate and stays; signing in again starts a new profile.
+    db.session.query(QuizAttempt).filter(QuizAttempt.user_id == record.id).delete()
+    db.session.delete(record)
+    db.session.commit()
+    return '', 204
+
+
 @accounts_bp.route('/api/usernames/<user_name>', methods=['GET'])
 @require_auth
 def username_available(user_name):
