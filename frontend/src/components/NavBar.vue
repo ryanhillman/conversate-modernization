@@ -185,7 +185,7 @@ function logout() {
 }
 .nav-link:hover,
 .nav-link:focus-visible {
-  color: var(--brand-accent-dark);
+  color: var(--brand-navy);
 }
 .nav-label {
   display: inline-block;
@@ -194,10 +194,10 @@ function logout() {
   transition: border-color 0.15s ease;
 }
 .router-link-active {
-  color: var(--brand-accent-dark);
+  color: var(--brand-navy);
 }
 .router-link-active .nav-label {
-  border-bottom-color: var(--brand-accent);
+  border-bottom-color: var(--brand-navy);
 }
 @media (min-width: 1200px) {
   .container {

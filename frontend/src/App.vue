@@ -32,7 +32,8 @@ import Toast from "./components/Toast.vue";
   --brand-accent-dark: #c8901a;
   --page-bg: #d8dee8;
   --text-color: #1f2937;
-  --text-muted: #6b7280;
+  /* Bootstrap's muted gray; #6b7280 was too light on the page background. */
+  --text-muted: var(--bs-secondary-color);
   --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 10px 24px rgba(0, 0, 0, 0.18);
   --card-border: 1px solid #bcc5d2;
   --card-bg: #ffffff;
@@ -116,6 +117,13 @@ h6 {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+/* Bootstrap's default input borders are too faint to see (WCAG asks for
+   3:1); use its own secondary gray. */
+.form-control,
+.form-select {
+  border-color: var(--bs-secondary);
 }
 
 .loading-state {
