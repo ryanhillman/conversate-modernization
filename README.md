@@ -14,7 +14,7 @@ Thank you to everyone involved.
 
 ---
 
-## [Demo](https://youtu.be/GpFT1M0YnfY)
+## [Demo (v1.0.0)](https://youtu.be/GpFT1M0YnfY)
 
 ---
 
