@@ -6,14 +6,15 @@
 - Added GitHub Actions CI.
 
 ### Changed
-- Pages now reuse the loaded profile instead of re-fetching it on every visit.
-- Text-to-speech audio is cached, so replaying the same text doesn't call Google again.
-- Reused connections to Google's APIs instead of opening a new one per request.
-- Shrank the home page images by about 75% by resizing them and converting them to WebP.
-- Added a database index for the leaderboard query.
+- Made pages reuse the loaded profile instead of fetching it on every visit.
+- Cached text-to-speech audio, so replaying the same text doesn't call Google again.
+- Reused connections to Google's APIs instead of opening a new one for every request.
+- Shrank the home page images by about 75% by resizing and converting them to WebP.
+- Added a database index for the leaderboard query and fetched only the columns it shows.
+- Made lesson completion load and lock the user in one query instead of two.
 
 ### Fixed
-- Edited the navy-on-navy "View leaderboard" button on the quiz results screen.
+- Made the "View leaderboard" button on the quiz results screen visible by switching from navy-on-navy to amber.
 
 ## [1.0.0] - 2026-10-22
 
