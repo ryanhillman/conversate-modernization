@@ -18,6 +18,7 @@
 - Made the "View leaderboard" button on the quiz results screen visible by switching from navy-on-navy to amber.
 - Removed the duplicate active-page marker from the phone menu.
 - Added .env.local files to .gitignore.
+- Showed the home page images in full instead of cropping.
 
 ## [1.0.0] - 2026-10-22
 

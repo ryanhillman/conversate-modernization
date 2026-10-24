@@ -52,7 +52,8 @@ const cards = [
 .card-img-top {
   height: 10rem;
   width: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  padding: 1rem;
 }
 .card-body {
   padding: 1.25rem 0.75rem;
