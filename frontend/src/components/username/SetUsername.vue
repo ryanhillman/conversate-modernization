@@ -8,8 +8,8 @@
       maxlength="100"
       aria-label="Username"
     />
-    <p v-if="username && validationError" class="text-danger small mb-2">{{ validationError }}</p>
-    <p v-else-if="takenUsername" class="text-danger small mb-2">That username is taken</p>
+    <p v-if="username && validationError" class="small mb-2">{{ validationError }}</p>
+    <p v-else-if="takenUsername" class="small mb-2">That username is taken</p>
     <br />
     <button
       class="btn btn-success"
@@ -60,7 +60,7 @@ async function saveUsername(name) {
 .username-input {
   width: 260px;
   padding: 0.5rem 0.75rem;
-  border: 1px solid #ccc;
+  border: 1px solid var(--bs-secondary);
   border-radius: 8px;
   margin-bottom: 1rem;
 }

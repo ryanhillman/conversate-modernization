@@ -237,7 +237,7 @@ watch(answers, () => {
 }
 .speakable {
   display: inline-block;
-  color: var(--brand-accent-dark);
+  color: var(--brand-navy);
   font-weight: 700;
   background-color: rgba(224, 168, 46, 0.18);
   border-radius: 6px;

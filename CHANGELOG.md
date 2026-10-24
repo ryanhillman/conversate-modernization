@@ -21,6 +21,7 @@
 - Added .env.local files to .gitignore.
 - Showed the home page images in full instead of cropping.
 - Removed the gray box behind the Translate image.
+- Raised text, icon, and border contrast to meet WCAG minimums.
 
 ## [1.0.0] - 2026-10-22
 

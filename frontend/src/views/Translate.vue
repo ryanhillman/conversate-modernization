@@ -35,7 +35,7 @@
             </option>
           </select>
         </div>
-        <p v-if="sameLanguageOnBothSides" class="text-danger small m-2">
+        <p v-if="sameLanguageOnBothSides" class="small m-2">
           Input and output language must be different.
         </p>
         <div>
@@ -242,11 +242,11 @@ async function startTextToSpeech() {
   resize: none;
 }
 .translate-icon {
-  color: var(--brand-accent);
+  color: var(--brand-navy);
   cursor: pointer;
 }
 .translate-icon:hover {
-  color: var(--brand-accent-dark);
+  color: var(--brand-navy-dark);
 }
 .back-card {
   border-radius: var(--radius);
@@ -267,7 +267,7 @@ async function startTextToSpeech() {
   width: auto;
   min-width: 13rem;
   padding: 0.55rem 2.2rem 0.55rem 1rem;
-  border: 1px solid #ccd3dd;
+  border: 1px solid var(--bs-secondary);
   border-radius: 8px;
   background-color: #fff;
   color: var(--text-color);
@@ -286,7 +286,7 @@ async function startTextToSpeech() {
   border-color: var(--brand-accent);
 }
 .lang-select:focus {
-  border-color: var(--brand-accent);
+  border-color: var(--brand-navy);
   box-shadow: 0 0 0 3px rgba(224, 168, 46, 0.25);
   outline: none;
 }
