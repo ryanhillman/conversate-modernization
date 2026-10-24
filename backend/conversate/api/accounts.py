@@ -100,30 +100,27 @@ def update_me(record):
     return jsonify(record.serialize()), 200
 
 
-def _lock_user_for_update(user_id):
+def _lock_user_for_update(sub):
     # A separate function so tests can monkeypatch it to hold the lock open
     # (sleep before returning) and force a genuine, deterministic overlap
     # with a concurrent caller, instead of hoping real threads happen to race.
-    return (
-        db.session.query(User)
-        .filter(User.id == user_id)
-        .populate_existing()
-        .with_for_update()
-        .one()
-    )
+    return db.session.query(User).filter(User.auth0_sub == sub).with_for_update().one_or_none()
 
 
 @accounts_bp.route('/api/me/lessons/<int:lesson_id>', methods=['POST'])
 @require_auth
-@resolve_me
-def complete_my_lesson(record, lesson_id):
+def complete_my_lesson(lesson_id):
     if not (1 <= lesson_id <= MAX_LESSON_ID):
         return jsonify(error='Invalid lesson id'), 400
     # lessons_completed is a JSON blob, not a set of rows, so writing it is a
     # full read-modify-write: without the lock, two concurrent completions
     # can both read the same starting list and the second commit silently
-    # overwrites the first's addition.
-    record = _lock_user_for_update(record.id)
+    # overwrites the first's addition. Loading the user and taking the lock
+    # in one query (rather than @resolve_me plus a locking re-read) saves a
+    # round trip.
+    record = _lock_user_for_update(g.current_user_sub)
+    if record is None:
+        return jsonify(error='Unknown resource'), 404
     completed = list(record.lessons_completed or [])
     if lesson_id not in completed:
         completed.append(lesson_id)

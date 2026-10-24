@@ -128,9 +128,9 @@ def test_concurrent_lesson_completions_do_not_lose_one(
     winner_assigned = threading.Lock()
     winner_decided = False
 
-    def hold_lock_open(user_id):
+    def hold_lock_open(sub):
         nonlocal winner_decided
-        record = real_lock(user_id)
+        record = real_lock(sub)
         with winner_assigned:
             is_winner = not winner_decided
             winner_decided = True
