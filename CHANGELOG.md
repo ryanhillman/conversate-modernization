@@ -19,6 +19,7 @@
 - Removed the duplicate active-page marker from the phone menu.
 - Added .env.local files to .gitignore.
 - Showed the home page images in full instead of cropping.
+- Removed the gray box behind the Translate image.
 
 ## [1.0.0] - 2026-10-22
 
