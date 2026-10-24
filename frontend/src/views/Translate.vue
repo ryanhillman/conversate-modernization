@@ -94,6 +94,7 @@ import { showToast } from "../stores/toastStore";
 
 const MIC_MIME_TYPE = "audio/webm;codecs=opus";
 const MAX_TTS_LENGTH = 5000;
+const MAX_RECORDING_MS = 30000;
 
 function blobToBase64(blob) {
   return new Promise((resolve, reject) => {
@@ -199,7 +200,7 @@ async function toggleRecording() {
   });
   mediaRecorder.start();
   recording.value = true;
-  recordingTimeout = setTimeout(() => mediaRecorder.stop(), 60000);
+  recordingTimeout = setTimeout(() => mediaRecorder.stop(), MAX_RECORDING_MS);
 }
 
 async function transcribeRecording() {
