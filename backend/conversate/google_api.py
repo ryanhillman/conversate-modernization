@@ -7,6 +7,12 @@ STT_URL = 'https://speech.googleapis.com/v1/speech:recognize'
 
 GOOGLE_API_TIMEOUT_SECONDS = 8
 
+# Speech-to-text replies only after transcribing the whole clip (up to the
+# frontend's 30-second recording cap), so it gets longer to answer. The
+# frontend's own timeout for this call must stay above this one's worst
+# case (connect + write + read), or the browser gives up first.
+STT_TIMEOUT = httpx.Timeout(GOOGLE_API_TIMEOUT_SECONDS, read=20)
+
 # One client for the whole process, so calls reuse open connections instead
 # of paying for a new TCP + TLS handshake to Google every time. httpx.Client
 # is safe to share across Gunicorn's worker threads.
@@ -25,7 +31,7 @@ class GoogleServiceError(Exception):
     pass
 
 
-def post(base_url, payload):
+def post(base_url, payload, timeout=httpx.USE_CLIENT_DEFAULT):
     try:
         # The key goes in a header rather than the ?key= query string so it
         # never ends up in URL logs (access logs, proxies, browser history).
@@ -33,6 +39,7 @@ def post(base_url, payload):
             base_url,
             json=payload,
             headers={'X-goog-api-key': current_app.config['GOOGLE_CLOUD_API_KEY']},
+            timeout=timeout,
         )
         response.raise_for_status()
         return response.json()

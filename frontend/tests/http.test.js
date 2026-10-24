@@ -64,6 +64,17 @@ describe("api requests", () => {
     expect(init.body).toBe('{"user_name":"ryan_h"}');
   });
 
+  it("times out after 10 seconds unless the caller sets a longer limit", async () => {
+    const timeout = vi.spyOn(AbortSignal, "timeout");
+    respond(200, {});
+
+    await api("/api/me");
+    await api("/api/stt", { method: "POST", body: {}, timeoutMs: 40000 });
+
+    expect(timeout.mock.calls).toEqual([[10000], [40000]]);
+    timeout.mockRestore();
+  });
+
   it("skips the token when signed out", async () => {
     auth0.isAuthenticated.value = false;
     respond(200, []);

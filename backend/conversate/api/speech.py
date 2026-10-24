@@ -115,6 +115,7 @@ def transcribe_speech():
                 'config': {'encoding': encoding, 'languageCode': language_code},
                 'audio': {'content': audio_b64},
             },
+            timeout=google_api.STT_TIMEOUT,
         )
     except google_api.GoogleServiceError as e:
         current_app.logger.warning('Transcription request failed: %s', e)
