@@ -67,12 +67,6 @@
   .nav-item .nav-link {
     padding: 0 0 0 16px;
   }
-  .nav-item .nav-link.router-link-exact-active {
-    border-bottom: 0;
-    border-left: 3px solid var(--brand-accent);
-    padding-left: 13px !important;
-    vertical-align: middle;
-  }
   .navbar-toggler {
     margin-right: 2.5rem;
   }
