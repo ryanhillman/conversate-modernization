@@ -26,6 +26,7 @@
 - Removed the gray box behind the Translate image.
 - Raised text, icon, and border contrast to meet WCAG minimums.
 - Marked Italian conjugations, quiz words, lesson answers, and Translate text with their language, so screen readers pronounce them correctly.
+- Prevented double-clicking a quiz answer from highlighting the footer logo.
 
 ## [1.0.0] - 2026-10-22
 
