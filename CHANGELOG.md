@@ -61,7 +61,7 @@
 - Centered the navigation bar.
 - Replaced the unofficial translate feature with the official Google Cloud Translation API.
 - Replaced the browser Speech API with Google Cloud Text-to-Speech and Speech-to-Text.
-- Consolidated the Alembic migration history into a single baseline.
+- Replaced the original's Alembic history with a new baseline migration.
 - Standardized API error responses as JSON instead of HTML.
 - Replaced full-table scans with indexed queries.
 - Added settings to the profile page and removed settings from drop down menu.
