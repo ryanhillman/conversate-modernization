@@ -56,6 +56,7 @@
 - Moved Bootstrap from a CDN to a local dependency.
 - Replaced the three Font Awesome packages with one inline SVG icon component containing the app’s three icons.
 - Replaced Axios with the native fetch API and a small wrapper for authenticated backend requests.
+- Replaced jQuery and Bootstrap's JavaScript with Vue state for the navbar's mobile collapse, profile dropdown, and error banner dismissal.
 - Converted authenticated routes from eager loading to lazy-loaded route chunks.
 - Upgraded to Python 3.14, Flask 3.1, SQLAlchemy 2.0, Flask-SQLAlchemy 3.1, Flask-Migrate 4.1, Gunicorn 26.0, Alembic 1.18, and all other backend dependencies.
 - Replaced Flask-Script and manage.py with Flask's built-in CLI for database migrations.
@@ -66,7 +67,6 @@
 - Made lesson answer checking ignore capitalization.
 - Replaced the score counter with lesson completion tracking on the Mastery page.
 - Initially setting a username now redirects user to the home page.
-- Let Vue manage error banner dismissal instead of Bootstrap JavaScript.
 - Improved design with new fonts and a cohesive color palette.
 - Centered the navigation bar.
 - Replaced the unofficial translate feature with the official Google Cloud Translation API.
@@ -87,7 +87,6 @@
 
 ### Removed
 - Removed Babel, Sass, and related build dependencies, which Vite doesn't need.
-- Removed jQuery and Bootstrap JavaScript by replacing the navbar's mobile collapse and profile dropdown with Vue state.
 - Removed the backend Pipfile and left requirements.txt as the single dependency source.
 - Removed unused games and question components, routes, imports, the flash card table, and the questions API endpoints.
 - Removed outdated project references.
