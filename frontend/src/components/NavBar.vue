@@ -131,6 +131,7 @@ import { ref, watch, onMounted, onBeforeUnmount } from "vue";
 import { useRoute } from "vue-router";
 import Icon from "./Icon.vue";
 import { useAuth } from "../composables/useAuth";
+import { clearProfile } from "../stores/profileStore";
 
 const auth = useAuth();
 const route = useRoute();
@@ -164,6 +165,7 @@ function login() {
   auth.loginWithRedirect();
 }
 function logout() {
+  clearProfile();
   auth.logout();
 }
 </script>

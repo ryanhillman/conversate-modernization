@@ -30,6 +30,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { updateUsername as apiUpdateUsername, resetStats as apiResetStats } from "../../api/users";
 import { useUsernameAvailability } from "../../composables/useUsernameAvailability";
+import { setProfile } from "../../stores/profileStore";
 import { showToast } from "../../stores/toastStore";
 
 const props = defineProps({
@@ -65,7 +66,7 @@ async function resetProgress() {
   if (confirm("Reset your progress?")) {
     saving.value = true;
     try {
-      await apiResetStats();
+      setProfile(await apiResetStats());
       showToast("Your progress has been reset", "success");
       router.push("/mastery");
     } catch {

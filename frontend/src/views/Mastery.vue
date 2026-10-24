@@ -1,5 +1,5 @@
 <template>
-  <RequireProfile @loaded="user = $event">
+  <RequireProfile>
     <div class="card-style">
       <h1>Mastery</h1>
       <h3>
@@ -23,11 +23,10 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { computed } from "vue";
 import RequireProfile from "../components/RequireProfile.vue";
 import { LESSONS } from "../data/lessons.js";
-
-const user = ref(null);
+import { profile as user } from "../stores/profileStore";
 
 const completedLessons = computed(() => {
   const completed = (user.value && user.value.lessons_completed) || [];

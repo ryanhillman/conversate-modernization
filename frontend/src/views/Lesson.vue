@@ -1,5 +1,5 @@
 <template>
-  <RequireProfile @loaded="user = $event">
+  <RequireProfile>
     <div v-if="showCelebration" class="celebration">
       <div class="celebration-toast">🎉 Lesson Complete!</div>
       <span v-for="(c, i) in confetti" :key="i" class="confetti-piece" :style="c"></span>
@@ -81,6 +81,7 @@ import RequireProfile from "../components/RequireProfile.vue";
 import RichText from "../components/RichText.vue";
 import { LESSONS } from "../data/lessons";
 import { synthesizeSpeech } from "../api/tts";
+import { profile as user, setProfile } from "../stores/profileStore";
 import { showToast } from "../stores/toastStore";
 
 const lessons = LESSONS;
@@ -92,7 +93,6 @@ LESSONS.forEach((lesson) =>
   }),
 );
 
-const user = ref(null);
 const currentLessonId = ref(null);
 const showCelebration = ref(false);
 const confetti = ref([]);
@@ -135,7 +135,7 @@ async function markLessonComplete(lessonId) {
     completing.value = true;
     try {
       const data = await completeLesson(lessonId);
-      user.value = data;
+      setProfile(data);
       launchCelebration();
     } catch (err) {
       console.error("Failed to save lesson completion:", err);
