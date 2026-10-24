@@ -15,6 +15,7 @@
 
 ### Fixed
 - Made the "View leaderboard" button on the quiz results screen visible by switching from navy-on-navy to amber.
+- Removed the duplicate active-page marker from the phone menu.
 
 ## [1.0.0] - 2026-10-22
 
