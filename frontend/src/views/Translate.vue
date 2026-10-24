@@ -41,6 +41,7 @@
         <div>
           <textarea
             class="m-2 translate-textarea"
+            :lang="inputLanguage"
             rows="10"
             maxlength="5000"
             placeholder="Type here to translate…"
@@ -66,6 +67,7 @@
           </div>
           <textarea
             class="m-2 translate-textarea"
+            :lang="translatedTextLanguage"
             disabled
             v-model="translatedText"
             rows="10"
