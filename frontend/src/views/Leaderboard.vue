@@ -1,5 +1,5 @@
 <template>
-  <RequireProfile @loaded="user = $event">
+  <RequireProfile>
     <div class="text-center">
       <div class="card-style">
         <h2>Leaderboard</h2>
@@ -41,10 +41,10 @@
 import { ref, onMounted } from "vue";
 import RequireProfile from "../components/RequireProfile.vue";
 import { getLeaderboard } from "../api/leaderboard";
+import { profile as user } from "../stores/profileStore";
 import { showToast } from "../stores/toastStore";
 import { formatTime } from "../utils/formatTime";
 
-const user = ref(null);
 const rows = ref([]);
 const loading = ref(true);
 

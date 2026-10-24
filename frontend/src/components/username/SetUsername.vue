@@ -26,6 +26,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { createMe } from "../../api/users";
 import { useUsernameAvailability } from "../../composables/useUsernameAvailability";
+import { setProfile } from "../../stores/profileStore";
 import { showToast } from "../../stores/toastStore";
 
 const router = useRouter();
@@ -37,7 +38,7 @@ const saving = ref(false);
 async function saveUsername(name) {
   saving.value = true;
   try {
-    await createMe(name.trim());
+    setProfile(await createMe(name.trim()));
     showToast("Welcome to Conversate!", "success");
     router.push("/");
   } catch {
