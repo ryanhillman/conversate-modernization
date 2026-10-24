@@ -26,7 +26,7 @@ Thank you to everyone involved.
 
 ## Features
 
-Secure profile handling with the ability to link Google Accounts.
+Secure sign-in with Google or email through Auth0.
 
 Interactive grammar lessons and progress tracking.
 
@@ -45,20 +45,26 @@ Vocabulary quiz with user scores and times ranked on a leaderboard.
 - Flask-Migrate 4.1 + Alembic 1.18
 - Flask-SQLAlchemy 3.1
 - Flask-Limiter 4.1
-- PostgreSQL
+- httpx 0.28
+- PostgreSQL 18
 - Gunicorn 26.0
 - Docker
 
 **Frontend**
-- Vue.js 3
-- Vite 8.1
-- Vue Router 4
-- Bootstrap 5
+- Vue.js 3.5
+- Vite 8.3
+- Vue Router 4.6
+- Bootstrap 5.3
 - CSS
 
 **Authentication**
 - Auth0
 - PyJWT 2.15
+
+**Google Cloud**
+- Cloud Translation API
+- Text-to-Speech API
+- Speech-to-Text API
 
 ---
 
@@ -73,6 +79,8 @@ Create an Auth0 Single Page Application and an Auth0 API:
 - Add `http://localhost:3000` to Allowed Callback URLs, Logout URLs, and Web Origins.
 - API set an identifier (e.g. `https://conversate-api`) — this becomes the audience used by both frontend and backend.
 - Enable **Allow Offline Access** on the API, so refresh tokens are issued and expired sessions can silently renew instead of getting stuck.
+- Enable **Refresh Token Rotation** on the SPA; the frontend uses refresh tokens, and Auth0 only issues them to browser apps with rotation on.
+- Enable the **Refresh Token** grant type on the SPA (Advanced Settings → Grant Types), which rotation requires.
 
 Create `frontend/.env`:
 
