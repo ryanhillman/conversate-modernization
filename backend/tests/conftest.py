@@ -2,14 +2,15 @@ import base64
 import json
 import os
 import time
-import urllib.request
 
+import httpx
 import jwt
 import pytest
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 
 from conversate import auth as auth_module
+from conversate import google_api
 from conversate.app import create_app
 from conversate.extensions import db
 from conversate.models import User
@@ -136,50 +137,40 @@ def create_user(app):
     return _create
 
 
-class _FakeResponse:
-    def __init__(self, payload):
-        self._payload = json.dumps(payload).encode()
-
-    def read(self):
-        return self._payload
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, *args):
-        return False
-
-
 class _RecordedCall:
-    def __init__(self, req, timeout):
-        self.url = req.full_url
-        self.payload = json.loads(req.data)
-        # Header names go through urllib's Request.add_header(), which stores
-        # them capitalize()-cased ('Content-type', not 'Content-Type') —
-        # lowercase the keys here so callers don't have to know that.
-        self.headers = {k.lower(): v for k, v in req.header_items()}
-        self.timeout = timeout
+    def __init__(self, request):
+        self.url = str(request.url)
+        self.payload = json.loads(request.content)
+        self.headers = dict(request.headers)  # httpx lowercases header names
+        self.timeout = request.extensions.get('timeout')
 
 
 class GoogleApiStub:
-    """Monkeypatches urllib.request.urlopen and records every outbound call,
-    so tests can simulate a Google API response/failure and assert on what
-    the app actually sent (the key header, the request body)."""
+    """Swaps google_api's shared HTTP client for one backed by a mock
+    transport and records every outbound call, so tests can simulate a
+    Google API response/failure and assert on what the app actually sent
+    (the key header, the request body)."""
 
     def __init__(self, monkeypatch):
         self.calls = []
         self._response = None
+        self._status = 200
         self._error = None
-        monkeypatch.setattr(urllib.request, 'urlopen', self._urlopen)
+        client = httpx.Client(
+            transport=httpx.MockTransport(self._handle),
+            timeout=google_api.GOOGLE_API_TIMEOUT_SECONDS,
+        )
+        monkeypatch.setattr(google_api, '_client', client)
 
-    def _urlopen(self, req, timeout=None):
-        self.calls.append(_RecordedCall(req, timeout))
+    def _handle(self, request):
+        self.calls.append(_RecordedCall(request))
         if self._error is not None:
             raise self._error
-        return _FakeResponse(self._response)
+        return httpx.Response(self._status, json=self._response)
 
-    def respond(self, payload):
+    def respond(self, payload, status=200):
         self._response = payload
+        self._status = status
 
     def fail(self, error):
         self._error = error

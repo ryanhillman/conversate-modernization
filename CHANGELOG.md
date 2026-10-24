@@ -8,6 +8,7 @@
 ### Changed
 - Pages now reuse the loaded profile instead of re-fetching it on every visit.
 - Text-to-speech audio is cached, so replaying the same text doesn't call Google again.
+- Reused connections to Google's APIs instead of opening a new one per request.
 
 ### Fixed
 - Edited the navy-on-navy "View leaderboard" button on the quiz results screen.

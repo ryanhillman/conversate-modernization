@@ -1,4 +1,4 @@
-import urllib.error
+import httpx
 
 TTS = '/api/tts'
 
@@ -32,5 +32,5 @@ def test_synthesizes_successfully(client, auth_headers, google_stub):
 
 
 def test_upstream_failure_is_502(client, auth_headers, google_stub):
-    google_stub.fail(urllib.error.URLError('boom'))
+    google_stub.fail(httpx.ConnectError('boom'))
     assert client.post(TTS, json=VALID, headers=auth_headers()).status_code == 502
