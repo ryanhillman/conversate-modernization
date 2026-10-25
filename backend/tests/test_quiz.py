@@ -229,6 +229,16 @@ def test_submit_uses_the_accumulated_correct_count(client, auth_headers, create_
     assert response.get_json()['score'] == 3
 
 
+def test_quiz_times_are_stored_and_read_back_in_utc(client, auth_headers, create_user):
+    user = create_user()
+    client.post(START, headers=auth_headers())
+    client.post(PAUSE, headers=auth_headers())
+    attempt = _attempt_for(user.id)
+    for value in (attempt.started_at, attempt.paused_at):
+        assert value.utcoffset() == timedelta(0)
+        assert abs((utcnow() - value).total_seconds()) < 60
+
+
 def test_submit_consumes_the_attempt(client, auth_headers, create_user):
     user = create_user()
     client.post(START, headers=auth_headers())
