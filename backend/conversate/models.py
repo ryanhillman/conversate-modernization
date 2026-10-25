@@ -24,8 +24,8 @@ class User(db.Model):
             quiz_best_score.desc(),
             quiz_best_time_seconds,
             id,
-            postgresql_where=quiz_best_score.isnot(None),
-            sqlite_where=quiz_best_score.isnot(None),
+            postgresql_where=quiz_best_score.is_not(None),
+            sqlite_where=quiz_best_score.is_not(None),
         ),
     )
 

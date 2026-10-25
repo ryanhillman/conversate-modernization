@@ -1,6 +1,7 @@
 import re
 
 from flask import Blueprint, g, jsonify
+from sqlalchemy import delete, select
 from sqlalchemy.exc import IntegrityError
 
 from ..auth import require_auth
@@ -34,10 +35,10 @@ def _username_error(name):
 
 
 def _username_taken(name, exclude_id=None):
-    query = db.session.query(User.id).filter(db.func.lower(User.username) == name.lower())
+    query = select(User.id).where(db.func.lower(User.username) == name.lower())
     if exclude_id is not None:
-        query = query.filter(User.id != exclude_id)
-    return query.first() is not None
+        query = query.where(User.id != exclude_id)
+    return db.session.scalar(query.limit(1)) is not None
 
 
 def _validate_username(name, conflict_message, exclude_id=None):
@@ -104,7 +105,9 @@ def _lock_user_for_update(sub):
     # A separate function so tests can monkeypatch it to hold the lock open
     # (sleep before returning) and force a genuine, deterministic overlap
     # with a concurrent caller, instead of hoping real threads happen to race.
-    return db.session.query(User).filter(User.auth0_sub == sub).with_for_update().one_or_none()
+    return db.session.scalars(
+        select(User).where(User.auth0_sub == sub).with_for_update()
+    ).one_or_none()
 
 
 @accounts_bp.route('/api/me/lessons/<int:lesson_id>', methods=['POST'])
@@ -139,7 +142,7 @@ def reset_me(record):
     # An in-progress attempt must not survive a reset — submitting it
     # afterward would otherwise record a "new best" of whatever it had
     # scored so far (0, if nothing was answered yet).
-    db.session.query(QuizAttempt).filter(QuizAttempt.user_id == record.id).delete()
+    db.session.execute(delete(QuizAttempt).where(QuizAttempt.user_id == record.id))
     db.session.commit()
     return jsonify(record.serialize()), 200
 
@@ -150,7 +153,7 @@ def reset_me(record):
 def delete_me(record):
     # Removes everything the app stores about the user. Their Auth0 login
     # identity is separate and stays; signing in again starts a new profile.
-    db.session.query(QuizAttempt).filter(QuizAttempt.user_id == record.id).delete()
+    db.session.execute(delete(QuizAttempt).where(QuizAttempt.user_id == record.id))
     db.session.delete(record)
     db.session.commit()
     return '', 204

@@ -2,7 +2,7 @@ import random
 from datetime import timedelta
 
 from flask import Blueprint, jsonify
-from sqlalchemy import update
+from sqlalchemy import select, update
 from sqlalchemy.exc import IntegrityError
 
 from ..auth import require_auth
@@ -55,7 +55,9 @@ def _seconds_remaining(started_at, at_time=None):
 
 
 def _find_attempt(user_id):
-    return db.session.query(QuizAttempt).filter(QuizAttempt.user_id == user_id).one_or_none()
+    return db.session.scalars(
+        select(QuizAttempt).where(QuizAttempt.user_id == user_id)
+    ).one_or_none()
 
 
 @quiz_bp.route('/api/me/quiz/start', methods=['POST'])
@@ -224,16 +226,15 @@ def leaderboard():
     # Only the three columns the response uses, not whole User rows; the
     # filter and sort match ix_user_leaderboard, so Postgres can read the top
     # rows straight off the index instead of scanning and sorting the table.
-    users = (
-        db.session.query(User.username, User.quiz_best_score, User.quiz_best_time_seconds)
-        .filter(User.quiz_best_score.isnot(None))
+    users = db.session.execute(
+        select(User.username, User.quiz_best_score, User.quiz_best_time_seconds)
+        .where(User.quiz_best_score.is_not(None))
         # id as a final tiebreak: without it, two rows tied on both score and
         # time have no defined relative order, so the leaderboard could show
         # them in either order from one request to the next.
         .order_by(User.quiz_best_score.desc(), User.quiz_best_time_seconds.asc(), User.id.asc())
         .limit(100)
-        .all()
-    )
+    ).all()
     rows = [
         {
             'username': u.username,
