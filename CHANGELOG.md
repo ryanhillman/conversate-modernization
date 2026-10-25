@@ -33,6 +33,9 @@
 - Styled lesson buttons by class instead of element.
 - Renamed the user_name field to username in the API and database for naming consistency.
 - Updated README's How to Run: Docker database address, .env.example files, and Google Cloud billing.
+- Upgraded Vue Router to 5, Vitest to 5, and Auth0's Vue SDK to 2.11.
+- Upgraded SQLAlchemy to 2.1, Alembic to 1.20, and Gunicorn to 26.2, and switched the Postgres driver to psycopg 3.
+- Upgraded the GitHub Actions used in CI.
 
 ### Fixed
 - Made the "View leaderboard" button on the quiz results screen visible by switching from navy-on-navy to amber.
