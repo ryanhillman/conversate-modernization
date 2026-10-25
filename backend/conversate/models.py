@@ -1,9 +1,27 @@
-from datetime import datetime
+from datetime import UTC, datetime
 
-from sqlalchemy import JSON, ForeignKey, String, text
+from sqlalchemy import JSON, DateTime, ForeignKey, String, text
 from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.types import TypeDecorator
 
 from .extensions import db
+
+
+class UTCDateTime(TypeDecorator):
+    """A timezone-aware datetime, stored as UTC. Postgres keeps the timezone
+    (timestamptz); SQLite has no timezone type and returns values without
+    one, so they're marked UTC on the way back out."""
+
+    impl = DateTime(timezone=True)
+    cache_ok = True
+
+    def process_bind_param(self, value, dialect):
+        return value.astimezone(UTC) if value is not None else None
+
+    def process_result_value(self, value, dialect):
+        if value is not None and value.tzinfo is None:
+            return value.replace(tzinfo=UTC)
+        return value
 
 
 class User(db.Model):
@@ -55,11 +73,11 @@ class QuizAttempt(db.Model):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey('user.id'))
-    started_at: Mapped[datetime]
+    started_at: Mapped[datetime] = mapped_column(UTCDateTime)
     quiz_state: Mapped[list[dict]] = mapped_column(JSON)
     next_index: Mapped[int] = mapped_column(default=0)
     correct_count: Mapped[int] = mapped_column(default=0)
-    paused_at: Mapped[datetime | None]
+    paused_at: Mapped[datetime | None] = mapped_column(UTCDateTime)
     pauses_used: Mapped[int] = mapped_column(default=0)
 
     __table_args__ = (db.Index('uq_quiz_attempt_user_id', user_id, unique=True),)

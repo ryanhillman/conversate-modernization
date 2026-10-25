@@ -37,6 +37,4 @@ def resolve_me(f):
 
 
 def utcnow():
-    # Naive UTC, matching the naive DateTime column QuizAttempt.started_at is
-    # stored in and compared against.
-    return datetime.now(UTC).replace(tzinfo=None)
+    return datetime.now(UTC)
