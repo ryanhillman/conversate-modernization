@@ -40,6 +40,7 @@
 - Labeled the Translate text boxes and the username field for screen readers.
 - Made Escape close the profile menu.
 - Made the lesson Toggle buttons tell screen readers whether the lesson is open.
+- Announced answer results, lesson completion, and username errors to screen readers.
 - Made the Log out menu item's hover highlight visible.
 - Made the current page's text on the nav bar navy to match its underline.
 - Made the frontend fail with a clear message when its Auth0 settings are missing.

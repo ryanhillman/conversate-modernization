@@ -79,6 +79,7 @@ import { ref, computed, onBeforeUnmount } from "vue";
 import RequireProfile from "../components/RequireProfile.vue";
 import { startQuiz, answerQuiz, pauseQuiz, resumeQuiz, submitQuiz } from "../api/quiz";
 import { profile } from "../stores/profileStore";
+import { announce } from "../stores/announceStore";
 import { showToast } from "../stores/toastStore";
 import { formatTime } from "../utils/formatTime";
 
@@ -176,6 +177,7 @@ async function selectAnswer(choice) {
   try {
     const { correct } = await answerQuiz(currentIndex.value, choice);
     feedback.value = correct ? "correct" : "wrong";
+    announce(correct ? "Correct" : "Incorrect");
   } catch (err) {
     console.error("Failed to submit answer:", err);
     if (err.status === 409) {

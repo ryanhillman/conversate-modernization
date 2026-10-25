@@ -104,6 +104,7 @@ import RichText from "../components/RichText.vue";
 import { LESSONS } from "../data/lessons";
 import { synthesizeSpeech } from "../api/tts";
 import { profile as user, setProfile } from "../stores/profileStore";
+import { announce } from "../stores/announceStore";
 import { showToast } from "../stores/toastStore";
 
 const lessons = LESSONS;
@@ -145,6 +146,10 @@ function checkAnswers(lesson) {
   return lesson.questions.length > 0 && lesson.questions.every((q) => isCorrect(q));
 }
 function submitAnswer(question) {
+  // Enter followed by leaving the box submits twice; only announce the first.
+  if (!submitted[question.id] && isAnswered(question)) {
+    announce(isCorrect(question) ? "Correct" : "Incorrect");
+  }
   submitted[question.id] = true;
   checkCurrentLesson();
 }
@@ -167,6 +172,7 @@ async function markLessonComplete(lessonId) {
       const data = await completeLesson(lessonId);
       setProfile(data);
       launchCelebration();
+      announce("Lesson complete!");
     } catch (err) {
       console.error("Failed to save lesson completion:", err);
       showToast("Could not save your progress.", "error");
