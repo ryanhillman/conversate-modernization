@@ -41,6 +41,7 @@
 - Made Escape close the profile menu.
 - Made the Log out menu item's hover highlight visible.
 - Made the current page's text on the nav bar navy to match its underline.
+- Made the frontend fail with a clear message when its Auth0 settings are missing.
 
 ## [1.0.0] - 2026-10-22
 
