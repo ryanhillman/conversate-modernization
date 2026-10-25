@@ -1,6 +1,8 @@
 import threading
 from datetime import timedelta
 
+from sqlalchemy import select
+
 from conversate.api.common import utcnow
 from conversate.api.quiz import _build_quiz
 from conversate.extensions import db
@@ -15,7 +17,7 @@ LEADERBOARD = '/api/leaderboard'
 
 
 def _attempt_for(user_id):
-    return db.session.query(QuizAttempt).filter(QuizAttempt.user_id == user_id).one()
+    return db.session.scalars(select(QuizAttempt).where(QuizAttempt.user_id == user_id)).one()
 
 
 def test_build_quiz_choices_are_unique_and_include_the_correct_answer():
@@ -231,7 +233,10 @@ def test_submit_consumes_the_attempt(client, auth_headers, create_user):
     user = create_user()
     client.post(START, headers=auth_headers())
     client.post(SUBMIT, headers=auth_headers())
-    assert db.session.query(QuizAttempt).filter(QuizAttempt.user_id == user.id).count() == 0
+    assert (
+        db.session.scalars(select(QuizAttempt).where(QuizAttempt.user_id == user.id)).first()
+        is None
+    )
 
 
 def test_worse_resubmission_does_not_overwrite_a_better_best(client, auth_headers, create_user):

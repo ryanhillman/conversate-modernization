@@ -2,6 +2,7 @@ from datetime import UTC, datetime
 from functools import wraps
 
 from flask import g, jsonify, request
+from sqlalchemy import select
 
 from ..extensions import db
 from ..models import User
@@ -21,7 +22,7 @@ def str_field(body, key):
 
 
 def find_user(sub):
-    return db.session.query(User).filter(User.auth0_sub == sub).one_or_none()
+    return db.session.scalars(select(User).where(User.auth0_sub == sub)).one_or_none()
 
 
 def resolve_me(f):

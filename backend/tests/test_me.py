@@ -3,6 +3,7 @@ import threading
 import time
 
 import pytest
+from sqlalchemy import select
 
 from conversate.extensions import db
 from conversate.models import QuizAttempt, User
@@ -153,7 +154,7 @@ def test_concurrent_lesson_completions_do_not_lose_one(
         from conversate.extensions import db
         from conversate.models import User
 
-        refreshed = db.session.query(User).filter(User.id == user.id).one()
+        refreshed = db.session.scalars(select(User).where(User.id == user.id)).one()
         assert sorted(refreshed.lessons_completed) == [1, 2]
 
 
@@ -168,7 +169,10 @@ def test_reset_discards_an_in_progress_quiz_attempt(client, auth_headers, create
     client.post('/api/me/quiz/start', headers=auth_headers())
     client.post(ME + '/reset', headers=auth_headers())
 
-    assert db.session.query(QuizAttempt).filter(QuizAttempt.user_id == user.id).count() == 0
+    assert (
+        db.session.scalars(select(QuizAttempt).where(QuizAttempt.user_id == user.id)).first()
+        is None
+    )
     # Without the attempt, submitting can no longer record a bogus "new best".
     submit = client.post('/api/me/quiz/submit', headers=auth_headers())
     assert submit.status_code == 409
@@ -184,8 +188,11 @@ def test_delete_removes_the_account_and_any_quiz_attempt(client, auth_headers, c
     client.post('/api/me/quiz/start', headers=auth_headers())
 
     assert client.delete(ME, headers=auth_headers()).status_code == 204
-    assert db.session.query(User).filter(User.id == user_id).count() == 0
-    assert db.session.query(QuizAttempt).filter(QuizAttempt.user_id == user_id).count() == 0
+    assert db.session.scalars(select(User).where(User.id == user_id)).first() is None
+    assert (
+        db.session.scalars(select(QuizAttempt).where(QuizAttempt.user_id == user_id)).first()
+        is None
+    )
     # The profile is gone, so the app treats them as a new user.
     assert client.get(ME, headers=auth_headers()).status_code == 404
 
