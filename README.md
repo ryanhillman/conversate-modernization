@@ -82,7 +82,7 @@ Create an Auth0 Single Page Application and an Auth0 API:
 - Enable **Refresh Token Rotation** on the SPA; the frontend uses refresh tokens, and Auth0 only issues them to browser apps with rotation on.
 - Enable the **Refresh Token** grant type on the SPA (Advanced Settings → Grant Types), which rotation requires.
 
-Create `frontend/.env`:
+Copy `frontend/.env.example` to `frontend/.env` and fill in your values:
 
 ```
 VITE_AUTH0_DOMAIN=<your Auth0 domain>
@@ -97,13 +97,14 @@ Set the same domain/audience in `backend/.env` (`AUTH0_DOMAIN`, `AUTH0_AUDIENCE`
 Translation, text-to-speech, and speech-to-text call the Google Cloud APIs directly with a plain API key.
 
 - Create a project in Google Cloud Console.
+- Enable billing on the project; all three APIs require it, even within their free tiers.
 - Enable the Translation, Text-to-Speech, and Speech-to-Text APIs.
 - Create an API key (APIs & Services → Credentials).
 - Set it as `GOOGLE_CLOUD_API_KEY` in `backend/.env`.
 
 ### Backend
 
-Create `backend/.env`:
+Copy `backend/.env.example` to `backend/.env` and fill in your values:
 
 ```
 DATABASE_URL=postgresql://conversate:conversate@127.0.0.1:5432/conversate
@@ -135,6 +136,8 @@ python run.py  # macOS: if this fails to bind, disable AirPlay Receiver (System 
 ```bash
 docker build -t conversate-backend backend
 docker run -p 5000:5000 --env-file backend/.env conversate-backend
+# inside the container, 127.0.0.1 is the container itself — use host.docker.internal
+# instead of 127.0.0.1 in DATABASE_URL to reach the Postgres on your machine
 # migrations don't run automatically — run `flask --app run.py db upgrade` separately first
 ```
 
