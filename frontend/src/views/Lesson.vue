@@ -102,6 +102,7 @@ import { generateConfetti } from "../utils/confetti";
 import RequireProfile from "../components/RequireProfile.vue";
 import RichText from "../components/RichText.vue";
 import { LESSONS } from "../data/lessons";
+import { isAnswerCorrect, isLessonComplete, normalizeAnswer } from "../utils/grading";
 import { synthesizeSpeech } from "../api/tts";
 import { profile as user, setProfile } from "../stores/profileStore";
 import { announce } from "../stores/announceStore";
@@ -132,18 +133,11 @@ const currentLesson = computed(
 function selectLesson(lessonId) {
   currentLessonId.value = currentLessonId.value === lessonId ? null : lessonId;
 }
-function normalize(value) {
-  return (value || "").trim().toLowerCase();
-}
 function isAnswered(question) {
-  return normalize(answers[question.id]) !== "";
+  return normalizeAnswer(answers[question.id]) !== "";
 }
 function isCorrect(question) {
-  const value = normalize(answers[question.id]);
-  return value !== "" && question.correctAnswers.some((a) => normalize(a) === value);
-}
-function checkAnswers(lesson) {
-  return lesson.questions.length > 0 && lesson.questions.every((q) => isCorrect(q));
+  return isAnswerCorrect(answers[question.id], question.correctAnswers);
 }
 function submitAnswer(question) {
   // Enter followed by leaving the box submits twice; only announce the first.
@@ -155,7 +149,7 @@ function submitAnswer(question) {
 }
 function checkCurrentLesson() {
   const lesson = currentLesson.value;
-  if (lesson && checkAnswers(lesson)) {
+  if (lesson && isLessonComplete(lesson.questions, answers)) {
     markLessonComplete(lesson.id);
   }
 }
