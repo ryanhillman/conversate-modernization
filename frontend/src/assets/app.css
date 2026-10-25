@@ -47,6 +47,12 @@
 .nav-item.dropdown .dropdown-item:first-child:hover {
   background: inherit;
 }
+/* Bootstrap's default hover gray is nearly invisible on the white menu; use
+   its slightly darker gray. */
+.nav-item.dropdown .dropdown-item:hover,
+.nav-item.dropdown .dropdown-item:focus-visible {
+  background-color: var(--bs-gray-300);
+}
 .nav-item.dropdown .dropdown-item:last-child {
   border-bottom: 0;
 }
