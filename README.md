@@ -181,6 +181,50 @@ npm run format
 
 ---
 
+## API
+
+All `/api` endpoints require an Auth0 access token (`Authorization: Bearer <token>`).
+Translation and speech endpoints are limited to 30 requests per minute per user.
+
+### Account
+
+| Method | Path | Purpose |
+|---|---|---|
+| GET | `/api/me` | Get your profile and progress |
+| POST | `/api/me` | Create your profile with a username |
+| PUT | `/api/me` | Change your username |
+| DELETE | `/api/me` | Delete your profile and progress |
+| POST | `/api/me/lessons/<id>` | Mark a lesson complete |
+| POST | `/api/me/reset` | Reset your progress (keeps your username) |
+| GET | `/api/usernames/<username>` | Check whether a username is valid and available |
+
+### Quiz
+
+| Method | Path | Purpose |
+|---|---|---|
+| POST | `/api/me/quiz/start` | Start a timed quiz and get its questions |
+| POST | `/api/me/quiz/answer` | Answer the current question |
+| POST | `/api/me/quiz/pause` | Pause the quiz timer (once per quiz) |
+| POST | `/api/me/quiz/resume` | Resume the quiz timer |
+| POST | `/api/me/quiz/submit` | Finish the quiz and save a new best |
+| GET | `/api/leaderboard` | Top 100 quiz scores |
+
+### Translation & speech
+
+| Method | Path | Purpose |
+|---|---|---|
+| POST | `/api/translate` | Translate text between English and Italian |
+| POST | `/api/tts` | Turn text into speech |
+| POST | `/api/stt` | Turn recorded speech into text |
+
+### Health
+
+| Method | Path | Purpose |
+|---|---|---|
+| GET | `/health` | Health check (no token needed) |
+
+---
+
 ## Credits
 
 Icons by [Icons8](https://icons8.com).
