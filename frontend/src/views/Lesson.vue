@@ -17,7 +17,12 @@
       </span>
       <div class="lesson-row">
         <label :for="lesson.slug" class="lesson-label">{{ lesson.menuTitle }}: </label>
-        <button :id="lesson.slug" class="toggle-lesson-btn" @click="selectLesson(lesson.id)">
+        <button
+          :id="lesson.slug"
+          class="toggle-lesson-btn"
+          :aria-expanded="currentLessonId === lesson.id ? 'true' : 'false'"
+          @click="selectLesson(lesson.id)"
+        >
           Toggle lesson
         </button>
       </div>
