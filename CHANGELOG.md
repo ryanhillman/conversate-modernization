@@ -25,7 +25,6 @@
 - Showed the home page images in full instead of cropping.
 - Removed the gray box behind the Translate image.
 - Raised text, icon, and border contrast to meet WCAG minimums.
-- Marked Italian conjugations, quiz words, lesson answers, and Translate text with their language, so screen readers pronounce them correctly.
 - Prevented double-clicking a quiz answer from highlighting the footer logo.
 - Made the Translate mic and speaker buttons usable by keyboard and screen readers.
 - Labeled the Translate text boxes and the username field for screen readers.

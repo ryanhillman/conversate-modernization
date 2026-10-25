@@ -26,11 +26,9 @@
           </ul>
           <ul v-else-if="s.t === 'conj'" :key="'s' + si">
             <li v-for="(r, ri) in s.rows" :key="ri">
-              <span lang="it">{{ r[0] }}</span
-              >:
+              {{ r[0] }}:
               <span
                 class="speakable"
-                lang="it"
                 role="button"
                 tabindex="0"
                 @click="speak(r[1])"
@@ -51,7 +49,6 @@
               :id="question.id"
               :name="question.id"
               type="text"
-              lang="it"
               class="answer-input"
               v-model.trim="answers[question.id]"
               :class="{
