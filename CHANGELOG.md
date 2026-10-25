@@ -39,6 +39,7 @@
 - Made the Translate mic and speaker buttons usable by keyboard and screen readers.
 - Labeled the Translate text boxes and the username field for screen readers.
 - Made Escape close the profile menu.
+- Made the lesson Toggle buttons tell screen readers whether the lesson is open.
 - Made the Log out menu item's hover highlight visible.
 - Made the current page's text on the nav bar navy to match its underline.
 - Made the frontend fail with a clear message when its Auth0 settings are missing.
