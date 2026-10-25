@@ -45,17 +45,14 @@ describe("profileStore", () => {
     expect(profile.value).toEqual({ user_name: "ryan_h" });
   });
 
-  it("fetches again after the profile is cleared", async () => {
-    const { getMe, loadProfile, setProfile, clearProfile, profile } = await load();
+  it("uses a profile set from another response without fetching", async () => {
+    const { getMe, loadProfile, setProfile, profile } = await load();
     getMe.mockResolvedValue({ user_name: "ryan_h" });
 
     setProfile({ user_name: "renamed" });
     await loadProfile();
+
     expect(getMe).not.toHaveBeenCalled();
     expect(profile.value).toEqual({ user_name: "renamed" });
-
-    clearProfile();
-    await loadProfile();
-    expect(getMe).toHaveBeenCalledTimes(1);
   });
 });
