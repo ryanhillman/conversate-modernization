@@ -14,7 +14,7 @@
       <h3>Completed Lessons</h3>
       <ul v-if="completedLessons.length" class="completed-list">
         <li v-for="lesson in completedLessons" :key="lesson.id">
-          ✓ Lesson {{ lesson.id }}: {{ lesson.menuTitle }}
+          <span class="completed-check">✓</span> Lesson {{ lesson.id }}: {{ lesson.menuTitle }}
         </li>
       </ul>
       <p v-else>No lessons completed yet.</p>
@@ -46,6 +46,13 @@ const masteryPercent = computed(() =>
 
 .completed-list li {
   padding: 0.25rem 0;
+}
+
+/* Bootstrap's light green for text on dark backgrounds (5.4:1 on navy);
+   its regular greens are too dark on the navy card. */
+.completed-check {
+  color: #75b798;
+  font-weight: 700;
 }
 
 .mastery-bar {
