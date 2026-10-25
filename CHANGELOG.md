@@ -29,6 +29,7 @@
 - Prevented double-clicking a quiz answer from highlighting the footer logo.
 - Made the Translate mic and speaker buttons usable by keyboard and screen readers.
 - Labeled the Translate text boxes and the username field for screen readers.
+- Made Escape close the profile menu.
 
 ## [1.0.0] - 2026-10-22
 

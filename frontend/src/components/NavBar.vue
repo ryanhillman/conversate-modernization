@@ -98,6 +98,7 @@
               class="nav-link dropdown-toggle"
               href="#"
               id="profileDropDown"
+              ref="dropdownToggle"
               aria-haspopup="true"
               :aria-expanded="dropdownOpen ? 'true' : 'false'"
               @click.prevent="dropdownOpen = !dropdownOpen"
@@ -139,6 +140,7 @@ const route = useRoute();
 const navOpen = ref(false);
 const dropdownOpen = ref(false);
 const dropdown = ref(null);
+const dropdownToggle = ref(null);
 
 watch(
   () => route.fullPath,
@@ -154,11 +156,23 @@ function onDocumentClick(event) {
   }
 }
 
+// Escape closes the menu and returns focus to the profile picture that opened
+// it, the standard behavior for dropdown menus (and what Bootstrap's dropdown
+// JavaScript did before it was removed).
+function onDocumentKeydown(event) {
+  if (event.key === "Escape" && dropdownOpen.value) {
+    dropdownOpen.value = false;
+    dropdownToggle.value?.focus();
+  }
+}
+
 onMounted(() => {
   document.addEventListener("click", onDocumentClick);
+  document.addEventListener("keydown", onDocumentKeydown);
 });
 onBeforeUnmount(() => {
   document.removeEventListener("click", onDocumentClick);
+  document.removeEventListener("keydown", onDocumentKeydown);
 });
 
 function login() {
