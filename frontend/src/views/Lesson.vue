@@ -19,7 +19,7 @@
         <label :for="lesson.slug" class="lesson-label">{{ lesson.menuTitle }}: </label>
         <button
           :id="lesson.slug"
-          class="toggle-lesson-btn"
+          class="lesson-btn toggle-lesson-btn"
           :aria-expanded="currentLessonId === lesson.id ? 'true' : 'false'"
           @click="selectLesson(lesson.id)"
         >
@@ -81,12 +81,7 @@
           </div>
         </template>
         <div v-else-if="!isComplete(lesson.id)" class="complete-lesson">
-          <!-- Navy comes from this view's scoped `button` style, which overrides btn-success -->
-          <button
-            class="btn btn-success"
-            :disabled="completing"
-            @click="markLessonComplete(lesson.id)"
-          >
+          <button class="lesson-btn" :disabled="completing" @click="markLessonComplete(lesson.id)">
             Mark lesson complete
           </button>
         </div>
@@ -194,6 +189,34 @@ function launchCelebration() {
 </script>
 
 <style scoped>
+/* The navy, amber-on-hover buttons used throughout the lessons. */
+.lesson-btn {
+  padding: 0.5em 2em;
+  border: none;
+  border-radius: 8px;
+  margin: 0 0.3em 0.3em 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  color: white;
+  background-color: var(--brand-navy);
+  text-align: center;
+  transition: all 0.25s;
+}
+.lesson-btn:hover {
+  background-color: var(--brand-accent);
+  color: var(--text-color);
+}
+.lesson-btn:disabled {
+  opacity: 0.65;
+}
+@media all and (max-width: 30em) {
+  .lesson-btn {
+    display: block;
+    margin: 0.4em auto;
+  }
+}
 .individual-lesson {
   position: relative;
   border-radius: var(--radius);
@@ -240,7 +263,7 @@ function launchCelebration() {
   text-align: center;
   margin-top: 1.5rem;
 }
-.complete-lesson button {
+.complete-lesson .lesson-btn {
   margin-left: 0;
 }
 /* Mirrors .correct: Bootstrap's pale red, the form-error red border, and an X. */
@@ -393,29 +416,5 @@ function launchCelebration() {
   max-width: 40rem;
   color: white;
   background-color: var(--brand-navy);
-}
-button {
-  padding: 0.5em 2em;
-  border: none;
-  border-radius: 8px;
-  margin: 0 0.3em 0.3em 0;
-  box-sizing: border-box;
-  text-decoration: none;
-  font-family: "Poppins", sans-serif;
-  font-weight: 500;
-  color: white;
-  background-color: var(--brand-navy);
-  text-align: center;
-  transition: all 0.25s;
-}
-button:hover {
-  background-color: var(--brand-accent);
-  color: var(--text-color);
-}
-@media all and (max-width: 30em) {
-  button {
-    display: block;
-    margin: 0.4em auto;
-  }
 }
 </style>
