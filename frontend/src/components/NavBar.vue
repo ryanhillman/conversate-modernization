@@ -1,7 +1,7 @@
 <template>
   <div class="mb-3">
     <nav class="navbar navbar-expand-xl navbar-light bg-light">
-      <div class="container" :class="{ 'nav-guest': !$auth.isAuthenticated }">
+      <div class="container" :class="{ 'nav-guest': !isAuthenticated }">
         <div class="nav-side nav-left">
           <img src="/logo.png" alt="Conversate logo" width="100" height="100" />
         </div>
@@ -18,61 +18,57 @@
 
         <div id="navbarNav" class="collapse navbar-collapse" :class="{ show: navOpen }">
           <ul class="navbar-nav">
-            <li v-if="$auth.isAuthenticated" class="nav-item">
+            <li v-if="isAuthenticated" class="nav-item">
               <router-link to="/" class="nav-link"><span class="nav-label">Home</span></router-link>
             </li>
-            <li v-if="$auth.isAuthenticated" class="nav-item">
+            <li v-if="isAuthenticated" class="nav-item">
               <router-link to="/profile" class="nav-link"
                 ><span class="nav-label">Profile</span></router-link
               >
             </li>
-            <li v-if="$auth.isAuthenticated" class="nav-item">
+            <li v-if="isAuthenticated" class="nav-item">
               <router-link to="/mastery" class="nav-link"
                 ><span class="nav-label">Mastery</span></router-link
               >
             </li>
-            <li v-if="$auth.isAuthenticated" class="nav-item">
+            <li v-if="isAuthenticated" class="nav-item">
               <router-link to="/lesson" class="nav-link"
                 ><span class="nav-label">Lessons</span></router-link
               >
             </li>
-            <li v-if="$auth.isAuthenticated" class="nav-item">
+            <li v-if="isAuthenticated" class="nav-item">
               <router-link to="/translate" class="nav-link"
                 ><span class="nav-label">Translate</span></router-link
               >
             </li>
-            <li v-if="$auth.isAuthenticated" class="nav-item">
+            <li v-if="isAuthenticated" class="nav-item">
               <router-link to="/quiz" class="nav-link"
                 ><span class="nav-label">Quiz</span></router-link
               >
             </li>
-            <li v-if="$auth.isAuthenticated" class="nav-item">
+            <li v-if="isAuthenticated" class="nav-item">
               <router-link to="/leaderboard" class="nav-link"
                 ><span class="nav-label">Leaderboard</span></router-link
               >
             </li>
           </ul>
 
-          <ul class="navbar-nav d-xl-none" v-if="!$auth.isAuthenticated && !$auth.loading">
+          <ul class="navbar-nav d-xl-none" v-if="!isAuthenticated && !isLoading">
             <li class="nav-item">
               <button class="btn btn-primary w-100" @click="login">Log in</button>
             </li>
           </ul>
 
-          <ul
-            id="mobileAuthNavBar"
-            class="navbar-nav d-xl-none d-flex"
-            v-if="$auth.isAuthenticated"
-          >
+          <ul id="mobileAuthNavBar" class="navbar-nav d-xl-none d-flex" v-if="isAuthenticated">
             <li class="nav-item">
               <span class="user-info">
                 <img
-                  :src="$auth.user.picture"
+                  :src="user.picture"
                   alt="User's profile picture"
                   class="nav-user-profile d-inline-block rounded-circle me-3"
                   width="50"
                 />
-                <h6 class="d-inline-block">{{ $auth.user.name }}</h6>
+                <h6 class="d-inline-block">{{ user.name }}</h6>
               </span>
             </li>
 
@@ -84,12 +80,12 @@
         </div>
 
         <ul class="navbar-nav nav-side nav-right d-none d-xl-flex">
-          <li v-if="!$auth.isAuthenticated && !$auth.loading" class="nav-item">
+          <li v-if="!isAuthenticated && !isLoading" class="nav-item">
             <button class="btn btn-primary" @click.prevent="login">Log in</button>
           </li>
 
           <li
-            v-if="$auth.isAuthenticated"
+            v-if="isAuthenticated"
             ref="dropdown"
             class="nav-item dropdown"
             :class="{ show: dropdownOpen }"
@@ -104,7 +100,7 @@
               @click.prevent="dropdownOpen = !dropdownOpen"
             >
               <img
-                :src="$auth.user.picture"
+                :src="user.picture"
                 alt="User's profile picture"
                 class="nav-user-profile rounded-circle"
                 width="50"
@@ -115,7 +111,7 @@
               :class="{ show: dropdownOpen }"
               aria-labelledby="profileDropDown"
             >
-              <div class="dropdown-header">{{ $auth.user.name }}</div>
+              <div class="dropdown-header">{{ user.name }}</div>
               <a href="#" class="dropdown-item" @click.prevent="logout">
                 <Icon name="power-off" class="me-3" />Log out
               </a>
@@ -130,10 +126,12 @@
 <script setup>
 import { ref, watch, onMounted, onBeforeUnmount } from "vue";
 import { useRoute } from "vue-router";
+import { useAuth0 } from "@auth0/auth0-vue";
 import Icon from "./Icon.vue";
-import { useAuth } from "../composables/useAuth";
+import { logout } from "../auth";
 
-const auth = useAuth();
+const auth0 = useAuth0();
+const { isAuthenticated, isLoading, user } = auth0;
 const route = useRoute();
 
 const navOpen = ref(false);
@@ -174,13 +172,7 @@ onBeforeUnmount(() => {
 });
 
 function login() {
-  auth.loginWithRedirect();
-}
-// Logout leaves for Auth0 and comes back with a full page load, which resets
-// the profile store. Clearing it first would briefly show the username setup
-// form on the current page.
-function logout() {
-  auth.logout();
+  auth0.loginWithRedirect();
 }
 </script>
 
