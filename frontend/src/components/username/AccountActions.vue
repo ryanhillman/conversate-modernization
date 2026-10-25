@@ -7,8 +7,8 @@
       class="form-control mb-2 account-actions-field"
       maxlength="100"
     />
-    <p v-if="username && validationError" class="small mb-2">{{ validationError }}</p>
-    <p v-else-if="takenUsername" class="small mb-2">That username is taken</p>
+    <p v-if="username && validationError" class="form-error small mb-2">{{ validationError }}</p>
+    <p v-else-if="takenUsername" class="form-error small mb-2">That username is taken</p>
     <button
       class="btn btn-success mb-2 account-actions-field"
       @click.prevent="updateUsername(username)"
