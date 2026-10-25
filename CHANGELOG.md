@@ -39,6 +39,7 @@
 - Labeled the Translate text boxes and the username field for screen readers.
 - Made Escape close the profile menu.
 - Made the Log out menu item's hover highlight visible.
+- Made the current page's text on the nav bar navy to match its underline.
 
 ## [1.0.0] - 2026-10-22
 
