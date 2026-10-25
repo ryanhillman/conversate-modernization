@@ -23,6 +23,8 @@
 - Restyled completed lessons with a green check on the card's corner and a green title and Toggle button.
 - Put each lesson's title and Toggle button on one row.
 - Added spacing around opened lessons and practice answers.
+- Added red shading and an X icon on wrong answers in lesson text boxes.
+- Lesson answers are now checked when pressing Enter or leaving the text box, rather than while typing.
 
 ### Fixed
 - Made the "View leaderboard" button on the quiz results screen visible by switching from navy-on-navy to amber.
