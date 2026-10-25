@@ -48,19 +48,28 @@
             v-model="textToTranslate"
           ></textarea>
           <div class="m-3">
-            <Icon
+            <button
               v-if="micSupported && !busy"
+              type="button"
+              class="icon-button"
+              :aria-label="recording ? 'Stop recording' : 'Start recording'"
               @click="toggleRecording"
-              name="microphone"
-              class="icon-3x m-2"
-              :class="recording ? 'text-danger' : 'translate-icon'"
-            />
-            <Icon
+            >
+              <Icon
+                name="microphone"
+                class="icon-3x m-2"
+                :class="recording ? 'text-danger' : 'translate-icon'"
+              />
+            </button>
+            <button
               v-if="translatedText && !translatedTextTooLong && !busy"
+              type="button"
+              class="icon-button"
+              aria-label="Listen to translation"
               @click="startTextToSpeech"
-              name="volume-up"
-              class="icon-3x m-2 translate-icon"
-            />
+            >
+              <Icon name="volume-up" class="icon-3x m-2 translate-icon" />
+            </button>
             <p v-else-if="translatedTextTooLong" class="text-muted small m-2">
               Translation is too long to read aloud.
             </p>
@@ -243,6 +252,16 @@ async function startTextToSpeech() {
   max-width: 30rem;
   box-sizing: border-box;
   resize: none;
+}
+/* Real buttons, so the mic and speaker can be reached with Tab and used by
+   screen readers, but drawn as just the icon. The browser's focus outline
+   is kept so keyboard users can see which one is selected. */
+.icon-button {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
 }
 .translate-icon {
   color: var(--brand-navy);
