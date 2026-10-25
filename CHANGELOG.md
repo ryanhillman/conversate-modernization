@@ -32,6 +32,10 @@
 - Moved all global CSS into app.css.
 - Styled lesson buttons by class instead of element.
 - Removed the $auth compatibility layer left from the old Auth0 wrapper.
+- Fetched Auth0's signing keys with PyJWT's built-in client instead of custom code.
+- Switched database queries to SQLAlchemy 2.0's select() style.
+- Declared database columns with typed annotations.
+- Stored quiz times with their timezone (UTC).
 - Renamed the user_name field to username in the API and database for naming consistency.
 - Updated README's How to Run: Docker database address, .env.example files, and Google Cloud billing.
 - Upgraded Vue Router to 5, Vitest to 5, and Auth0's Vue SDK to 2.11.
