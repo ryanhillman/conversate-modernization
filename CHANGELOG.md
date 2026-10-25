@@ -28,6 +28,7 @@
 - Marked Italian conjugations, quiz words, lesson answers, and Translate text with their language, so screen readers pronounce them correctly.
 - Prevented double-clicking a quiz answer from highlighting the footer logo.
 - Made the Translate mic and speaker buttons usable by keyboard and screen readers.
+- Labeled the Translate text boxes and the username field for screen readers.
 
 ## [1.0.0] - 2026-10-22
 

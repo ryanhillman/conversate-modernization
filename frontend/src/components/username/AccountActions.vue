@@ -3,6 +3,7 @@
     <input
       v-model="username"
       placeholder="Edit username"
+      aria-label="New username"
       class="form-control mb-2 account-actions-field"
       maxlength="100"
     />
