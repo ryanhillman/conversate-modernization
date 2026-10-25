@@ -41,6 +41,7 @@
         <div>
           <textarea
             class="m-2 translate-textarea"
+            aria-label="Text to translate"
             :lang="inputLanguage"
             rows="10"
             maxlength="5000"
@@ -76,6 +77,7 @@
           </div>
           <textarea
             class="m-2 translate-textarea"
+            aria-label="Translation"
             :lang="translatedTextLanguage"
             disabled
             v-model="translatedText"
