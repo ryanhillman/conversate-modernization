@@ -1,5 +1,4 @@
-from conversate import auth as auth_module
-from conversate.auth import JwksUnavailable
+from urllib.error import URLError
 
 URL = '/api/me'
 
@@ -38,11 +37,13 @@ def test_large_clock_skew_in_the_future_is_401(client, auth_headers):
     assert client.get(URL, headers=headers).status_code == 401
 
 
-def test_jwks_unreachable_is_503_not_401(client, auth_headers, monkeypatch):
-    headers = auth_headers()
+def test_jwks_unreachable_is_503_not_401(client, auth_headers, stub_jwks):
+    stub_jwks.error = URLError('connection refused')
+    assert client.get(URL, headers=auth_headers()).status_code == 503
 
-    def unreachable(domain, force_refresh=False):
-        raise JwksUnavailable('connection refused')
 
-    monkeypatch.setattr(auth_module, '_get_jwks', unreachable)
-    assert client.get(URL, headers=headers).status_code == 503
+def test_unknown_key_ids_dont_refetch_keys_during_the_cooldown(client, auth_headers, stub_jwks):
+    for _ in range(3):
+        headers = auth_headers(kid='forged-key')
+        assert client.get(URL, headers=headers).status_code == 401
+    assert stub_jwks.fetches == 1

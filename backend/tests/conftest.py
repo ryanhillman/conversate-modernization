@@ -1,7 +1,9 @@
 import base64
+import io
 import json
 import os
 import time
+import urllib.request
 
 import httpx
 import jwt
@@ -67,12 +69,32 @@ def signing_key():
     return pem, jwk
 
 
+class JwksStub:
+    """Stands in for the HTTP opener PyJWKClient fetches Auth0's keys with,
+    so the client's own caching and cooldown still run. Serves the test
+    signing key and counts the fetches, or fails them like an unreachable
+    Auth0."""
+
+    def __init__(self, jwk):
+        self.jwk = jwk
+        self.fetches = 0
+        self.error = None
+
+    def open(self, request, timeout=None):
+        self.fetches += 1
+        if self.error is not None:
+            raise self.error
+        return io.BytesIO(json.dumps({'keys': [self.jwk]}).encode())
+
+
 @pytest.fixture(autouse=True)
 def stub_jwks(monkeypatch, signing_key):
     _, jwk = signing_key
-    monkeypatch.setattr(
-        auth_module, '_get_jwks', lambda domain, force_refresh=False: {'keys': [jwk]}
-    )
+    stub = JwksStub(jwk)
+    # Fresh clients per test, so no test sees keys another one cached.
+    monkeypatch.setattr(auth_module, '_jwks_clients', {})
+    monkeypatch.setattr(urllib.request, 'build_opener', lambda *handlers: stub)
+    return stub
 
 
 @pytest.fixture
@@ -101,7 +123,7 @@ def client(app):
 def make_token(signing_key):
     pem, _ = signing_key
 
-    def _make(sub='auth0|test', audience=TEST_AUDIENCE, issuer=ISSUER, iat_offset=0):
+    def _make(sub='auth0|test', audience=TEST_AUDIENCE, issuer=ISSUER, iat_offset=0, kid=KID):
         # An Auth0 API access token identifies the user by `sub`; it does not
         # carry email.
         now = int(time.time()) + iat_offset
@@ -112,7 +134,7 @@ def make_token(signing_key):
             'iat': now,
             'exp': now + 3600,
         }
-        return jwt.encode(claims, pem, algorithm='RS256', headers={'kid': KID})
+        return jwt.encode(claims, pem, algorithm='RS256', headers={'kid': kid})
 
     return _make
 
