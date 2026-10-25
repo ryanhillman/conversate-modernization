@@ -26,6 +26,7 @@
 - Added red shading and an X icon on wrong answers in lesson text boxes.
 - Lesson answers are now checked when pressing Enter or leaving the text box, rather than while typing.
 - Consistently used color tokens instead of hard-coded colors.
+- Moved all global CSS into app.css.
 
 ### Fixed
 - Made the "View leaderboard" button on the quiz results screen visible by switching from navy-on-navy to amber.
