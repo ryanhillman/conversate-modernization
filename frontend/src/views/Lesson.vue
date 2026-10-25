@@ -350,6 +350,7 @@ button {
 }
 button:hover {
   background-color: var(--brand-accent);
+  color: var(--text-color);
 }
 @media all and (max-width: 30em) {
   button {
