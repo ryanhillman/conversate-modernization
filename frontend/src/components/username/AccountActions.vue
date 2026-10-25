@@ -43,7 +43,7 @@ import {
 } from "../../api/users";
 import { useAuth } from "../../composables/useAuth";
 import { useUsernameAvailability } from "../../composables/useUsernameAvailability";
-import { setProfile, clearProfile } from "../../stores/profileStore";
+import { setProfile } from "../../stores/profileStore";
 import { showToast } from "../../stores/toastStore";
 
 const props = defineProps({
@@ -96,7 +96,6 @@ async function deleteAccount() {
     saving.value = true;
     try {
       await apiDeleteMe();
-      clearProfile();
       auth.logout();
     } catch {
       showToast("Could not delete your account.", "error");

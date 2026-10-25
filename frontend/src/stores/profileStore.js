@@ -28,7 +28,3 @@ export function loadProfile() {
 export function setProfile(data) {
   profile.value = data;
 }
-
-export function clearProfile() {
-  profile.value = null;
-}

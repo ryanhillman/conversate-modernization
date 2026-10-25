@@ -132,7 +132,6 @@ import { ref, watch, onMounted, onBeforeUnmount } from "vue";
 import { useRoute } from "vue-router";
 import Icon from "./Icon.vue";
 import { useAuth } from "../composables/useAuth";
-import { clearProfile } from "../stores/profileStore";
 
 const auth = useAuth();
 const route = useRoute();
@@ -177,8 +176,10 @@ onBeforeUnmount(() => {
 function login() {
   auth.loginWithRedirect();
 }
+// Logout leaves for Auth0 and comes back with a full page load, which resets
+// the profile store. Clearing it first would briefly show the username setup
+// form on the current page.
 function logout() {
-  clearProfile();
   auth.logout();
 }
 </script>
