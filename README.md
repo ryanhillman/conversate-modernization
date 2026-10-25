@@ -41,19 +41,19 @@ Vocabulary quiz with user scores and times ranked on a leaderboard.
 **Backend**
 - Python 3.14
 - Flask 3.1
-- SQLAlchemy 2.0
-- Flask-Migrate 4.1 + Alembic 1.18
+- SQLAlchemy 2.1
+- Flask-Migrate 4.1 + Alembic 1.20
 - Flask-SQLAlchemy 3.1
 - Flask-Limiter 4.1
 - httpx 0.28
 - PostgreSQL 18
-- Gunicorn 26.0
+- Gunicorn 26.2
 - Docker
 
 **Frontend**
 - Vue.js 3.5
 - Vite 8.3
-- Vue Router 4.6
+- Vue Router 5.4
 - Bootstrap 5.3
 - CSS
 
