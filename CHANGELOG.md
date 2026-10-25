@@ -5,6 +5,7 @@
 ### Added
 - Added GitHub Actions CI.
 - Added frontend unit tests with Vitest.
+- Added tests for lesson answer grading.
 - Added a Delete account option to the profile page.
 
 ### Changed
