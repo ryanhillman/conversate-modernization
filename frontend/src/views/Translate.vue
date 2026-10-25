@@ -270,6 +270,13 @@ async function startTextToSpeech() {
 .translate-icon:hover {
   color: var(--brand-navy-dark);
 }
+.icon-button .translate-icon {
+  transition: filter 0.15s ease;
+}
+.icon-button:hover .translate-icon,
+.icon-button:focus-visible .translate-icon {
+  filter: drop-shadow(0 0 6px rgba(224, 168, 46, 0.8));
+}
 .back-card {
   border-radius: var(--radius);
   box-shadow: var(--card-shadow);
