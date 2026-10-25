@@ -202,16 +202,58 @@ function logout() {
   color: var(--brand-navy);
 }
 .nav-label {
+  position: relative;
   display: inline-block;
   padding-bottom: 0.35rem;
   border-bottom: 3px solid transparent;
-  transition: border-color 0.15s ease;
+}
+/* Underline: grows out from the center on hover, and is always shown for the
+   current page. It sits over the label's transparent border. */
+.nav-label::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 3px;
+  background-color: var(--brand-navy);
+  transform: scaleX(0);
+  transition: transform 0.2s ease;
+}
+.nav-link:hover .nav-label::after,
+.nav-link:focus-visible .nav-label::after {
+  transform: scaleX(1);
+}
+/* The current page shows the same underline at full width, so both always
+   match exactly. */
+.router-link-active .nav-label::after {
+  transform: scaleX(1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-label::after {
+    transition: none;
+  }
+}
+/* Gold hover glow on Log in, like the home cards. Keyboard focus keeps
+   Bootstrap's own focus ring. */
+.navbar-nav .btn-primary {
+  transition: box-shadow 0.15s ease;
+}
+.navbar-nav .btn-primary:hover {
+  box-shadow: 0 0 12px rgba(224, 168, 46, 0.6);
+}
+/* Gold ring on the profile picture while hovered or while its menu is open. */
+#profileDropDown .nav-user-profile {
+  transition: box-shadow 0.15s ease;
+}
+#profileDropDown:hover .nav-user-profile,
+#profileDropDown[aria-expanded="true"] .nav-user-profile {
+  box-shadow:
+    0 0 0 3px rgba(224, 168, 46, 0.7),
+    0 0 10px rgba(224, 168, 46, 0.5);
 }
 .router-link-active {
   color: var(--brand-navy);
-}
-.router-link-active .nav-label {
-  border-bottom-color: var(--brand-navy);
 }
 @media (min-width: 1200px) {
   .container {

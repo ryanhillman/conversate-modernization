@@ -58,8 +58,17 @@ const cards = [
 .card-body {
   padding: 1.25rem 0.75rem;
 }
-.card:hover {
+.card:hover,
+.card:focus-within {
   transform: translateY(-6px);
+  box-shadow:
+    var(--card-shadow),
+    0 0 18px rgba(224, 168, 46, 0.55);
+}
+@media (prefers-reduced-motion: reduce) {
+  .cards > .card {
+    transition: none;
+  }
 }
 .card .btn-primary {
   display: block;
