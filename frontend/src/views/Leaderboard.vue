@@ -85,7 +85,7 @@ onMounted(async () => {
   color: white;
 }
 .leaderboard-you {
-  background-color: rgba(224, 168, 46, 0.18);
+  background-color: color-mix(in srgb, var(--brand-accent) 18%, transparent);
   font-weight: 600;
 }
 </style>

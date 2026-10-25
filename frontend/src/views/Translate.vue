@@ -275,7 +275,7 @@ async function startTextToSpeech() {
 }
 .icon-button:hover .translate-icon,
 .icon-button:focus-visible .translate-icon {
-  filter: drop-shadow(0 0 6px rgba(224, 168, 46, 0.8));
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--brand-accent) 80%, transparent));
 }
 .back-card {
   border-radius: var(--radius);
@@ -316,7 +316,7 @@ async function startTextToSpeech() {
 }
 .lang-select:focus {
   border-color: var(--brand-navy);
-  box-shadow: 0 0 0 3px rgba(224, 168, 46, 0.25);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-accent) 25%, transparent);
   outline: none;
 }
 </style>

@@ -240,7 +240,7 @@ function logout() {
   transition: box-shadow 0.15s ease;
 }
 .navbar-nav .btn-primary:hover {
-  box-shadow: 0 0 12px rgba(224, 168, 46, 0.6);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--brand-accent) 60%, transparent);
 }
 /* Gold ring on the profile picture while hovered or while its menu is open. */
 #profileDropDown .nav-user-profile {
@@ -249,8 +249,8 @@ function logout() {
 #profileDropDown:hover .nav-user-profile,
 #profileDropDown[aria-expanded="true"] .nav-user-profile {
   box-shadow:
-    0 0 0 3px rgba(224, 168, 46, 0.7),
-    0 0 10px rgba(224, 168, 46, 0.5);
+    0 0 0 3px color-mix(in srgb, var(--brand-accent) 70%, transparent),
+    0 0 10px color-mix(in srgb, var(--brand-accent) 50%, transparent);
 }
 .router-link-active {
   color: var(--brand-navy);
