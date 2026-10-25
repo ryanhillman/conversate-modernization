@@ -127,8 +127,8 @@ def auth_headers(make_token):
 
 @pytest.fixture
 def create_user(app):
-    def _create(sub='auth0|test', user_name='tester', lessons=None):
-        user = User(sub, user_name)
+    def _create(sub='auth0|test', username='tester', lessons=None):
+        user = User(sub, username)
         user.lessons_completed = [] if lessons is None else lessons
         db.session.add(user)
         db.session.commit()

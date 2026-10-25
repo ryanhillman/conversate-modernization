@@ -22,11 +22,11 @@
           <tbody>
             <tr
               v-for="(row, index) in rows"
-              :key="row.user_name"
-              :class="{ 'leaderboard-you': user && row.user_name === user.user_name }"
+              :key="row.username"
+              :class="{ 'leaderboard-you': user && row.username === user.username }"
             >
               <td>{{ index + 1 }}</td>
-              <td>{{ row.user_name }}</td>
+              <td>{{ row.username }}</td>
               <td>{{ row.score }}</td>
               <td>{{ formatTime(row.time_seconds) }}</td>
             </tr>

@@ -225,7 +225,7 @@ def leaderboard():
     # filter and sort match ix_user_leaderboard, so Postgres can read the top
     # rows straight off the index instead of scanning and sorting the table.
     users = (
-        db.session.query(User.user_name, User.quiz_best_score, User.quiz_best_time_seconds)
+        db.session.query(User.username, User.quiz_best_score, User.quiz_best_time_seconds)
         .filter(User.quiz_best_score.isnot(None))
         # id as a final tiebreak: without it, two rows tied on both score and
         # time have no defined relative order, so the leaderboard could show
@@ -236,7 +236,7 @@ def leaderboard():
     )
     rows = [
         {
-            'user_name': u.user_name,
+            'username': u.username,
             'score': u.quiz_best_score,
             'time_seconds': u.quiz_best_time_seconds,
         }
