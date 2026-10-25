@@ -61,9 +61,12 @@
               class="answer-input"
               v-model.trim="answers[question.id]"
               :class="{
-                correct: isCorrect(question),
-                wrong: isAnswered(question) && !isCorrect(question),
+                correct: submitted[question.id] && isCorrect(question),
+                wrong: submitted[question.id] && isAnswered(question) && !isCorrect(question),
               }"
+              @input="submitted[question.id] = false"
+              @keydown.enter="submitAnswer(question)"
+              @blur="submitAnswer(question)"
             />
           </div>
         </template>
@@ -83,7 +86,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch } from "vue";
+import { ref, reactive, computed } from "vue";
 import { completeLesson } from "../api/users";
 import { generateConfetti } from "../utils/confetti";
 import RequireProfile from "../components/RequireProfile.vue";
@@ -96,9 +99,13 @@ import { showToast } from "../stores/toastStore";
 const lessons = LESSONS;
 
 const answers = reactive({});
+// An answer is only marked right or wrong once it's submitted (Enter or
+// leaving the box), not while it's still being typed.
+const submitted = reactive({});
 LESSONS.forEach((lesson) =>
   lesson.questions.forEach((q) => {
     answers[q.id] = "";
+    submitted[q.id] = false;
   }),
 );
 
@@ -126,6 +133,10 @@ function isCorrect(question) {
 }
 function checkAnswers(lesson) {
   return lesson.questions.length > 0 && lesson.questions.every((q) => isCorrect(q));
+}
+function submitAnswer(question) {
+  submitted[question.id] = true;
+  checkCurrentLesson();
 }
 function checkCurrentLesson() {
   const lesson = currentLesson.value;
@@ -170,9 +181,6 @@ function launchCelebration() {
     showCelebration.value = false;
   }, 3200);
 }
-watch(answers, () => {
-  checkCurrentLesson();
-});
 </script>
 
 <style scoped>
@@ -225,9 +233,15 @@ watch(answers, () => {
 .complete-lesson button {
   margin-left: 0;
 }
+/* Mirrors .correct: Bootstrap's pale red, the form-error red border, and an X. */
 .wrong {
-  border-color: red;
+  border: 2px solid #b02a37;
   border-radius: 20px;
+  background-color: var(--bs-danger-bg-subtle);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23b02a37'%3E%3Cpath d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1.1rem;
 }
 .correct {
   border: 2px solid #1e7e34;
