@@ -157,8 +157,7 @@ function onDocumentClick(event) {
 }
 
 // Escape closes the menu and returns focus to the profile picture that opened
-// it, the standard behavior for dropdown menus (and what Bootstrap's dropdown
-// JavaScript did before it was removed).
+// it, the standard behavior for dropdown menus.
 function onDocumentKeydown(event) {
   if (event.key === "Escape" && dropdownOpen.value) {
     dropdownOpen.value = false;
