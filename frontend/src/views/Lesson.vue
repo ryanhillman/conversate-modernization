@@ -69,6 +69,11 @@
                 correct: submitted[question.id] && isCorrect(question),
                 wrong: submitted[question.id] && isAnswered(question) && !isCorrect(question),
               }"
+              :aria-invalid="
+                submitted[question.id] && isAnswered(question) && !isCorrect(question)
+                  ? 'true'
+                  : 'false'
+              "
               @input="submitted[question.id] = false"
               @keydown.enter="submitAnswer(question)"
               @blur="submitAnswer(question)"
