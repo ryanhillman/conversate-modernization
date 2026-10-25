@@ -235,7 +235,7 @@ function launchCelebration() {
 }
 /* Mirrors .correct: Bootstrap's pale red, the form-error red border, and an X. */
 .wrong {
-  border: 2px solid #b02a37;
+  border: 2px solid var(--danger-text);
   border-radius: 20px;
   background-color: var(--bs-danger-bg-subtle);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23b02a37'%3E%3Cpath d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/%3E%3C/svg%3E");
@@ -244,7 +244,7 @@ function launchCelebration() {
   background-size: 1.1rem;
 }
 .correct {
-  border: 2px solid #1e7e34;
+  border: 2px solid var(--success);
   border-radius: 20px;
   background-color: #e9f9ec;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231e7e34'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
@@ -268,7 +268,7 @@ function launchCelebration() {
   display: inline-block;
   color: var(--brand-navy);
   font-weight: 700;
-  background-color: rgba(224, 168, 46, 0.18);
+  background-color: color-mix(in srgb, var(--brand-accent) 18%, transparent);
   border-radius: 6px;
   border-bottom: 2px solid var(--brand-accent-dark);
   padding: 0.05em 0.5em;
@@ -278,7 +278,7 @@ function launchCelebration() {
     color 0.15s;
 }
 .speakable:hover {
-  background-color: rgba(224, 168, 46, 0.32);
+  background-color: color-mix(in srgb, var(--brand-accent) 32%, transparent);
   color: var(--brand-navy);
 }
 .celebration {
@@ -350,14 +350,14 @@ function launchCelebration() {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background-color: #1e7e34;
+  background-color: var(--success);
   color: white;
   font-weight: 700;
   box-shadow: var(--card-shadow);
 }
 .is-complete .lesson-label,
 .is-complete .toggle-lesson-btn:not(:hover) {
-  background-color: #1e7e34;
+  background-color: var(--success);
 }
 /* Title on the left, Toggle on the right, on one row (wrapping on narrow
    screens). */

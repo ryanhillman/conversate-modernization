@@ -63,7 +63,7 @@ const cards = [
   transform: translateY(-6px);
   box-shadow:
     var(--card-shadow),
-    0 0 18px rgba(224, 168, 46, 0.55);
+    0 0 18px color-mix(in srgb, var(--brand-accent) 55%, transparent);
 }
 @media (prefers-reduced-motion: reduce) {
   .cards > .card {

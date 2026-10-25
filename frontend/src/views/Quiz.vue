@@ -297,13 +297,13 @@ async function finish() {
     border-color 0.15s ease;
 }
 .quiz-choice-correct {
-  background-color: #1e7e34;
-  border-color: #1e7e34;
+  background-color: var(--success);
+  border-color: var(--success);
   color: white;
 }
 .quiz-choice-wrong {
-  background-color: #dc3545;
-  border-color: #dc3545;
+  background-color: var(--bs-danger);
+  border-color: var(--bs-danger);
   color: white;
 }
 .card-flip-enter-active,

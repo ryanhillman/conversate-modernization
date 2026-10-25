@@ -30,6 +30,8 @@ import Toast from "./components/Toast.vue";
   --brand-navy-dark: #0f2547;
   --brand-accent: #e0a82e;
   --brand-accent-dark: #c8901a;
+  --success: #1e7e34;
+  --danger-text: #b02a37;
   --page-bg: #d8dee8;
   --text-color: #1f2937;
   --text-muted: var(--bs-secondary-color);
@@ -127,7 +129,7 @@ h6 {
 
 /* Bootstrap's darker red: its main red fails contrast on the gray page. */
 .form-error {
-  color: #b02a37;
+  color: var(--danger-text);
 }
 
 .loading-state {

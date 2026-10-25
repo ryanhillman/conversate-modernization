@@ -36,10 +36,10 @@ const toasts = computed(() => toastState.toasts);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
 }
 .toast-success {
-  background-color: #1e7e34;
+  background-color: var(--success);
 }
 .toast-error {
-  background-color: #dc3545;
+  background-color: var(--bs-danger);
 }
 .toast-enter-active,
 .toast-leave-active {
