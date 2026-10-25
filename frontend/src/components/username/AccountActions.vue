@@ -46,7 +46,7 @@ import {
   resetStats as apiResetStats,
   deleteMe as apiDeleteMe,
 } from "../../api/users";
-import { useAuth } from "../../composables/useAuth";
+import { logout } from "../../auth";
 import { useUsernameAvailability } from "../../composables/useUsernameAvailability";
 import { setProfile } from "../../stores/profileStore";
 import { showToast } from "../../stores/toastStore";
@@ -57,7 +57,6 @@ const props = defineProps({
 const emit = defineEmits(["updated"]);
 
 const router = useRouter();
-const auth = useAuth();
 
 const username = ref("");
 const { checking, takenUsername, validationError } = useUsernameAvailability(username, {
@@ -101,7 +100,7 @@ async function deleteAccount() {
     saving.value = true;
     try {
       await apiDeleteMe();
-      auth.logout();
+      logout();
     } catch {
       showToast("Could not delete your account.", "error");
       saving.value = false;

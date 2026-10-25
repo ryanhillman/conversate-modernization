@@ -20,3 +20,10 @@ export const auth0 = createAuth0({
   cacheLocation: "localstorage",
   useRefreshTokens: true,
 });
+
+// Logout leaves for Auth0 and comes back with a full page load, which resets
+// the profile store. Clearing it first would briefly show the username setup
+// form on the current page.
+export function logout() {
+  auth0.logout({ logoutParams: { returnTo: window.location.origin } });
+}

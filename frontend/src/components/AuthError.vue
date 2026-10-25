@@ -7,15 +7,14 @@
 
 <script setup>
 import { ref, computed, watch } from "vue";
-import { useAuth } from "../composables/useAuth";
+import { useAuth0 } from "@auth0/auth0-vue";
 
-const auth = useAuth();
+const { error } = useAuth0();
 const dismissed = ref(false);
 
 const msg = computed(() => {
-  const error = auth.error;
-  if (!error) return "";
-  return error.message || String(error);
+  if (!error.value) return "";
+  return error.value.message || String(error.value);
 });
 
 watch(msg, () => {

@@ -31,6 +31,7 @@
 - Consistently used color tokens instead of hard-coded colors.
 - Moved all global CSS into app.css.
 - Styled lesson buttons by class instead of element.
+- Removed the $auth compatibility layer left from the old Auth0 wrapper.
 - Renamed the user_name field to username in the API and database for naming consistency.
 - Updated README's How to Run: Docker database address, .env.example files, and Google Cloud billing.
 - Upgraded Vue Router to 5, Vitest to 5, and Auth0's Vue SDK to 2.11.
