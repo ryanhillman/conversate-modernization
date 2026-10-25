@@ -31,6 +31,7 @@
 - Moved all global CSS into app.css.
 - Styled lesson buttons by class instead of element.
 - Renamed the user_name field to username in the API and database for naming consistency.
+- Updated README's How to Run: Docker database address, .env.example files, and Google Cloud billing.
 
 ### Fixed
 - Made the "View leaderboard" button on the quiz results screen visible by switching from navy-on-navy to amber.
