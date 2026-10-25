@@ -9,7 +9,7 @@ from conversate.models import QuizAttempt, User
 
 ME = '/api/me'
 
-VALID = {'user_name': 'tester'}
+VALID = {'username': 'tester'}
 
 
 def test_requires_a_token(client):
@@ -20,19 +20,19 @@ def test_requires_a_token(client):
 
 
 def test_create_stores_the_username(client, auth_headers):
-    response = client.post(ME, json={'user_name': 'tester'}, headers=auth_headers())
+    response = client.post(ME, json={'username': 'tester'}, headers=auth_headers())
     assert response.status_code == 201
-    assert response.get_json()['user_name'] == 'tester'
+    assert response.get_json()['username'] == 'tester'
 
 
-def test_create_rejects_a_non_string_user_name(client, auth_headers):
-    response = client.post(ME, json={'user_name': 123}, headers=auth_headers())
+def test_create_rejects_a_non_string_username(client, auth_headers):
+    response = client.post(ME, json={'username': 123}, headers=auth_headers())
     assert response.status_code == 400
 
 
 def test_create_rejects_a_duplicate(client, auth_headers, create_user):
-    create_user(sub='auth0|test', user_name='tester')
-    response = client.post(ME, json={'user_name': 'other'}, headers=auth_headers(sub='auth0|test'))
+    create_user(sub='auth0|test', username='tester')
+    response = client.post(ME, json={'username': 'other'}, headers=auth_headers(sub='auth0|test'))
     assert response.status_code == 409
 
 
@@ -43,15 +43,15 @@ def test_get_without_profile_is_404(client, auth_headers):
 def test_get_resolves_to_the_authenticated_user_not_just_any_user(
     client, auth_headers, create_user
 ):
-    create_user(sub='auth0|a', user_name='alice')
-    create_user(sub='auth0|b', user_name='bob')
+    create_user(sub='auth0|a', username='alice')
+    create_user(sub='auth0|b', username='bob')
     body = client.get(ME, headers=auth_headers(sub='auth0|b')).get_json()
-    assert body['user_name'] == 'bob'
+    assert body['username'] == 'bob'
 
 
 def test_reset_does_not_touch_another_users_record(client, auth_headers, create_user):
-    create_user(sub='auth0|a', user_name='alice', lessons=[1, 2])
-    create_user(sub='auth0|b', user_name='bob', lessons=[3, 4])
+    create_user(sub='auth0|a', username='alice', lessons=[1, 2])
+    create_user(sub='auth0|b', username='bob', lessons=[3, 4])
     client.post(ME + '/reset', headers=auth_headers(sub='auth0|b'))
     untouched = client.get(ME, headers=auth_headers(sub='auth0|a')).get_json()
     assert untouched['lessons_completed'] == [1, 2]
@@ -59,23 +59,23 @@ def test_reset_does_not_touch_another_users_record(client, auth_headers, create_
 
 def test_rename(client, auth_headers, create_user):
     create_user()
-    response = client.put(ME, json={'user_name': 'renamed'}, headers=auth_headers())
+    response = client.put(ME, json={'username': 'renamed'}, headers=auth_headers())
     assert response.status_code == 200
-    assert response.get_json()['user_name'] == 'renamed'
+    assert response.get_json()['username'] == 'renamed'
 
 
-def test_rename_rejects_a_non_string_user_name(client, auth_headers, create_user):
+def test_rename_rejects_a_non_string_username(client, auth_headers, create_user):
     create_user()
-    response = client.put(ME, json={'user_name': ['not', 'a', 'string']}, headers=auth_headers())
+    response = client.put(ME, json={'username': ['not', 'a', 'string']}, headers=auth_headers())
     assert response.status_code == 400
 
 
 def test_rename_to_a_taken_username_is_409(client, auth_headers, create_user):
-    create_user(sub='auth0|me', user_name='tester')
-    create_user(sub='auth0|other', user_name='taken')
+    create_user(sub='auth0|me', username='tester')
+    create_user(sub='auth0|other', username='taken')
     assert (
         client.put(
-            ME, json={'user_name': 'taken'}, headers=auth_headers(sub='auth0|me')
+            ME, json={'username': 'taken'}, headers=auth_headers(sub='auth0|me')
         ).status_code
         == 409
     )
@@ -191,8 +191,8 @@ def test_delete_removes_the_account_and_any_quiz_attempt(client, auth_headers, c
 
 
 def test_delete_does_not_touch_another_users_record(client, auth_headers, create_user):
-    create_user(sub='auth0|a', user_name='alice')
-    create_user(sub='auth0|b', user_name='bob')
+    create_user(sub='auth0|a', username='alice')
+    create_user(sub='auth0|b', username='bob')
 
     client.delete(ME, headers=auth_headers(sub='auth0|a'))
 

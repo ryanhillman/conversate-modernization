@@ -250,9 +250,9 @@ def test_worse_resubmission_does_not_overwrite_a_better_best(client, auth_header
 
 
 def test_leaderboard_ranks_score_then_breaks_ties_with_time(client, auth_headers, create_user):
-    a = create_user(sub='auth0|a', user_name='alice')
-    b = create_user(sub='auth0|b', user_name='bob')
-    c = create_user(sub='auth0|c', user_name='carla')
+    a = create_user(sub='auth0|a', username='alice')
+    b = create_user(sub='auth0|b', username='bob')
+    c = create_user(sub='auth0|c', username='carla')
     a.quiz_best_score, a.quiz_best_time_seconds = 40, 120
     b.quiz_best_score, b.quiz_best_time_seconds = 40, 60
     c.quiz_best_score, c.quiz_best_time_seconds = 45, 200
@@ -260,7 +260,7 @@ def test_leaderboard_ranks_score_then_breaks_ties_with_time(client, auth_headers
 
     body = client.get(LEADERBOARD, headers=auth_headers()).get_json()
 
-    names = [row['user_name'] for row in body]
+    names = [row['username'] for row in body]
     # carla: highest score, wins outright. Between alice/bob's tied score,
     # bob's faster time wins the tiebreak.
     assert names == ['carla', 'bob', 'alice']

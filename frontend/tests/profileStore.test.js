@@ -15,18 +15,18 @@ describe("profileStore", () => {
 
   it("fetches the profile once and reuses it", async () => {
     const { getMe, loadProfile, profile } = await load();
-    getMe.mockResolvedValue({ user_name: "ryan_h" });
+    getMe.mockResolvedValue({ username: "ryan_h" });
 
     await loadProfile();
     await loadProfile();
 
     expect(getMe).toHaveBeenCalledTimes(1);
-    expect(profile.value).toEqual({ user_name: "ryan_h" });
+    expect(profile.value).toEqual({ username: "ryan_h" });
   });
 
   it("shares one request between simultaneous loads", async () => {
     const { getMe, loadProfile } = await load();
-    getMe.mockResolvedValue({ user_name: "ryan_h" });
+    getMe.mockResolvedValue({ username: "ryan_h" });
 
     await Promise.all([loadProfile(), loadProfile(), loadProfile()]);
 
@@ -35,24 +35,24 @@ describe("profileStore", () => {
 
   it("retries after a failed load", async () => {
     const { getMe, loadProfile, profile } = await load();
-    getMe.mockRejectedValueOnce(new Error("down")).mockResolvedValue({ user_name: "ryan_h" });
+    getMe.mockRejectedValueOnce(new Error("down")).mockResolvedValue({ username: "ryan_h" });
 
     await expect(loadProfile()).rejects.toThrow("down");
     expect(profile.value).toBeNull();
     await loadProfile();
 
     expect(getMe).toHaveBeenCalledTimes(2);
-    expect(profile.value).toEqual({ user_name: "ryan_h" });
+    expect(profile.value).toEqual({ username: "ryan_h" });
   });
 
   it("uses a profile set from another response without fetching", async () => {
     const { getMe, loadProfile, setProfile, profile } = await load();
-    getMe.mockResolvedValue({ user_name: "ryan_h" });
+    getMe.mockResolvedValue({ username: "ryan_h" });
 
-    setProfile({ user_name: "renamed" });
+    setProfile({ username: "renamed" });
     await loadProfile();
 
     expect(getMe).not.toHaveBeenCalled();
-    expect(profile.value).toEqual({ user_name: "renamed" });
+    expect(profile.value).toEqual({ username: "renamed" });
   });
 });

@@ -4,19 +4,19 @@ from .extensions import db
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     auth0_sub = db.Column(db.String(255), nullable=False)
-    user_name = db.Column(db.String(100), nullable=False)
+    username = db.Column(db.String(100), nullable=False)
     lessons_completed = db.Column(
         db.JSON, nullable=False, default=list, server_default=db.text("'[]'")
     )
     quiz_best_score = db.Column(db.Integer, nullable=True)
     quiz_best_time_seconds = db.Column(db.Integer, nullable=True)
 
-    # Identity is the Auth0 subject, so that's the unique key. user_name is
+    # Identity is the Auth0 subject, so that's the unique key. username is
     # compared case-insensitively in the app, so it's enforced the same way in
     # the database.
     __table_args__ = (
         db.Index('uq_user_auth0_sub', auth0_sub, unique=True),
-        db.Index('uq_user_user_name_lower', db.func.lower(user_name), unique=True),
+        db.Index('uq_user_username_lower', db.func.lower(username), unique=True),
         # Matches the leaderboard's ORDER BY. Partial, because the leaderboard
         # only ever reads users who have a best score.
         db.Index(
@@ -29,14 +29,14 @@ class User(db.Model):
         ),
     )
 
-    def __init__(self, auth0_sub, user_name):
+    def __init__(self, auth0_sub, username):
         self.auth0_sub = auth0_sub
-        self.user_name = user_name
+        self.username = username
 
     def serialize(self):
         return {
             'id': self.id,
-            'user_name': self.user_name,
+            'username': self.username,
             'lessons_completed': self.lessons_completed or [],
             'quiz_best_score': self.quiz_best_score,
             'quiz_best_time_seconds': self.quiz_best_time_seconds,

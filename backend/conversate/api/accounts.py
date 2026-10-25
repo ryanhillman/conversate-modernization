@@ -23,18 +23,18 @@ MAX_LESSON_ID = 999
 
 def _username_error(name):
     if not name:
-        return 'user_name is required'
+        return 'username is required'
     if len(name) < MIN_USERNAME_LENGTH:
-        return f'user_name must be at least {MIN_USERNAME_LENGTH} characters'
+        return f'username must be at least {MIN_USERNAME_LENGTH} characters'
     if len(name) > MAX_USERNAME_LENGTH:
-        return f'user_name must be at most {MAX_USERNAME_LENGTH} characters'
+        return f'username must be at most {MAX_USERNAME_LENGTH} characters'
     if not _USERNAME_RE.match(name):
-        return 'user_name may only contain letters, numbers, and _ . -'
+        return 'username may only contain letters, numbers, and _ . -'
     return None
 
 
 def _username_taken(name, exclude_id=None):
-    query = db.session.query(User.id).filter(db.func.lower(User.user_name) == name.lower())
+    query = db.session.query(User.id).filter(db.func.lower(User.username) == name.lower())
     if exclude_id is not None:
         query = query.filter(User.id != exclude_id)
     return query.first() is not None
@@ -57,13 +57,13 @@ def create_me():
     body = json_body()
     if body is None:
         return jsonify(error='Request body must be a JSON object'), 400
-    user_name = str_field(body, 'user_name')
+    username = str_field(body, 'username')
     if find_user(sub) is not None:
         return jsonify(error='User already exists'), 409
-    error = _validate_username(user_name, 'user_name already exists')
+    error = _validate_username(username, 'username already exists')
     if error:
         return error
-    new_user = User(sub, user_name)
+    new_user = User(sub, username)
     db.session.add(new_user)
     try:
         db.session.commit()
@@ -87,16 +87,16 @@ def update_me(record):
     body = json_body()
     if body is None:
         return jsonify(error='Request body must be a JSON object'), 400
-    new_name = str_field(body, 'user_name')
-    error = _validate_username(new_name, 'user_name already exists', exclude_id=record.id)
+    new_name = str_field(body, 'username')
+    error = _validate_username(new_name, 'username already exists', exclude_id=record.id)
     if error:
         return error
-    record.user_name = new_name
+    record.username = new_name
     try:
         db.session.commit()
     except IntegrityError:
         db.session.rollback()
-        return jsonify(error='user_name already exists'), 409
+        return jsonify(error='username already exists'), 409
     return jsonify(record.serialize()), 200
 
 
@@ -156,11 +156,11 @@ def delete_me(record):
     return '', 204
 
 
-@accounts_bp.route('/api/usernames/<user_name>', methods=['GET'])
+@accounts_bp.route('/api/usernames/<username>', methods=['GET'])
 @require_auth
-def username_available(user_name):
-    user_name = user_name.strip()
-    name_error = _username_error(user_name)
+def username_available(username):
+    username = username.strip()
+    name_error = _username_error(username)
     if name_error:
         return jsonify(error=name_error), 400
-    return jsonify(available=not _username_taken(user_name)), 200
+    return jsonify(available=not _username_taken(username)), 200

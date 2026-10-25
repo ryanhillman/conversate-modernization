@@ -12,7 +12,7 @@
         <div class="col-md text-center text-md-start">
           <p class="mb-2"><strong>Name:</strong> {{ $auth.user.name }}</p>
           <p class="mb-2"><strong>Email:</strong> {{ $auth.user.email }}</p>
-          <p class="mb-2"><strong>Username:</strong> {{ user.user_name }}</p>
+          <p class="mb-2"><strong>Username:</strong> {{ user.username }}</p>
           <p class="mb-2">
             <strong>Best quiz score:</strong>
             {{ user.quiz_best_score ?? "—" }}
@@ -23,7 +23,7 @@
           </p>
         </div>
         <div class="col-md text-center text-md-start">
-          <AccountActions :current-username="user.user_name" @updated="setUser" />
+          <AccountActions :current-username="user.username" @updated="setUser" />
         </div>
       </div>
     </RequireProfile>

@@ -51,9 +51,9 @@ describe("api requests", () => {
   it("sends the access token and a JSON body", async () => {
     respond(200, { ok: true });
 
-    await expect(api("/api/me", { method: "PUT", body: { user_name: "ryan_h" } })).resolves.toEqual(
-      { ok: true },
-    );
+    await expect(api("/api/me", { method: "PUT", body: { username: "ryan_h" } })).resolves.toEqual({
+      ok: true,
+    });
     const [url, init] = fetchMock.mock.calls[0];
     expect(url).toMatch(/\/api\/me$/);
     expect(init.method).toBe("PUT");
@@ -61,7 +61,7 @@ describe("api requests", () => {
       Authorization: "Bearer token-123",
       "Content-Type": "application/json",
     });
-    expect(init.body).toBe('{"user_name":"ryan_h"}');
+    expect(init.body).toBe('{"username":"ryan_h"}');
   });
 
   it("times out after 10 seconds unless the caller sets a longer limit", async () => {
@@ -85,10 +85,10 @@ describe("api requests", () => {
   });
 
   it("throws the server's error message with the status", async () => {
-    respond(409, { error: "user_name already exists" });
+    respond(409, { error: "username already exists" });
 
     await expect(api("/api/me", { method: "PUT", body: {} })).rejects.toMatchObject({
-      message: "user_name already exists",
+      message: "username already exists",
       status: 409,
     });
   });
