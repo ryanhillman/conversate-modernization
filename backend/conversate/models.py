@@ -1,15 +1,20 @@
+from datetime import datetime
+
+from sqlalchemy import JSON, ForeignKey, String, text
+from sqlalchemy.orm import Mapped, mapped_column
+
 from .extensions import db
 
 
 class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    auth0_sub = db.Column(db.String(255), nullable=False)
-    username = db.Column(db.String(100), nullable=False)
-    lessons_completed = db.Column(
-        db.JSON, nullable=False, default=list, server_default=db.text("'[]'")
+    id: Mapped[int] = mapped_column(primary_key=True)
+    auth0_sub: Mapped[str] = mapped_column(String(255))
+    username: Mapped[str] = mapped_column(String(100))
+    lessons_completed: Mapped[list[int]] = mapped_column(
+        JSON, default=list, server_default=text("'[]'")
     )
-    quiz_best_score = db.Column(db.Integer, nullable=True)
-    quiz_best_time_seconds = db.Column(db.Integer, nullable=True)
+    quiz_best_score: Mapped[int | None] = mapped_column()
+    quiz_best_time_seconds: Mapped[int | None] = mapped_column()
 
     # Identity is the Auth0 subject, so that's the unique key. username is
     # compared case-insensitively in the app, so it's enforced the same way in
@@ -48,13 +53,13 @@ class QuizAttempt(db.Model):
     time for one user. Created by /api/me/quiz/start, consumed and deleted by
     /api/me/quiz/submit. Never serialized to the client."""
 
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    started_at = db.Column(db.DateTime, nullable=False)
-    quiz_state = db.Column(db.JSON, nullable=False)
-    next_index = db.Column(db.Integer, nullable=False, default=0)
-    correct_count = db.Column(db.Integer, nullable=False, default=0)
-    paused_at = db.Column(db.DateTime, nullable=True)
-    pauses_used = db.Column(db.Integer, nullable=False, default=0)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey('user.id'))
+    started_at: Mapped[datetime]
+    quiz_state: Mapped[list[dict]] = mapped_column(JSON)
+    next_index: Mapped[int] = mapped_column(default=0)
+    correct_count: Mapped[int] = mapped_column(default=0)
+    paused_at: Mapped[datetime | None]
+    pauses_used: Mapped[int] = mapped_column(default=0)
 
     __table_args__ = (db.Index('uq_quiz_attempt_user_id', user_id, unique=True),)
