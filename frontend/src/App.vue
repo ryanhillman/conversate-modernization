@@ -126,6 +126,11 @@ h6 {
   border-color: var(--bs-secondary);
 }
 
+/* Bootstrap's darker red: its main red fails contrast on the gray page. */
+.form-error {
+  color: #b02a37;
+}
+
 .loading-state {
   text-align: center;
   margin: 3rem auto;

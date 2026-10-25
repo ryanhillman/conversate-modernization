@@ -35,7 +35,7 @@
             </option>
           </select>
         </div>
-        <p v-if="sameLanguageOnBothSides" class="small m-2">
+        <p v-if="sameLanguageOnBothSides" class="form-error small m-2">
           Input and output language must be different.
         </p>
         <div>
