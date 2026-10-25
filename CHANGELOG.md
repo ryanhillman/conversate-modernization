@@ -20,6 +20,9 @@
 - Added an expanding navy underline to nav bar links while hovering.
 - Added a gold glow to the home cards, Translate mic and speaker, Log in button, and profile picture while hovering.
 - Colored the checkmarks on Mastery's completed lessons green.
+- Restyled completed lessons with a green check on the card's corner and a green title and Toggle button.
+- Put each lesson's title and Toggle button on one row.
+- Added spacing around opened lessons and practice answers.
 
 ### Fixed
 - Made the "View leaderboard" button on the quiz results screen visible by switching from navy-on-navy to amber.
