@@ -14,10 +14,13 @@
       {{ errorMessage }}
     </p>
     <br />
+    <!-- Busy buttons use aria-disabled, not disabled: a disabled button loses keyboard focus. -->
     <button
       class="btn btn-success"
+      :class="{ disabled: saving }"
       @click.prevent="saveUsername(username)"
-      :disabled="!!validationError || checking || saving || takenUsername"
+      :disabled="!!validationError || checking || takenUsername"
+      :aria-disabled="saving"
     >
       Save username
     </button>
@@ -40,6 +43,7 @@ const { checking, takenUsername, validationError, errorMessage } =
 const saving = ref(false);
 
 async function saveUsername(name) {
+  if (saving.value) return;
   saving.value = true;
   try {
     setProfile(await createMe(name.trim()));
