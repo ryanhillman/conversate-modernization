@@ -3,8 +3,8 @@ import { getMe } from "../api/users";
 
 // The signed-in user's profile, loaded once and shared by every view so that
 // moving between pages doesn't re-fetch it. Views that change the profile
-// (rename, lesson completion, reset, quiz submit) write the server's response
-// back here instead of triggering another GET /api/me.
+// (rename, lesson completion, reset, quiz submit) update it here instead of
+// triggering another GET /api/me.
 export const profile = ref(null);
 
 let pending = null;

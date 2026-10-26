@@ -1,7 +1,7 @@
 import { api } from "./http";
 
-// Must exceed the backend's worst case for this call (google_api.STT_TIMEOUT:
-// 8s connect + 8s write + 20s read), so the browser never gives up while the
+// Above the backend's timeouts for the Google call (google_api.STT_TIMEOUT:
+// 8s connect, 8s write, 20s read), so the browser doesn't give up while the
 // backend is still waiting on Google.
 const STT_TIMEOUT_MS = 40000;
 

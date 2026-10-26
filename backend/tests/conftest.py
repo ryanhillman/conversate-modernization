@@ -209,10 +209,9 @@ def google_stub(monkeypatch):
 
 @pytest.fixture
 def rate_limited_client(tmp_path):
-    # A dedicated app/client (own db, own user) with rate limiting left on,
-    # for the one test that needs it; the standard `app`/`client` fixtures
-    # disable it so the rest of the suite isn't order-dependent on shared
-    # hit counts. Separate from `create_user`, which is wired to `app`.
+    # A dedicated app/client (own db, own user) with rate limiting on, for the
+    # one test that needs it. Separate from `create_user`, which is wired to
+    # `app`.
     config = _TestConfig()
     config.RATELIMIT_ENABLED = True
     config.SQLALCHEMY_DATABASE_URI = os.environ.get(

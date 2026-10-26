@@ -29,7 +29,7 @@ MAX_PAUSE_CREDIT_SECONDS = 120
 def _build_quiz():
     words = list(QUIZ_WORDS)
     random.shuffle(words)
-    # Picking distractors independently per question lets popular words get
+    # Picking distractors independently per question lets some words get
     # drawn far more often than others by chance. Track how many times each
     # word has been used as a distractor and always draw from the
     # least-used ones, so usage stays balanced across the whole quiz instead
