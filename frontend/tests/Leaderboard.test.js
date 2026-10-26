@@ -12,7 +12,9 @@ vi.mock("../src/api/leaderboard", () => ({
 }));
 vi.mock("../src/api/users", () => ({ getMe: vi.fn() }));
 
+import { getLeaderboard } from "../src/api/leaderboard";
 import { setProfile } from "../src/stores/profileStore";
+import { toastState } from "../src/stores/toastStore";
 import Leaderboard from "../src/views/Leaderboard.vue";
 
 // Renders the page without loading a profile.
@@ -31,5 +33,27 @@ describe("Leaderboard", () => {
     const rows = wrapper.findAll("tbody tr");
     expect(rows[0].find(".visually-hidden").exists()).toBe(false);
     expect(rows[1].get(".visually-hidden").text()).toBe("(you)");
+  });
+
+  it("says when loading failed, instead of showing an empty leaderboard", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    getLeaderboard.mockRejectedValueOnce(new Error("down"));
+    toastState.toasts = [];
+    const wrapper = mount(Leaderboard, {
+      attachTo: document.body,
+      global: { stubs: { RequireProfile } },
+    });
+    await flushPromises();
+
+    expect(wrapper.text()).toContain("Could not load the leaderboard.");
+    expect(wrapper.text()).not.toContain("be the first");
+    expect(toastState.toasts).toEqual([]);
+
+    await wrapper.get("button").trigger("click");
+    await flushPromises();
+
+    expect(wrapper.findAll("tbody tr")).toHaveLength(2);
+    expect(document.activeElement).toBe(wrapper.get(".leaderboard-wrap").element.parentElement);
+    wrapper.unmount();
   });
 });
