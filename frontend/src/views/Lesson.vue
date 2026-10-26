@@ -66,26 +66,20 @@
             <label :for="question.id" class="question-label"
               ><RichText :text="question.prompt"
             /></label>
-            <input
-              :id="question.id"
-              :name="question.id"
-              type="text"
-              :lang="lesson.answerLang"
-              class="answer-input"
-              v-model.trim="answers[question.id]"
-              :class="{
-                correct: submitted[question.id] && isCorrect(question),
-                wrong: submitted[question.id] && isAnswered(question) && !isCorrect(question),
-              }"
-              :aria-invalid="
-                submitted[question.id] && isAnswered(question) && !isCorrect(question)
-                  ? 'true'
-                  : 'false'
-              "
-              @input="submitted[question.id] = false"
-              @keydown.enter="submitAnswer(question)"
-              @blur="submitAnswer(question)"
-            />
+            <span class="answer-field" :class="answerState(question)">
+              <input
+                :id="question.id"
+                :name="question.id"
+                type="text"
+                :lang="lesson.answerLang"
+                class="answer-input"
+                v-model.trim="answers[question.id]"
+                :aria-invalid="answerState(question) === 'wrong' ? 'true' : 'false'"
+                @input="submitted[question.id] = false"
+                @keydown.enter="submitAnswer(question)"
+                @blur="submitAnswer(question)"
+              />
+            </span>
           </div>
         </template>
         <div v-else-if="!isComplete(lesson.id)" class="complete-lesson">
@@ -142,6 +136,11 @@ function isAnswered(question) {
 }
 function isCorrect(question) {
   return isAnswerCorrect(answers[question.id], question.correctAnswers);
+}
+// "correct" or "wrong" once an answer is submitted, otherwise null.
+function answerState(question) {
+  if (!submitted[question.id] || !isAnswered(question)) return null;
+  return isCorrect(question) ? "correct" : "wrong";
 }
 function submitAnswer(question) {
   // Enter followed by leaving the box submits twice; only announce the first.
@@ -215,7 +214,7 @@ function launchCelebration() {
   text-decoration: none;
   font-family: "Poppins", sans-serif;
   font-weight: 500;
-  color: white;
+  color: var(--text-on-dark);
   background-color: var(--brand-navy);
   text-align: center;
   transition: all 0.25s;
@@ -255,7 +254,7 @@ function launchCelebration() {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
-  color: #fff;
+  color: var(--text-on-dark);
   padding-top: 2.5rem;
   padding-bottom: 2.5rem;
   background-color: var(--brand-navy);
@@ -273,11 +272,16 @@ function launchCelebration() {
 .question-label {
   margin-right: 0.75rem;
 }
+/* An input can't have ::after, so the check or X is drawn on this wrapper. */
+.answer-field {
+  position: relative;
+  display: inline-block;
+  margin: 2rem auto;
+}
 .answer-input {
   border-radius: 12px;
   box-shadow: var(--card-shadow);
   padding: 1rem;
-  margin: 2rem auto;
   max-width: 40rem;
 }
 .complete-lesson {
@@ -287,25 +291,39 @@ function launchCelebration() {
 .complete-lesson .lesson-btn {
   margin-left: 0;
 }
-/* Mirrors .correct: Bootstrap's pale red, the form-error red border, and an X. */
-.wrong {
+.answer-field.correct .answer-input {
+  border: 2px solid var(--success);
+  border-radius: 20px;
+  background-color: var(--success-bg);
+}
+.answer-field.wrong .answer-input {
   border: 2px solid var(--danger-text);
   border-radius: 20px;
   background-color: var(--bs-danger-bg-subtle);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23b02a37'%3E%3Cpath d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  background-size: 1.1rem;
 }
-.correct {
-  border: 2px solid var(--success);
-  border-radius: 20px;
-  background-color: #e9f9ec;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231e7e34'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.75rem center;
-  background-size: 1.1rem;
+.answer-field.correct {
   animation: correctPop 0.3s ease;
+}
+/* The SVG supplies only the shape; the color comes from the token. */
+.answer-field.correct::after,
+.answer-field.wrong::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: calc(0.75rem + 2px);
+  width: 1.1rem;
+  height: 1.1rem;
+  transform: translateY(-50%);
+  mask: no-repeat center / contain;
+  pointer-events: none;
+}
+.answer-field.correct::after {
+  background-color: var(--success);
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
+}
+.answer-field.wrong::after {
+  background-color: var(--danger-text);
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/%3E%3C/svg%3E");
 }
 @keyframes correctPop {
   0% {
@@ -364,13 +382,13 @@ function launchCelebration() {
   left: 50%;
   transform: translateX(-50%);
   background: var(--brand-navy);
-  color: #fff;
+  color: var(--text-on-dark);
   padding: 0.9rem 2rem;
   border-radius: 999px;
   font-family: "Poppins", sans-serif;
   font-weight: 600;
   font-size: 1.1rem;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--popup-shadow);
   animation:
     toastIn 0.4s ease,
     toastOut 0.4s ease 2.7s forwards;
@@ -405,7 +423,7 @@ function launchCelebration() {
   justify-content: center;
   border-radius: 50%;
   background-color: var(--success);
-  color: white;
+  color: var(--text-on-dark);
   font-weight: 700;
   box-shadow: var(--card-shadow);
 }
@@ -435,7 +453,7 @@ function launchCelebration() {
   padding: 1rem;
   margin: 1rem auto;
   max-width: 40rem;
-  color: white;
+  color: var(--text-on-dark);
   background-color: var(--brand-navy);
 }
 </style>

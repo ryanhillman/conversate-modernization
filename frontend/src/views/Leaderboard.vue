@@ -83,12 +83,12 @@ onMounted(async () => {
 .leaderboard-table td {
   padding: 0.75rem 1rem;
   text-align: center;
-  border-bottom: 1px solid #e5e9f0;
+  border-bottom: 1px solid var(--border-subtle);
   overflow-wrap: anywhere;
 }
 .leaderboard-table th {
   background-color: var(--brand-navy);
-  color: white;
+  color: var(--text-on-dark);
 }
 .leaderboard-you {
   background-color: color-mix(in srgb, var(--brand-accent) 18%, transparent);

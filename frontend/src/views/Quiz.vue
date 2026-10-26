@@ -299,10 +299,10 @@ async function finish() {
 .quiz-meta .btn-outline-primary {
   --bs-btn-color: var(--brand-navy);
   --bs-btn-border-color: var(--brand-navy);
-  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-color: var(--text-on-dark);
   --bs-btn-hover-bg: var(--brand-navy);
   --bs-btn-hover-border-color: var(--brand-navy);
-  --bs-btn-active-color: #fff;
+  --bs-btn-active-color: var(--text-on-dark);
   --bs-btn-active-bg: var(--brand-navy-dark);
   --bs-btn-active-border-color: var(--brand-navy-dark);
   --bs-btn-disabled-color: var(--brand-navy);
@@ -344,12 +344,12 @@ async function finish() {
 .quiz-choice-correct {
   background-color: var(--success);
   border-color: var(--success);
-  color: white;
+  color: var(--text-on-dark);
 }
 .quiz-choice-wrong {
   background-color: var(--bs-danger);
   border-color: var(--bs-danger);
-  color: white;
+  color: var(--text-on-dark);
 }
 .card-flip-enter-active,
 .card-flip-leave-active {
