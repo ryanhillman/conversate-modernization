@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { getMe } from "../api/users";
 
 // The signed-in user's profile, loaded once and shared by every view so that
@@ -6,6 +6,8 @@ import { getMe } from "../api/users";
 // (rename, lesson completion, reset, quiz submit) update it here instead of
 // triggering another GET /api/me.
 export const profile = ref(null);
+
+export const completedLessonIds = computed(() => profile.value?.lessons_completed ?? []);
 
 let pending = null;
 

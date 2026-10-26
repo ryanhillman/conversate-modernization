@@ -55,4 +55,12 @@ describe("profileStore", () => {
     expect(getMe).not.toHaveBeenCalled();
     expect(profile.value).toEqual({ username: "renamed" });
   });
+
+  it("lists completed lesson ids, or none before the profile loads", async () => {
+    const { setProfile, completedLessonIds } = await load();
+
+    expect(completedLessonIds.value).toEqual([]);
+    setProfile({ username: "ryan_h", lessons_completed: [1, 3] });
+    expect(completedLessonIds.value).toEqual([1, 3]);
+  });
 });
