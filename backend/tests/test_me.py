@@ -37,6 +37,36 @@ def test_create_rejects_a_duplicate(client, auth_headers, create_user):
     assert response.status_code == 409
 
 
+def test_create_losing_a_username_race_reports_the_username(
+    client, auth_headers, create_user, monkeypatch
+):
+    # Simulates another account claiming the name between this request's
+    # availability check and its commit: the check passes, and the database's
+    # unique index rejects the insert.
+    import conversate.api.accounts as accounts_module
+
+    create_user(sub='auth0|other', username='tester')
+    monkeypatch.setattr(accounts_module, '_validate_username', lambda *args, **kwargs: None)
+    response = client.post(ME, json={'username': 'TESTER'}, headers=auth_headers(sub='auth0|me'))
+    assert response.status_code == 409
+    assert response.get_json() == {'error': 'username already exists'}
+
+
+def test_create_losing_a_same_account_race_reports_the_account(
+    client, auth_headers, create_user, monkeypatch
+):
+    # Simulates this account's own concurrent create committing first: the
+    # existing-profile check passes, and the unique index on auth0_sub
+    # rejects the insert.
+    import conversate.api.accounts as accounts_module
+
+    create_user(sub='auth0|me', username='tester')
+    monkeypatch.setattr(accounts_module, 'find_user', lambda sub: None)
+    response = client.post(ME, json={'username': 'other'}, headers=auth_headers(sub='auth0|me'))
+    assert response.status_code == 409
+    assert response.get_json() == {'error': 'User already exists'}
+
+
 def test_get_without_profile_is_404(client, auth_headers):
     assert client.get(ME, headers=auth_headers()).status_code == 404
 
