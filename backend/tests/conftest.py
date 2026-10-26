@@ -10,6 +10,7 @@ import jwt
 import pytest
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
+from sqlalchemy.engine import make_url
 
 from conversate import auth as auth_module
 from conversate import google_api
@@ -26,7 +27,7 @@ KID = 'test-key'
 # Pointed at the app's own database by mistake, that wipes its data — refuse
 # to run rather than risk it.
 _test_db_url = os.environ.get('TEST_DATABASE_URL')
-if _test_db_url and not _test_db_url.rsplit('/', 1)[-1].endswith('_test'):
+if _test_db_url and not (make_url(_test_db_url).database or '').endswith('_test'):
     pytest.exit('TEST_DATABASE_URL must point at a database whose name ends in _test')
 
 
