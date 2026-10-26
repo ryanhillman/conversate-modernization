@@ -7,7 +7,7 @@
     <button class="btn btn-accent" @click="load">Try again</button>
   </div>
   <div v-else-if="profile">
-    <slot :user="profile" :set-user="setProfile" />
+    <slot />
   </div>
   <div v-else class="text-center">
     <SetUsername />
@@ -16,7 +16,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { profile, loadProfile, setProfile } from "../stores/profileStore";
+import { profile, loadProfile } from "../stores/profileStore";
 import { showToast } from "../stores/toastStore";
 import SetUsername from "./username/SetUsername.vue";
 
