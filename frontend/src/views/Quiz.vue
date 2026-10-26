@@ -70,6 +70,11 @@
         <p>Could not load the quiz.</p>
         <button class="btn btn-accent" @click="start">Try again</button>
       </div>
+
+      <div v-else-if="phase === 'saveError'" class="card-style">
+        <p>Could not save your result.</p>
+        <button class="btn btn-accent" @click="finish">Try again</button>
+      </div>
     </div>
   </RequireProfile>
 </template>
@@ -215,7 +220,7 @@ function preventDoubleClickSelection(event) {
 }
 
 async function finish() {
-  if (phase.value !== "active" && phase.value !== "paused") return;
+  if (!["active", "paused", "saveError"].includes(phase.value)) return;
   clearInterval(tickTimer);
   phase.value = "loading";
   try {
@@ -232,8 +237,14 @@ async function finish() {
     phase.value = "results";
   } catch (err) {
     console.error("Failed to submit quiz:", err);
-    showToast("Could not submit your quiz result.", "error");
-    phase.value = "error";
+    // 409: no quiz in progress, e.g. an earlier submit saved but its response
+    // was lost, so retrying can't help. Other failures may be temporary.
+    if (err.status === 409) {
+      showToast("This quiz is no longer in progress.", "error");
+      phase.value = "ready";
+    } else {
+      phase.value = "saveError";
+    }
   }
 }
 </script>
