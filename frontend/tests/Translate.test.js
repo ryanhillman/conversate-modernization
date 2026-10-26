@@ -46,4 +46,28 @@ describe("Translate", () => {
     expect(speaker.exists()).toBe(true);
     expect(speaker.attributes("disabled")).toBeDefined();
   });
+
+  it("says in text, not just color, that it's recording", async () => {
+    // jsdom has no microphone; stand in for one that records nothing.
+    vi.stubGlobal("navigator", {
+      mediaDevices: { getUserMedia: vi.fn().mockResolvedValue({ getTracks: () => [] }) },
+    });
+    vi.stubGlobal(
+      "MediaRecorder",
+      class {
+        static isTypeSupported = () => true;
+        addEventListener() {}
+        start() {}
+        stop() {}
+      },
+    );
+    const wrapper = mount(Translate, { global: { stubs: { RequireProfile } } });
+
+    await wrapper.get('[aria-label="Start recording"]').trigger("click");
+    await flushPromises();
+
+    expect(wrapper.text()).toContain("Recording…");
+    wrapper.unmount();
+    vi.unstubAllGlobals();
+  });
 });

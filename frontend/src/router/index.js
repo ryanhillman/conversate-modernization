@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { authGuard } from "@auth0/auth0-vue";
+import { clearErrorToasts } from "../stores/toastStore";
 import Home from "../views/Home.vue";
 
 const router = createRouter({
@@ -61,7 +62,9 @@ const router = createRouter({
 // default.
 router.beforeEach((to) => (to.meta.public ? true : authGuard(to)));
 
-router.afterEach((to) => {
+router.afterEach((to, from) => {
+  // An error toast is about the page it appeared on.
+  if (to.path !== from.path) clearErrorToasts();
   document.title = to.meta.title ? `${to.meta.title} | Conversate` : "Conversate";
 });
 

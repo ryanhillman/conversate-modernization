@@ -75,6 +75,9 @@
             <p v-else-if="translatedTextTooLong" class="text-muted small m-2">
               Translation is too long to read aloud.
             </p>
+            <p v-if="recording" class="small m-2">
+              Recording… select the microphone again to stop.
+            </p>
           </div>
           <textarea
             class="m-2 translate-textarea"
