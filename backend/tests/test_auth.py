@@ -1,4 +1,9 @@
+import logging
 from urllib.error import URLError
+
+import pytest
+
+from conversate import auth as auth_module
 
 URL = '/api/me'
 
@@ -16,9 +21,20 @@ def test_malformed_token_is_401(client):
     assert client.get(URL, headers=headers).status_code == 401
 
 
-def test_wrong_audience_is_401(client, auth_headers):
+def test_wrong_audience_is_401_and_logged(client, auth_headers, caplog):
     headers = auth_headers(audience='another-api')
-    assert client.get(URL, headers=headers).status_code == 401
+    with caplog.at_level(logging.INFO):
+        assert client.get(URL, headers=headers).status_code == 401
+    assert "Rejected token: Audience doesn't match" in caplog.text
+
+
+def test_a_bug_in_token_checking_is_not_reported_as_401(client, auth_headers, monkeypatch):
+    def broken():
+        raise RuntimeError('bug')
+
+    monkeypatch.setattr(auth_module, '_verify_token', broken)
+    with pytest.raises(RuntimeError):
+        client.get(URL, headers=auth_headers())
 
 
 def test_wrong_issuer_is_401(client, auth_headers):

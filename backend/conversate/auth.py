@@ -60,7 +60,8 @@ def require_auth(f):
         except PyJWKClientConnectionError as e:
             current_app.logger.warning('JWKS fetch failed: %s', e)
             return jsonify(error='Authentication service unavailable'), 503
-        except Exception:
+        except jwt.PyJWTError as e:
+            current_app.logger.info('Rejected token: %s', e)
             return jsonify(error='Unauthorized'), 401
         if claims is None or not claims.get('sub'):
             return jsonify(error='Unauthorized'), 401
