@@ -65,6 +65,7 @@
                 <img
                   :src="user.picture"
                   alt="User's profile picture"
+                  referrerpolicy="no-referrer"
                   class="nav-user-profile d-inline-block rounded-circle me-3"
                   width="50"
                 />
@@ -102,6 +103,7 @@
               <img
                 :src="user.picture"
                 alt="User's profile picture"
+                referrerpolicy="no-referrer"
                 class="nav-user-profile rounded-circle"
                 width="50"
               />

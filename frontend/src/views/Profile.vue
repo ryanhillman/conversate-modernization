@@ -6,6 +6,7 @@
           <img
             :src="authUser.picture"
             alt="User's profile picture"
+            referrerpolicy="no-referrer"
             class="rounded-circle img-fluid profile-picture"
           />
         </div>
