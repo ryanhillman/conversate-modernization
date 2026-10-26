@@ -74,112 +74,78 @@ Requires Python 3.14, Node 22, Docker, Auth0, and Google Cloud.
 
 ### Auth0
 
-Create an Auth0 Single Page Application and an Auth0 API:
+Create a Single Page Application and an API:
 
-- Add `http://localhost:3000` to Allowed Callback URLs, Logout URLs, and Web Origins.
-- API set an identifier (e.g. `https://conversate-api`) — this becomes the audience used by both frontend and backend.
-- Enable **Allow Offline Access** on the API, so refresh tokens are issued and expired sessions can silently renew instead of getting stuck.
-- Enable **Refresh Token Rotation** on the SPA; the frontend uses refresh tokens, and Auth0 only issues them to browser apps with rotation on.
-- Enable the **Refresh Token** grant type on the SPA (Advanced Settings → Grant Types), which rotation requires.
+- **SPA:** add `http://localhost:3000` to Allowed Callback URLs, Allowed Logout URLs, and Allowed Web Origins. Turn on **Refresh Token Rotation**, and the **Refresh Token** grant type (Advanced Settings → Grant Types).
+- **API:** set an identifier, e.g. `https://conversate-api`; it's the audience for both apps. Turn on **Allow Offline Access**, so expired sessions renew silently.
 
-Copy `frontend/.env.example` to `frontend/.env` and fill in your values:
+### Google Cloud
 
-```
-VITE_AUTH0_DOMAIN=<your Auth0 domain>
-VITE_AUTH0_CLIENT_ID=<your SPA client ID>
-VITE_AUTH0_AUDIENCE=<your API identifier>
-```
+In a project with billing enabled (required even within the free tiers), enable the Translation, Text-to-Speech, and Speech-to-Text APIs, and create an API key (APIs & Services → Credentials).
 
-Set the same domain/audience in `backend/.env` (`AUTH0_DOMAIN`, `AUTH0_AUDIENCE`).
+### Environment
 
-### Google Cloud API
-
-Translation, text-to-speech, and speech-to-text call the Google Cloud APIs directly with a plain API key.
-
-- Create a project in Google Cloud Console.
-- Enable billing on the project; all three APIs require it, even within their free tiers.
-- Enable the Translation, Text-to-Speech, and Speech-to-Text APIs.
-- Create an API key (APIs & Services → Credentials).
-- Set it as `GOOGLE_CLOUD_API_KEY` in `backend/.env`.
-
-### Backend
-
-Copy `backend/.env.example` to `backend/.env` and fill in your values:
-
-```
-DATABASE_URL=postgresql://conversate:conversate@127.0.0.1:5432/conversate
-AUTH0_DOMAIN=<your Auth0 domain>
-AUTH0_AUDIENCE=<your API identifier>
-GOOGLE_CLOUD_API_KEY=<your Google Cloud API key>
-DEBUG=False
+```bash
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
 ```
 
-Start a local Postgres (Docker):
+Fill in the Auth0 domain and audience (both files), the SPA client ID (frontend), and the Google API key (backend). The default `DATABASE_URL` matches the Postgres container below.
+
+### Run
 
 ```bash
 docker run -d --name conversate-postgres -p 5432:5432 -e POSTGRES_USER=conversate -e POSTGRES_PASSWORD=conversate -e POSTGRES_DB=conversate postgres:18
-```
 
-#### Start backend
-
-```bash
 cd backend
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 flask --app run.py db upgrade
-python run.py  # macOS: if this fails to bind, disable AirPlay Receiver (System Settings → General → AirDrop & Handoff) — it also uses port 5000
+python run.py  # http://localhost:5000
 ```
 
-#### Docker
-
-```bash
-docker build -t conversate-backend backend
-docker run -p 5000:5000 --env-file backend/.env conversate-backend
-# inside the container, 127.0.0.1 is the container itself — use host.docker.internal
-# instead of 127.0.0.1 in DATABASE_URL to reach the Postgres on your machine
-# migrations don't run automatically — run `flask --app run.py db upgrade` separately first
-```
-
-### Frontend
+In a second terminal:
 
 ```bash
 cd frontend
 npm install
-npm run dev
+npm run dev  # http://localhost:3000
 ```
+
+On macOS, if port 5000 is taken, turn off AirPlay Receiver (System Settings → General → AirDrop & Handoff).
+
+#### Backend in Docker (optional)
+
+```bash
+docker build -t conversate-backend backend
+docker run -p 5000:5000 --env-file backend/.env \
+  -e DATABASE_URL=postgresql://conversate:conversate@host.docker.internal:5432/conversate \
+  --add-host=host.docker.internal:host-gateway \
+  conversate-backend
+```
+
+Inside the container, `127.0.0.1` is the container itself, so it reaches Postgres through `host.docker.internal`; `--add-host` makes that name work on Linux too. The container doesn't run migrations; run `flask --app run.py db upgrade` first, as above.
 
 ### Tests
 
 ```bash
-cd backend
-pip install -r requirements-dev.txt
-pytest
+(cd backend && pip install -r requirements-dev.txt && pytest)
+(cd frontend && npm test)
 ```
 
-```bash
-cd frontend
-npm test
-```
-
-#### Postgres test
+To run the backend suite against Postgres, use a separate database whose name ends in `_test`; the suite drops its tables.
 
 ```bash
 docker exec conversate-postgres createdb -U conversate conversate_test
-# never point this at the app's own database — the suite drops its tables
-TEST_DATABASE_URL=postgresql://conversate:conversate@127.0.0.1:5432/conversate_test pytest
+(cd backend && TEST_DATABASE_URL=postgresql://conversate:conversate@127.0.0.1:5432/conversate_test pytest)
 ```
 
 ### Lint & format
 
 ```bash
-# Backend
-ruff check .
-ruff format .
-
-# Frontend
-npm run lint
-npm run format
+(cd backend && ruff check . && ruff format .)
+(cd frontend && npm run lint && npm run format)
 ```
 
 ---
