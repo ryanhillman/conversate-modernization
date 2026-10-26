@@ -19,6 +19,11 @@ const RequireProfile = {
 };
 
 describe("Lesson", () => {
+  it("titles the page with a heading", () => {
+    const wrapper = mount(Lesson, { global: { stubs: { RequireProfile } } });
+    expect(wrapper.get("h1").text()).toBe("Select any lesson to begin!");
+  });
+
   it("names each Toggle button with its visible text and the lesson title", () => {
     const wrapper = mount(Lesson, { global: { stubs: { RequireProfile } } });
     const button = wrapper.get(`#${LESSONS[0].slug}`);
