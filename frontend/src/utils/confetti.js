@@ -1,4 +1,10 @@
-const COLORS = ["#16335c", "#E0A82E", "#1e7e34", "#2c6df8", "#dc3545"];
+const COLORS = [
+  "var(--brand-navy)",
+  "var(--brand-accent)",
+  "var(--success)",
+  "var(--confetti-blue)",
+  "var(--bs-danger)",
+];
 
 export function generateConfetti(count = 60) {
   return Array.from({ length: count }, (_, i) => ({

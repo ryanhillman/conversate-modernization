@@ -43,10 +43,10 @@ const toasts = computed(() => toastState.toasts);
   max-width: 22rem;
   padding: 0.85rem 1.2rem;
   border-radius: 10px;
-  color: #fff;
+  color: var(--text-on-dark);
   font-family: "Poppins", sans-serif;
   font-weight: 500;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--popup-shadow);
 }
 .toast-success {
   background-color: var(--success);

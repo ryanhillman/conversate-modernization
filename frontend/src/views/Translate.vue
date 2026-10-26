@@ -8,32 +8,36 @@
         <div class="m-3">
           <label for="selectInputLanguage">Select Input Language</label>
           <br />
-          <select
-            id="selectInputLanguage"
-            v-model="inputLanguage"
-            name="selectInputLanguage"
-            class="form-select lang-select"
-            aria-label="Select input language"
-          >
-            <option v-for="language in languages" :key="language.code" :value="language.code">
-              {{ language.name }}
-            </option>
-          </select>
+          <span class="lang-select-wrap">
+            <select
+              id="selectInputLanguage"
+              v-model="inputLanguage"
+              name="selectInputLanguage"
+              class="form-select lang-select"
+              aria-label="Select input language"
+            >
+              <option v-for="language in languages" :key="language.code" :value="language.code">
+                {{ language.name }}
+              </option>
+            </select>
+          </span>
         </div>
         <div class="m-3">
           <label for="selectOutputLanguage">Select Output Language</label>
           <br />
-          <select
-            id="selectOutputLanguage"
-            v-model="outputLanguage"
-            name="selectOutputLanguage"
-            class="form-select lang-select"
-            aria-label="Select output language"
-          >
-            <option v-for="language in languages" :key="language.code" :value="language.code">
-              {{ language.name }}
-            </option>
-          </select>
+          <span class="lang-select-wrap">
+            <select
+              id="selectOutputLanguage"
+              v-model="outputLanguage"
+              name="selectOutputLanguage"
+              class="form-select lang-select"
+              aria-label="Select output language"
+            >
+              <option v-for="language in languages" :key="language.code" :value="language.code">
+                {{ language.name }}
+              </option>
+            </select>
+          </span>
         </div>
         <p v-if="sameLanguageOnBothSides" class="form-error small m-2">
           Input and output language must be different.
@@ -321,18 +325,34 @@ async function startTextToSpeech() {
   padding: 0.55rem 2.2rem 0.55rem 1rem;
   border: 1px solid var(--bs-secondary);
   border-radius: 8px;
-  background-color: #fff;
+  background-color: var(--card-bg);
   color: var(--text-color);
   font-family: "Poppins", sans-serif;
   font-weight: 500;
   cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6' fill='%2316335c'%3E%3Cpath d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.9rem center;
-  background-size: 0.7rem;
+  background-image: none;
   transition:
     border-color 0.15s,
     box-shadow 0.15s;
+}
+/* A select can't have ::after, so the arrow is drawn on this wrapper. The SVG
+   supplies only the shape; the color comes from the token. */
+.lang-select-wrap {
+  position: relative;
+  display: inline-block;
+}
+.lang-select-wrap::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: calc(0.9rem + 1px);
+  width: 0.7rem;
+  height: 0.42rem;
+  transform: translateY(-50%);
+  background-color: var(--brand-navy);
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z'/%3E%3C/svg%3E")
+    no-repeat center / contain;
+  pointer-events: none;
 }
 .lang-select:hover {
   border-color: var(--brand-accent);

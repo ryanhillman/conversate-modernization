@@ -49,15 +49,13 @@ const masteryPercent = computed(() =>
   padding: 0.25rem 0;
 }
 
-/* Bootstrap's light green for text on dark backgrounds (5.4:1 on navy);
-   its regular greens are too dark on the navy card. */
 .completed-check {
-  color: #75b798;
+  color: var(--success-on-dark);
   font-weight: 700;
 }
 
 .mastery-bar {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--track-on-dark);
   border-radius: 999px;
   height: 14px;
   max-width: 28rem;
