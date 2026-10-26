@@ -47,7 +47,16 @@ function fakeMicrophone() {
   return { getUserMedia, track, recorders, allow: () => grant() };
 }
 
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => {
+  vi.unstubAllGlobals();
+  vi.clearAllMocks();
+});
+
+// A busy button stays focusable (aria-disabled, not disabled).
+function expectBusy(button) {
+  expect(button.attributes("disabled")).toBeUndefined();
+  expect(button.attributes("aria-disabled")).toBe("true");
+}
 
 describe("Translate", () => {
   it("announces when both languages are the same", async () => {
@@ -78,19 +87,26 @@ describe("Translate", () => {
     expect(output.attributes("lang")).toBe("it");
   });
 
-  it("keeps the speaker button, disabled, while its audio loads", async () => {
-    translateText.mockResolvedValue({ translated_text: "ciao" });
+  it("keeps the busy Translate and Listen buttons focusable, ignoring clicks", async () => {
+    let finishTranslating;
+    translateText.mockReturnValueOnce(new Promise((resolve) => (finishTranslating = resolve)));
     synthesizeSpeech.mockReturnValue(new Promise(() => {}));
     const wrapper = mount(Translate, { global: { stubs: { RequireProfile } } });
     await wrapper.get("textarea").setValue("hello");
-    await wrapper.get(".btn-accent").trigger("click");
+
+    const translate = wrapper.get(".btn-accent");
+    await translate.trigger("click");
+    await translate.trigger("click");
+    expectBusy(translate);
+    expect(translateText).toHaveBeenCalledTimes(1);
+
+    finishTranslating({ translated_text: "ciao" });
     await flushPromises();
-
-    await wrapper.get('[aria-label="Listen to translation"]').trigger("click");
-
-    const speaker = wrapper.find('[aria-label="Listen to translation"]');
-    expect(speaker.exists()).toBe(true);
-    expect(speaker.attributes("disabled")).toBeDefined();
+    const listen = wrapper.get('[aria-label="Listen to translation"]');
+    await listen.trigger("click");
+    await listen.trigger("click");
+    expectBusy(listen);
+    expect(synthesizeSpeech).toHaveBeenCalledTimes(1);
   });
 
   it("says in text, not just color, that it's recording", async () => {
@@ -111,6 +127,7 @@ describe("Translate", () => {
     const button = wrapper.get('[aria-label="Start recording"]');
 
     await button.trigger("click");
+    expectBusy(button);
     await button.trigger("click");
     mic.allow();
     await flushPromises();

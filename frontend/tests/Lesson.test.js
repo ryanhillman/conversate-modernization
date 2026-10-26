@@ -68,6 +68,21 @@ describe("Lesson", () => {
     }
   });
 
+  it("keeps Mark lesson complete focusable while it saves", async () => {
+    const lesson = LESSONS.find((l) => !l.questions.length);
+    completeLesson.mockReturnValueOnce(new Promise(() => {}));
+    const wrapper = mount(Lesson, { global: { stubs: { RequireProfile } } });
+    await wrapper.get(`#${lesson.slug}`).trigger("click");
+
+    const button = wrapper.get(".complete-lesson button");
+    await button.trigger("click");
+    await button.trigger("click");
+
+    expect(button.attributes("disabled")).toBeUndefined();
+    expect(button.attributes("aria-disabled")).toBe("true");
+    expect(completeLesson).toHaveBeenCalledTimes(1);
+  });
+
   it("moves focus to the Toggle button once Mark lesson complete disappears", async () => {
     const lesson = LESSONS.find((l) => !l.questions.length);
     completeLesson.mockResolvedValue({ username: "ryan_h", lessons_completed: [lesson.id] });

@@ -83,7 +83,11 @@
           </div>
         </template>
         <div v-else-if="!isComplete(lesson.id)" class="complete-lesson">
-          <button class="lesson-btn" :disabled="completing" @click="completeWithButton(lesson)">
+          <button
+            class="lesson-btn"
+            :aria-disabled="completing"
+            @click="completeWithButton(lesson)"
+          >
             Mark lesson complete
           </button>
         </div>
@@ -223,7 +227,7 @@ function launchCelebration() {
   background-color: var(--brand-accent);
   color: var(--text-color);
 }
-.lesson-btn:disabled {
+.lesson-btn[aria-disabled="true"] {
   opacity: 0.65;
 }
 @media all and (max-width: 30em) {

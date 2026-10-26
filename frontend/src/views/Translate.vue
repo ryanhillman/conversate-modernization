@@ -53,11 +53,12 @@
             v-model="textToTranslate"
           ></textarea>
           <div class="m-3">
+            <!-- Busy buttons use aria-disabled, not disabled: a disabled button loses keyboard focus. -->
             <button
               v-if="micSupported"
               type="button"
               class="icon-button"
-              :disabled="busy || startingMic"
+              :aria-disabled="busy || startingMic"
               :aria-label="recording ? 'Stop recording' : 'Start recording'"
               @click="toggleRecording"
             >
@@ -71,7 +72,7 @@
               v-if="translatedText && !translatedTextTooLong"
               type="button"
               class="icon-button"
-              :disabled="busy"
+              :aria-disabled="busy"
               aria-label="Listen to translation"
               @click="startTextToSpeech"
             >
@@ -95,8 +96,10 @@
         </div>
         <br />
         <button
-          :disabled="!textToTranslate.trim() || sameLanguageOnBothSides || busy"
+          :disabled="!textToTranslate.trim() || sameLanguageOnBothSides"
+          :aria-disabled="busy"
           class="btn btn-accent m-3"
+          :class="{ disabled: busy }"
           @click="translateEnteredText()"
         >
           Translate
@@ -186,6 +189,7 @@ onBeforeUnmount(() => {
 });
 
 async function translateEnteredText() {
+  if (busy.value) return;
   busy.value = true;
   try {
     const { translated_text: result } = await translateText(
@@ -206,6 +210,7 @@ async function translateEnteredText() {
 }
 
 async function toggleRecording() {
+  if (busy.value) return;
   if (recording.value) {
     mediaRecorder.stop();
     return;
@@ -263,6 +268,7 @@ async function transcribeRecording() {
 }
 
 async function startTextToSpeech() {
+  if (busy.value) return;
   busy.value = true;
   try {
     const { audio_content } = await synthesizeSpeech(
@@ -309,11 +315,11 @@ async function startTextToSpeech() {
 .icon-button:focus-visible .translate-icon {
   filter: drop-shadow(0 0 6px color-mix(in srgb, var(--brand-accent) 80%, transparent));
 }
-.icon-button:disabled {
+.icon-button[aria-disabled="true"] {
   opacity: 0.5;
 }
-.icon-button:disabled,
-.icon-button:disabled .translate-icon {
+.icon-button[aria-disabled="true"],
+.icon-button[aria-disabled="true"] .translate-icon {
   cursor: default;
 }
 .back-card {

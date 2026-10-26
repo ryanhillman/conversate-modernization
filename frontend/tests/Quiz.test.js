@@ -125,6 +125,22 @@ describe("Quiz feedback", () => {
   });
 });
 
+describe("Quiz answers", () => {
+  it("stay focusable while an answer is checked, ignoring more clicks", async () => {
+    answerQuiz.mockReturnValue(new Promise(() => {}));
+    wrapper = await startQuizPage();
+
+    await wrapper.get(".quiz-choice").trigger("click");
+    await wrapper.findAll(".quiz-choice")[1].trigger("click");
+
+    for (const choice of wrapper.findAll(".quiz-choice")) {
+      expect(choice.attributes("disabled")).toBeUndefined();
+      expect(choice.attributes("aria-disabled")).toBe("true");
+    }
+    expect(answerQuiz).toHaveBeenCalledTimes(1);
+  });
+});
+
 describe("Quiz language", () => {
   it("marks the question word as Italian", async () => {
     wrapper = await startQuizPage();

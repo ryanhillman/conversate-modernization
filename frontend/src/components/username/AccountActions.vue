@@ -12,24 +12,29 @@
     <p v-if="errorMessage" id="edit-username-error" class="form-error small mb-2">
       {{ errorMessage }}
     </p>
+    <!-- Busy buttons use aria-disabled, not disabled: a disabled button loses keyboard focus. -->
     <button
       class="btn btn-success mb-2 account-actions-field"
+      :class="{ disabled: saving }"
       @click.prevent="updateUsername(username)"
-      :disabled="!!validationError || checking || saving || takenUsername"
+      :disabled="!!validationError || checking || takenUsername"
+      :aria-disabled="saving"
     >
       Update username
     </button>
     <button
       class="btn btn-warning mb-2 account-actions-field"
+      :class="{ disabled: saving }"
       @click.prevent="resetProgress()"
-      :disabled="saving"
+      :aria-disabled="saving"
     >
       Reset progress
     </button>
     <button
       class="btn btn-danger account-actions-field"
+      :class="{ disabled: saving }"
       @click.prevent="deleteAccount()"
-      :disabled="saving"
+      :aria-disabled="saving"
     >
       Delete account
     </button>
@@ -62,6 +67,7 @@ const { checking, takenUsername, validationError, errorMessage } = useUsernameAv
 const saving = ref(false);
 
 async function updateUsername(name) {
+  if (saving.value) return;
   saving.value = true;
   try {
     const data = await apiUpdateUsername(name.trim());
@@ -77,6 +83,7 @@ async function updateUsername(name) {
 }
 
 async function resetProgress() {
+  if (saving.value) return;
   if (confirm("Reset your progress?")) {
     saving.value = true;
     try {
@@ -92,6 +99,7 @@ async function resetProgress() {
 }
 
 async function deleteAccount() {
+  if (saving.value) return;
   if (confirm("Delete your account?")) {
     saving.value = true;
     try {

@@ -49,8 +49,8 @@
                 v-for="choice in currentQuestion.choices"
                 :key="choice"
                 class="btn btn-outline-primary quiz-choice"
-                :class="choiceClass(choice)"
-                :disabled="advancing"
+                :class="[choiceClass(choice), { disabled: advancing }]"
+                :aria-disabled="advancing"
                 @click="selectAnswer(choice)"
               >
                 <span v-if="choiceClass(choice)" aria-hidden="true">{{
