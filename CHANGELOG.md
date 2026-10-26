@@ -65,6 +65,7 @@
 - Kept Save disabled until the username availability check finishes, so a taken name can't be submitted by clicking quickly.
 - Stated the text-to-speech length limit in bytes, which is how it's measured, rather than characters.
 - Stopped rejecting out-of-order quiz answers as too fast.
+- Logged the reason the server rejects a login.
 
 ## [1.0.0] - 2026-10-22
 
