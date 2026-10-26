@@ -48,20 +48,15 @@ import {
 } from "../../api/users";
 import { logout } from "../../auth";
 import { useUsernameAvailability } from "../../composables/useUsernameAvailability";
-import { setProfile } from "../../stores/profileStore";
+import { profile, setProfile } from "../../stores/profileStore";
 import { showToast } from "../../stores/toastStore";
-
-const props = defineProps({
-  currentUsername: { type: String, default: "" },
-});
-const emit = defineEmits(["updated"]);
 
 const router = useRouter();
 
 const username = ref("");
 const { checking, takenUsername, validationError } = useUsernameAvailability(username, {
   skipAvailabilityCheck: (candidate) =>
-    candidate.toLowerCase() === props.currentUsername.trim().toLowerCase(),
+    candidate.toLowerCase() === (profile.value?.username ?? "").toLowerCase(),
 });
 const saving = ref(false);
 
@@ -72,7 +67,7 @@ async function updateUsername(name) {
     showToast("Username updated", "success");
     username.value = "";
     takenUsername.value = false;
-    emit("updated", data);
+    setProfile(data);
   } catch {
     showToast("Could not update username.", "error");
   } finally {

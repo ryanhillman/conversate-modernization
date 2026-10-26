@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <RequireProfile v-slot="{ user, setUser }">
+    <RequireProfile>
       <div class="row align-items-center profile-header">
         <div class="col-md-2 mb-3">
           <img
@@ -23,7 +23,7 @@
           </p>
         </div>
         <div class="col-md text-center text-md-start">
-          <AccountActions :current-username="user.username" @updated="setUser" />
+          <AccountActions />
         </div>
       </div>
     </RequireProfile>
@@ -34,8 +34,9 @@
 import { useAuth0 } from "@auth0/auth0-vue";
 import RequireProfile from "../components/RequireProfile.vue";
 import AccountActions from "../components/username/AccountActions.vue";
+import { profile as user } from "../stores/profileStore";
 import { formatTime } from "../utils/formatTime";
 
-// Named apart from the slot's user, which is the Conversate profile.
+// Named apart from user, the Conversate profile.
 const { user: authUser } = useAuth0();
 </script>

@@ -12,6 +12,7 @@
 
 ### Changed
 - Made pages reuse the loaded profile instead of fetching it on every visit.
+- Made the profile page read and update the shared profile store directly.
 - Cached text-to-speech audio, so replaying the same text doesn't call Google again.
 - Reused connections to Google's APIs instead of opening a new one for every request.
 - Kept idle connections to Google open for 60 seconds instead of 5.
