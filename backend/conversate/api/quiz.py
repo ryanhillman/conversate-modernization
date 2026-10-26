@@ -113,12 +113,12 @@ def answer_quiz(record):
         return jsonify(error='Quiz is paused; call /api/me/quiz/resume first'), 409
     if _seconds_remaining(attempt.started_at) <= 0:
         return jsonify(error='Time is up; call /api/me/quiz/submit'), 409
-    if (utcnow() - attempt.started_at).total_seconds() < index * MIN_SECONDS_PER_ANSWER:
-        return jsonify(error='Answering too fast'), 429
     if attempt.next_index >= len(attempt.quiz_state):
         return jsonify(error='All questions have already been answered'), 409
     if index != attempt.next_index:
         return jsonify(error='index does not match the current question'), 409
+    if (utcnow() - attempt.started_at).total_seconds() < index * MIN_SECONDS_PER_ANSWER:
+        return jsonify(error='Answering too fast'), 429
 
     correct = body.get('answer') == attempt.quiz_state[index]['correct']
 
