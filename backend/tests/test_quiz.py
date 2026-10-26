@@ -69,11 +69,8 @@ def test_concurrent_first_starts_returns_409_not_500(
 
 
 def test_answer_out_of_order_is_409(client, auth_headers, create_user):
-    user = create_user()
+    create_user()
     client.post(START, headers=auth_headers())
-    attempt = _attempt_for(user.id)
-    attempt.started_at = utcnow() - timedelta(seconds=10)
-    db.session.commit()
     response = client.post(ANSWER, json={'index': 1, 'answer': 'x'}, headers=auth_headers())
     assert response.status_code == 409
 
