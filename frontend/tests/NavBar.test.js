@@ -25,4 +25,14 @@ describe("NavBar", () => {
     expect(wrapper.find("h1, h2, h3, h4, h5, h6").exists()).toBe(false);
     expect(wrapper.get(".nav-user-name").text()).toBe("Ryan Hillman");
   });
+
+  it("loads profile pictures without a referrer, which Google requires", () => {
+    const wrapper = mount(NavBar, { global: { stubs: { RouterLink: true } } });
+    const pictures = wrapper.findAll(".nav-user-profile");
+
+    expect(pictures).toHaveLength(2);
+    for (const picture of pictures) {
+      expect(picture.attributes("referrerpolicy")).toBe("no-referrer");
+    }
+  });
 });

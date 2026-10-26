@@ -39,10 +39,15 @@
 .navbar-nav .btn {
   min-width: 145px;
 }
+/* Google serves profile pictures only without a referrer, hence
+   referrerpolicy="no-referrer" on each. Square boxes keep them round even if
+   one fails to load. */
 .nav-user-profile {
   border-radius: 50% 50%;
   max-width: 3.785rem;
   height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
   box-shadow: 0 0 4px 0 var(--bs-gray-500);
 }
 .nav-item.dropdown .dropdown-toggle {
@@ -131,6 +136,8 @@ footer {
   margin-bottom: 3rem;
 }
 .profile-header .profile-picture {
+  aspect-ratio: 1;
+  object-fit: cover;
   box-shadow: 0 0 4px 0 var(--bs-gray-500);
   margin-bottom: 1.5rem;
 }
