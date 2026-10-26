@@ -8,62 +8,81 @@
       <div v-if="loading" class="loading-state">
         <p>Loading…</p>
       </div>
-      <p v-else-if="!rows.length" class="text-muted">No quiz results yet — be the first!</p>
-      <div v-else class="leaderboard-wrap">
-        <table class="leaderboard-table">
-          <thead>
-            <tr>
-              <th>Rank</th>
-              <th>Player</th>
-              <th>Correct</th>
-              <th>Time</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="(row, index) in rows"
-              :key="row.username"
-              :class="{ 'leaderboard-you': isYou(row) }"
-            >
-              <td>{{ index + 1 }}</td>
-              <td>
-                {{ row.username }}<span v-if="isYou(row)" class="visually-hidden"> (you)</span>
-              </td>
-              <td>{{ row.score }}</td>
-              <td>{{ formatTime(row.time_seconds) }}</td>
-            </tr>
-          </tbody>
-        </table>
+      <div v-else-if="loadFailed" class="card-style">
+        <p>Could not load the leaderboard.</p>
+        <button ref="retryButton" class="btn btn-accent" @click="retry">Try again</button>
+      </div>
+      <div v-else ref="results" tabindex="-1">
+        <p v-if="!rows.length" class="text-muted">No quiz results yet — be the first!</p>
+        <div v-else class="leaderboard-wrap">
+          <table class="leaderboard-table">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Player</th>
+                <th>Correct</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="(row, index) in rows"
+                :key="row.username"
+                :class="{ 'leaderboard-you': isYou(row) }"
+              >
+                <td>{{ index + 1 }}</td>
+                <td>
+                  {{ row.username }}<span v-if="isYou(row)" class="visually-hidden"> (you)</span>
+                </td>
+                <td>{{ row.score }}</td>
+                <td>{{ formatTime(row.time_seconds) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </RequireProfile>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, nextTick, onMounted } from "vue";
 import RequireProfile from "../components/RequireProfile.vue";
 import { getLeaderboard } from "../api/leaderboard";
 import { profile as user } from "../stores/profileStore";
-import { showToast } from "../stores/toastStore";
 import { formatTime } from "../utils/formatTime";
 
 const rows = ref([]);
 const loading = ref(true);
+const loadFailed = ref(false);
+const retryButton = ref(null);
+const results = ref(null);
 
 function isYou(row) {
   return user.value && row.username === user.value.username;
 }
 
-onMounted(async () => {
+async function load() {
+  loading.value = true;
+  loadFailed.value = false;
   try {
     rows.value = await getLeaderboard();
   } catch (err) {
     console.error("Failed to load leaderboard:", err);
-    showToast("Could not load the leaderboard.", "error");
+    loadFailed.value = true;
   } finally {
     loading.value = false;
   }
-});
+}
+
+// Try again is replaced while loading, so put focus on whatever replaces it.
+async function retry() {
+  await load();
+  await nextTick();
+  (loadFailed.value ? retryButton : results).value?.focus();
+}
+
+onMounted(load);
 </script>
 
 <style scoped>

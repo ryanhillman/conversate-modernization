@@ -17,7 +17,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { profile, loadProfile } from "../stores/profileStore";
-import { showToast } from "../stores/toastStore";
 import SetUsername from "./username/SetUsername.vue";
 
 // Only the first view after sign-in (or a reload) waits on the request;
@@ -37,7 +36,6 @@ async function load() {
     // "no profile" and must not silently fall into that signup flow.
     if (err.status !== 404) {
       console.error("Failed to load user:", err);
-      showToast("Could not load your profile.", "error");
       loadFailed.value = true;
     }
   } finally {
