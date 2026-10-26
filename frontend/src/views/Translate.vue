@@ -95,12 +95,13 @@
   </div>
 </template>
 <script setup>
-import { ref, computed, onBeforeUnmount } from "vue";
+import { ref, computed, watch, onBeforeUnmount } from "vue";
 import Icon from "../components/Icon.vue";
 import RequireProfile from "../components/RequireProfile.vue";
 import { translateText } from "../api/translate";
 import { synthesizeSpeech } from "../api/tts";
 import { transcribeSpeech } from "../api/stt";
+import { announce } from "../stores/announceStore";
 import { showToast } from "../stores/toastStore";
 
 const MIC_MIME_TYPE = "audio/webm;codecs=opus";
@@ -152,6 +153,14 @@ const translatedTextTooLong = computed(() => {
   return new TextEncoder().encode(translatedText.value).length > MAX_TTS_LENGTH;
 });
 const sameLanguageOnBothSides = computed(() => inputLanguage.value === outputLanguage.value);
+
+// These messages appear without moving focus, so tell screen readers.
+watch(sameLanguageOnBothSides, (same) => {
+  if (same) announce("Input and output language must be different.");
+});
+watch(translatedTextTooLong, (tooLong) => {
+  if (tooLong) announce("Translation is too long to read aloud.");
+});
 
 onBeforeUnmount(() => {
   // Stopping the tracks below fires the recorder's own "stop" handler,

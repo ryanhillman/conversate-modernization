@@ -6,14 +6,12 @@
       placeholder="Username"
       class="username-input"
       maxlength="100"
+      autocomplete="username"
       aria-describedby="setup-username-error"
       aria-label="Username"
     />
-    <p v-if="username && validationError" id="setup-username-error" class="form-error small mb-2">
-      {{ validationError }}
-    </p>
-    <p v-else-if="takenUsername" id="setup-username-error" class="form-error small mb-2">
-      That username is taken
+    <p v-if="errorMessage" id="setup-username-error" class="form-error small mb-2">
+      {{ errorMessage }}
     </p>
     <br />
     <button
@@ -37,7 +35,8 @@ import { showToast } from "../../stores/toastStore";
 const router = useRouter();
 
 const username = ref("");
-const { checking, takenUsername, validationError } = useUsernameAvailability(username);
+const { checking, takenUsername, validationError, errorMessage } =
+  useUsernameAvailability(username);
 const saving = ref(false);
 
 async function saveUsername(name) {

@@ -20,6 +20,7 @@
         <button
           :id="lesson.slug"
           class="lesson-btn toggle-lesson-btn"
+          :aria-label="`Toggle lesson: ${lesson.menuTitle}`"
           :aria-expanded="currentLessonId === lesson.id ? 'true' : 'false'"
           @click="selectLesson(lesson.id)"
         >

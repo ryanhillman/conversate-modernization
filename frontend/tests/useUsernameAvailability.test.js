@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick, ref } from "vue";
 
 vi.mock("../src/api/users", () => ({ checkUsername: vi.fn() }));
+vi.mock("../src/stores/announceStore", () => ({ announce: vi.fn() }));
 // The composable registers an unmount hook, which Vue only allows inside a
 // component; outside one it would just log a warning on every test.
 vi.mock("vue", async (importOriginal) => ({
@@ -10,6 +11,7 @@ vi.mock("vue", async (importOriginal) => ({
 }));
 
 import { checkUsername } from "../src/api/users";
+import { announce } from "../src/stores/announceStore";
 import { useUsernameAvailability } from "../src/composables/useUsernameAvailability";
 
 const DEBOUNCE_MS = 400;
@@ -151,5 +153,35 @@ describe("useUsernameAvailability", () => {
     await vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
 
     expect(checkUsername).not.toHaveBeenCalled();
+  });
+
+  it("shows no error for an empty field", () => {
+    const { errorMessage } = useUsernameAvailability(ref(""));
+    expect(errorMessage.value).toBe("");
+  });
+
+  it("announces a validation error once, not on every keystroke", async () => {
+    const username = ref("");
+    const { errorMessage } = useUsernameAvailability(username);
+
+    await type(username, "r");
+    await type(username, "ry");
+
+    expect(errorMessage.value).toMatch(/at least 3/);
+    expect(announce).toHaveBeenCalledTimes(1);
+    expect(announce).toHaveBeenCalledWith(errorMessage.value);
+  });
+
+  it("shows and announces a taken name", async () => {
+    checkUsername.mockResolvedValue({ available: false });
+    const username = ref("");
+    const { errorMessage } = useUsernameAvailability(username);
+
+    await type(username, "ryan_h");
+    await vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
+    await nextTick();
+
+    expect(errorMessage.value).toBe("That username is taken");
+    expect(announce).toHaveBeenCalledWith("That username is taken");
   });
 });

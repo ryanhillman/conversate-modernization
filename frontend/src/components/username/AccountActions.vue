@@ -6,13 +6,11 @@
       aria-label="New username"
       class="form-control mb-2 account-actions-field"
       maxlength="100"
+      autocomplete="username"
       aria-describedby="edit-username-error"
     />
-    <p v-if="username && validationError" id="edit-username-error" class="form-error small mb-2">
-      {{ validationError }}
-    </p>
-    <p v-else-if="takenUsername" id="edit-username-error" class="form-error small mb-2">
-      That username is taken
+    <p v-if="errorMessage" id="edit-username-error" class="form-error small mb-2">
+      {{ errorMessage }}
     </p>
     <button
       class="btn btn-success mb-2 account-actions-field"
@@ -54,10 +52,13 @@ import { showToast } from "../../stores/toastStore";
 const router = useRouter();
 
 const username = ref("");
-const { checking, takenUsername, validationError } = useUsernameAvailability(username, {
-  skipAvailabilityCheck: (candidate) =>
-    candidate.toLowerCase() === (profile.value?.username ?? "").toLowerCase(),
-});
+const { checking, takenUsername, validationError, errorMessage } = useUsernameAvailability(
+  username,
+  {
+    skipAvailabilityCheck: (candidate) =>
+      candidate.toLowerCase() === (profile.value?.username ?? "").toLowerCase(),
+  },
+);
 const saving = ref(false);
 
 async function updateUsername(name) {

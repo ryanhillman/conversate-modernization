@@ -1,5 +1,6 @@
 import { ref, computed, watch, onBeforeUnmount } from "vue";
 import { checkUsername as apiCheckUsername } from "../api/users";
+import { announce } from "../stores/announceStore";
 import { usernameError } from "../utils/usernameValidation";
 
 // Shared debounced username-availability check for the create and rename forms.
@@ -48,7 +49,18 @@ export function useUsernameAvailability(username, { skipAvailabilityCheck = () =
     checkTimer = setTimeout(() => checkUsername(candidate, seq), 400);
   });
 
+  // The error shown under the field; nothing until something is typed.
+  const errorMessage = computed(() => {
+    if (username.value && validationError.value) return validationError.value;
+    return takenUsername.value ? "That username is taken" : "";
+  });
+  // Errors appear as you type, without moving focus, so screen readers are
+  // told when one appears or changes.
+  watch(errorMessage, (message) => {
+    if (message) announce(message);
+  });
+
   onBeforeUnmount(() => clearTimeout(checkTimer));
 
-  return { checking, takenUsername, validationError };
+  return { checking, takenUsername, validationError, errorMessage };
 }
