@@ -4,7 +4,7 @@
       <div class="celebration-toast">🎉 Lesson Complete!</div>
       <span v-for="(c, i) in confetti" :key="i" class="confetti-piece" :style="c"></span>
     </div>
-    <header class="lesson-header">Select any lesson to begin!</header>
+    <h1 class="lesson-header">Select any lesson to begin!</h1>
 
     <div
       v-for="lesson in lessons"
@@ -241,7 +241,12 @@ function launchCelebration() {
 .individual-lesson:hover {
   transform: translateY(-3px);
 }
+/* A heading, styled like the plain text it replaced. */
 .lesson-header {
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
   color: #fff;
   padding-top: 2.5rem;
   padding-bottom: 2.5rem;
