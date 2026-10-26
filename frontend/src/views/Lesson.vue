@@ -16,11 +16,13 @@
         <span aria-hidden="true">✓</span><span class="visually-hidden">Completed</span>
       </span>
       <div class="lesson-row">
-        <label :for="lesson.slug" class="lesson-label">{{ lesson.menuTitle }}: </label>
+        <label :for="lesson.slug" class="lesson-label"
+          ><RichText :text="lesson.menuTitle" />:
+        </label>
         <button
           :id="lesson.slug"
           class="lesson-btn toggle-lesson-btn"
-          :aria-label="`Toggle lesson: ${lesson.menuTitle}`"
+          :aria-label="`Toggle lesson: ${plainText(lesson.menuTitle)}`"
           :aria-expanded="currentLessonId === lesson.id ? 'true' : 'false'"
           @click="selectLesson(lesson.id)"
         >
@@ -41,9 +43,11 @@
           </ul>
           <ul v-else-if="s.t === 'conj'" :key="'s' + si">
             <li v-for="(r, ri) in s.rows" :key="ri">
-              {{ r[0] }}:
+              <span lang="it">{{ r[0] }}</span
+              >:
               <span
                 class="speakable"
+                lang="it"
                 role="button"
                 tabindex="0"
                 @click="speak(r[1])"
@@ -59,11 +63,14 @@
         <template v-if="lesson.questions.length">
           <h5>Now let's practice some on your own!</h5>
           <div v-for="question in lesson.questions" :key="question.id">
-            <label :for="question.id" class="question-label">{{ question.prompt }}</label>
+            <label :for="question.id" class="question-label"
+              ><RichText :text="question.prompt"
+            /></label>
             <input
               :id="question.id"
               :name="question.id"
               type="text"
+              :lang="lesson.answerLang"
               class="answer-input"
               v-model.trim="answers[question.id]"
               :class="{
@@ -98,6 +105,7 @@ import { generateConfetti } from "../utils/confetti";
 import RequireProfile from "../components/RequireProfile.vue";
 import RichText from "../components/RichText.vue";
 import { LESSONS } from "../data/lessons";
+import { plainText } from "../utils/richText";
 import { isAnswerCorrect, isLessonComplete, normalizeAnswer } from "../utils/grading";
 import { synthesizeSpeech } from "../api/tts";
 import { completedLessonIds, setProfile } from "../stores/profileStore";

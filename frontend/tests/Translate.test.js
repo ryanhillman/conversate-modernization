@@ -32,6 +32,25 @@ describe("Translate", () => {
     expect(announce).toHaveBeenCalledWith("Input and output language must be different.");
   });
 
+  it("marks each text box with the language it holds", async () => {
+    translateText.mockResolvedValue({ translated_text: "ciao" });
+    const wrapper = mount(Translate, { global: { stubs: { RequireProfile } } });
+    const [input, output] = wrapper.findAll("textarea");
+    expect(input.attributes("lang")).toBe("en");
+    expect(output.attributes("lang")).toBeUndefined();
+
+    await input.setValue("hello");
+    await wrapper.get(".btn-accent").trigger("click");
+    await flushPromises();
+    expect(output.attributes("lang")).toBe("it");
+
+    // The translation keeps its language when the pickers change afterward.
+    await wrapper.get("#selectInputLanguage").setValue("it");
+    await wrapper.get("#selectOutputLanguage").setValue("en");
+    expect(input.attributes("lang")).toBe("it");
+    expect(output.attributes("lang")).toBe("it");
+  });
+
   it("keeps the speaker button, disabled, while its audio loads", async () => {
     translateText.mockResolvedValue({ translated_text: "ciao" });
     synthesizeSpeech.mockReturnValue(new Promise(() => {}));

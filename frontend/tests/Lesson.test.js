@@ -29,7 +29,43 @@ describe("Lesson", () => {
     const button = wrapper.get(`#${LESSONS[0].slug}`);
 
     expect(button.text()).toBe("Toggle lesson");
-    expect(button.attributes("aria-label")).toBe(`Toggle lesson: ${LESSONS[0].menuTitle}`);
+    expect(button.attributes("aria-label")).toBe("Toggle lesson: Avere and Essere");
+  });
+
+  it("marks Italian in titles, conjugations, prompts, and answer boxes", async () => {
+    const wrapper = mount(Lesson, { global: { stubs: { RequireProfile } } });
+    const italian = (el) => el.findAll('[lang="it"]').map((span) => span.text());
+
+    expect(italian(wrapper.get('label[for="avere-essere"]'))).toEqual(["Avere", "Essere"]);
+
+    await wrapper.get("#avere-essere").trigger("click");
+    expect(italian(wrapper.get(".lesson-content ul"))).toEqual([
+      "io",
+      "ho",
+      "tu",
+      "hai",
+      "lui/lei",
+      "ha",
+      "noi",
+      "abbiamo",
+      "voi",
+      "avete",
+      "loro",
+      "hanno",
+    ]);
+    expect(wrapper.get("#lesson-1-question-1").attributes("lang")).toBe("it");
+
+    await wrapper.get("#basic-greetings").trigger("click");
+    expect(italian(wrapper.get('label[for="lesson-2-question-1"]'))).toEqual(["Ciao"]);
+    expect(wrapper.get("#lesson-2-question-1").attributes("lang")).toBe("en");
+  });
+
+  it("never shows the markup itself, in any lesson", async () => {
+    const wrapper = mount(Lesson, { global: { stubs: { RequireProfile } } });
+    for (const lesson of LESSONS) {
+      await wrapper.get(`#${lesson.slug}`).trigger("click");
+      expect(wrapper.text(), lesson.slug).not.toMatch(/<\/?(i|strong|it)>/);
+    }
   });
 
   it("moves focus to the Toggle button once Mark lesson complete disappears", async () => {

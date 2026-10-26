@@ -125,6 +125,13 @@ describe("Quiz feedback", () => {
   });
 });
 
+describe("Quiz language", () => {
+  it("marks the question word as Italian", async () => {
+    wrapper = await startQuizPage();
+    expect(wrapper.get(".quiz-word").attributes("lang")).toBe("it");
+  });
+});
+
 describe("Quiz focus", () => {
   it("moves focus to each new question, Resume, and the results", async () => {
     quizStarting(2);
