@@ -75,6 +75,7 @@
 - Gave each page its own title, a main landmark, and a skip link.
 - Kept error messages on screen until dismissed.
 - Marked Italian text so screen readers pronounce it in Italian.
+- Showed a leaderboard load failure on the page instead of an empty leaderboard.
 
 ## [1.0.0] - 2026-10-22
 
