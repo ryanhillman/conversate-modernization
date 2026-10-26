@@ -57,7 +57,7 @@
               v-if="micSupported"
               type="button"
               class="icon-button"
-              :disabled="busy"
+              :disabled="busy || startingMic"
               :aria-label="recording ? 'Stop recording' : 'Start recording'"
               @click="toggleRecording"
             >
@@ -129,6 +129,7 @@ function blobToBase64(blob) {
 }
 
 const recording = ref(false);
+const startingMic = ref(false);
 const busy = ref(false);
 const textToTranslate = ref("");
 const translatedText = ref(null);
@@ -209,12 +210,23 @@ async function toggleRecording() {
     mediaRecorder.stop();
     return;
   }
+  // A second click while the microphone starts would open a second stream
+  // that nothing stops.
+  if (startingMic.value) return;
+  startingMic.value = true;
   let stream;
   try {
     stream = await navigator.mediaDevices.getUserMedia({ audio: true });
   } catch (err) {
     console.error("Microphone access denied:", err);
     showToast("Microphone access is required to record.", "error");
+    return;
+  } finally {
+    startingMic.value = false;
+  }
+  // The page was left while the permission prompt was open.
+  if (leavingPage) {
+    stream.getTracks().forEach((track) => track.stop());
     return;
   }
   micStream = stream;
@@ -225,7 +237,7 @@ async function toggleRecording() {
   });
   mediaRecorder.addEventListener("stop", () => {
     clearTimeout(recordingTimeout);
-    micStream.getTracks().forEach((track) => track.stop());
+    stream.getTracks().forEach((track) => track.stop());
     recording.value = false;
     if (!leavingPage) transcribeRecording();
   });

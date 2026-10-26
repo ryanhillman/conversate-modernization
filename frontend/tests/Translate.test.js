@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { flushPromises, mount } from "@vue/test-utils";
 
 // The real API modules load auth.js, which needs Auth0 settings that CI
@@ -21,6 +21,33 @@ const RequireProfile = {
     return () => slots.default();
   },
 };
+
+// jsdom has no microphone. This stands in for one whose permission prompt
+// stays open until allow() is called.
+function fakeMicrophone() {
+  let grant;
+  const track = { stop: vi.fn() };
+  const recorders = [];
+  const getUserMedia = vi.fn(
+    () => new Promise((resolve) => (grant = () => resolve({ getTracks: () => [track] }))),
+  );
+  vi.stubGlobal("navigator", { mediaDevices: { getUserMedia } });
+  vi.stubGlobal(
+    "MediaRecorder",
+    class {
+      static isTypeSupported = () => true;
+      constructor() {
+        recorders.push(this);
+      }
+      addEventListener() {}
+      start() {}
+      stop() {}
+    },
+  );
+  return { getUserMedia, track, recorders, allow: () => grant() };
+}
+
+afterEach(() => vi.unstubAllGlobals());
 
 describe("Translate", () => {
   it("announces when both languages are the same", async () => {
@@ -67,26 +94,41 @@ describe("Translate", () => {
   });
 
   it("says in text, not just color, that it's recording", async () => {
-    // jsdom has no microphone; stand in for one that records nothing.
-    vi.stubGlobal("navigator", {
-      mediaDevices: { getUserMedia: vi.fn().mockResolvedValue({ getTracks: () => [] }) },
-    });
-    vi.stubGlobal(
-      "MediaRecorder",
-      class {
-        static isTypeSupported = () => true;
-        addEventListener() {}
-        start() {}
-        stop() {}
-      },
-    );
+    const mic = fakeMicrophone();
     const wrapper = mount(Translate, { global: { stubs: { RequireProfile } } });
 
     await wrapper.get('[aria-label="Start recording"]').trigger("click");
+    mic.allow();
     await flushPromises();
 
     expect(wrapper.text()).toContain("Recording…");
     wrapper.unmount();
-    vi.unstubAllGlobals();
+  });
+
+  it("opens one microphone, even when the button is double-clicked", async () => {
+    const mic = fakeMicrophone();
+    const wrapper = mount(Translate, { global: { stubs: { RequireProfile } } });
+    const button = wrapper.get('[aria-label="Start recording"]');
+
+    await button.trigger("click");
+    await button.trigger("click");
+    mic.allow();
+    await flushPromises();
+
+    expect(mic.getUserMedia).toHaveBeenCalledTimes(1);
+    wrapper.unmount();
+  });
+
+  it("turns the microphone off if the page is left during the permission prompt", async () => {
+    const mic = fakeMicrophone();
+    const wrapper = mount(Translate, { global: { stubs: { RequireProfile } } });
+
+    await wrapper.get('[aria-label="Start recording"]').trigger("click");
+    wrapper.unmount();
+    mic.allow();
+    await flushPromises();
+
+    expect(mic.track.stop).toHaveBeenCalled();
+    expect(mic.recorders).toEqual([]);
   });
 });
