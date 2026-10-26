@@ -59,6 +59,7 @@
 - Made the Log out menu item's hover highlight visible.
 - Made the current page's text on the nav bar navy to match its underline.
 - Made the frontend fail with a clear message when its Auth0 settings are missing.
+- Reported a taken username, rather than an existing profile, when two people claim the same name at once.
 
 ## [1.0.0] - 2026-10-22
 

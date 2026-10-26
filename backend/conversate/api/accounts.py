@@ -69,7 +69,12 @@ def create_me():
     try:
         db.session.commit()
     except IntegrityError:
+        # Both unique indexes can lose a race past the checks above: this
+        # account creating twice at once, or two accounts claiming the same
+        # username. Report whichever one it was.
         db.session.rollback()
+        if _username_taken(username):
+            return jsonify(error='username already exists'), 409
         return jsonify(error='User already exists'), 409
     return jsonify(new_user.serialize()), 201
 
