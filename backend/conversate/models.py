@@ -67,9 +67,9 @@ class User(db.Model):
 
 
 class QuizAttempt(db.Model):
-    """An in-flight, single-use quiz: the server's private answer key and start
-    time for one user. Created by /api/me/quiz/start, consumed and deleted by
-    /api/me/quiz/submit. Never serialized to the client."""
+    """An in-flight quiz: the server's private answer key and start time for
+    one user. Written by /api/me/quiz/start, and deleted by /api/me/quiz/submit,
+    a reset, or account deletion. Never serialized to the client."""
 
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey('user.id'))

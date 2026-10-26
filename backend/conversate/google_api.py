@@ -9,8 +9,8 @@ GOOGLE_API_TIMEOUT_SECONDS = 8
 
 # Speech-to-text replies only after transcribing the whole clip (up to the
 # frontend's 30-second recording cap), so it gets longer to answer. The
-# frontend's own timeout for this call must stay above this one's worst
-# case (connect + write + read), or the browser gives up first.
+# frontend's timeout for this call (api/stt.js) must stay above these, or the
+# browser gives up first.
 STT_TIMEOUT = httpx.Timeout(GOOGLE_API_TIMEOUT_SECONDS, read=20)
 
 # One client for the whole process, so calls reuse open connections instead

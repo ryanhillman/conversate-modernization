@@ -11,8 +11,9 @@ JWKS_TIMEOUT_SECONDS = 5
 # regardless of how many such requests arrive.
 JWKS_REFRESH_COOLDOWN_SECONDS = 60
 # Each re-download is a chance for a network blip to fail a sign-in, so keep
-# the keys for 10 hours (Auth0's own jwks-rsa default) rather than PyJWT's 5
-# minutes. A rotated key still arrives at once, via the unknown-kid refresh.
+# the keys for 10 hours rather than PyJWT's 5 minutes. A new key is still
+# fetched when a token first uses it (subject to the cooldown above), but a key
+# Auth0 removes stays trusted until the cache expires.
 JWKS_CACHE_SECONDS = 10 * 60 * 60
 
 # One client per Auth0 domain, each caching that domain's keys.
