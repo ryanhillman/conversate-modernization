@@ -61,6 +61,7 @@
 - Made the frontend fail with a clear message when its Auth0 settings are missing.
 - Reported a taken username, rather than an existing profile, when two people claim the same name at once.
 - Kept Save disabled until the username availability check finishes, so a taken name can't be submitted by clicking quickly.
+- Stated the text-to-speech length limit in bytes, which is how it's measured, rather than characters.
 
 ## [1.0.0] - 2026-10-22
 
