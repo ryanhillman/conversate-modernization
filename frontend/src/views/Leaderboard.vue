@@ -23,10 +23,12 @@
             <tr
               v-for="(row, index) in rows"
               :key="row.username"
-              :class="{ 'leaderboard-you': user && row.username === user.username }"
+              :class="{ 'leaderboard-you': isYou(row) }"
             >
               <td>{{ index + 1 }}</td>
-              <td>{{ row.username }}</td>
+              <td>
+                {{ row.username }}<span v-if="isYou(row)" class="visually-hidden"> (you)</span>
+              </td>
               <td>{{ row.score }}</td>
               <td>{{ formatTime(row.time_seconds) }}</td>
             </tr>
@@ -47,6 +49,10 @@ import { formatTime } from "../utils/formatTime";
 
 const rows = ref([]);
 const loading = ref(true);
+
+function isYou(row) {
+  return user.value && row.username === user.value.username;
+}
 
 onMounted(async () => {
   try {

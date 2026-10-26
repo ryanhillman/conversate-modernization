@@ -2,7 +2,16 @@
   <div class="toast-container" role="status" aria-live="polite">
     <transition-group name="toast">
       <div v-for="t in toasts" :key="t.id" :class="['toast-item', 'toast-' + t.type]">
-        {{ t.message }}
+        <span>{{ t.message }}</span>
+        <button
+          v-if="t.type === 'error'"
+          type="button"
+          class="toast-dismiss"
+          aria-label="Dismiss"
+          @click="dismissToast(t.id)"
+        >
+          ×
+        </button>
       </div>
     </transition-group>
   </div>
@@ -10,7 +19,7 @@
 
 <script setup>
 import { computed } from "vue";
-import { toastState } from "../stores/toastStore";
+import { dismissToast, toastState } from "../stores/toastStore";
 
 const toasts = computed(() => toastState.toasts);
 </script>
@@ -18,7 +27,7 @@ const toasts = computed(() => toastState.toasts);
 <style scoped>
 .toast-container {
   position: fixed;
-  top: 1.5rem;
+  bottom: 1.5rem;
   right: 1.5rem;
   z-index: 2000;
   display: flex;
@@ -26,6 +35,10 @@ const toasts = computed(() => toastState.toasts);
   gap: 0.6rem;
 }
 .toast-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
   min-width: 16rem;
   max-width: 22rem;
   padding: 0.85rem 1.2rem;
@@ -40,6 +53,14 @@ const toasts = computed(() => toastState.toasts);
 }
 .toast-error {
   background-color: var(--bs-danger);
+}
+.toast-dismiss {
+  background: none;
+  border: 0;
+  padding: 0 0.25rem;
+  color: inherit;
+  font-size: 1.25rem;
+  line-height: 1;
 }
 .toast-enter-active,
 .toast-leave-active {

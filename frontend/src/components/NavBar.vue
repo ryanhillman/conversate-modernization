@@ -68,7 +68,7 @@
                   class="nav-user-profile d-inline-block rounded-circle me-3"
                   width="50"
                 />
-                <h6 class="d-inline-block">{{ user.name }}</h6>
+                <span class="d-inline-block nav-user-name">{{ user.name }}</span>
               </span>
             </li>
 
@@ -177,6 +177,14 @@ function login() {
 </script>
 
 <style scoped>
+/* Styled like the <h6> it replaced; the user's name isn't a heading. */
+.nav-user-name {
+  margin-bottom: 0.5rem;
+  font-family: "Poppins", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
 #mobileAuthNavBar {
   min-height: 125px;
   justify-content: space-between;
