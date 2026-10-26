@@ -78,7 +78,7 @@
 import { ref, computed, onBeforeUnmount } from "vue";
 import RequireProfile from "../components/RequireProfile.vue";
 import { startQuiz, answerQuiz, pauseQuiz, resumeQuiz, submitQuiz } from "../api/quiz";
-import { profile } from "../stores/profileStore";
+import { profile, setProfile } from "../stores/profileStore";
 import { announce } from "../stores/announceStore";
 import { showToast } from "../stores/toastStore";
 import { formatTime } from "../utils/formatTime";
@@ -223,11 +223,11 @@ async function finish() {
     // Submit returns only this attempt's result, so update the stored
     // profile's best directly rather than re-fetching it.
     if (result.value.is_new_best && profile.value) {
-      profile.value = {
+      setProfile({
         ...profile.value,
         quiz_best_score: result.value.score,
         quiz_best_time_seconds: result.value.time_seconds,
-      };
+      });
     }
     phase.value = "results";
   } catch (err) {
