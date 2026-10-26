@@ -18,6 +18,7 @@
 - Shrank the home page images by about 75% by resizing and converting them to WebP.
 - Added a database index for the leaderboard query and fetched only the columns it shows.
 - Made lesson completion load and lock the user in one query instead of two.
+- Stopped re-reading the user from the database after saving changes.
 - Shortened the maximum speech-to-text recording from 60 to 30 seconds.
 - Extended the speech-to-text timeout from 10 to 40 seconds.
 - Added an expanding navy underline to nav bar links while hovering.

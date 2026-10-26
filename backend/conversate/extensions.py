@@ -17,7 +17,10 @@ class Base(DeclarativeBase):
     )
 
 
-db = SQLAlchemy(model_class=Base)
+# Each request gets its own short-lived session, so keeping values loaded after
+# commit can't serve stale data, and serializing a just-saved row needs no
+# re-read.
+db = SQLAlchemy(model_class=Base, session_options={'expire_on_commit': False})
 migrate = Migrate()
 
 
