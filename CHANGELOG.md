@@ -76,7 +76,6 @@
 - Kept error messages on screen until dismissed.
 - Marked Italian text so screen readers pronounce it in Italian.
 - Showed a leaderboard load failure on the page instead of an empty leaderboard.
-- Showed Google profile pictures, which failed to load.
 
 ## [1.0.0] - 2026-10-22
 
