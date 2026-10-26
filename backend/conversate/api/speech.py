@@ -71,7 +71,7 @@ def synthesize_speech():
     voice = TTS_VOICES.get(str_field(body, 'language'))
     if not text or len(text.encode('utf-8')) > MAX_TTS_TEXT_LENGTH:
         return jsonify(
-            error=f'text is required and must be at most {MAX_TTS_TEXT_LENGTH} characters'
+            error=f'text is required and must be at most {MAX_TTS_TEXT_LENGTH} bytes'
         ), 400
     if voice is None:
         return jsonify(error=f'language must be one of: {", ".join(sorted(TTS_VOICES))}'), 400
