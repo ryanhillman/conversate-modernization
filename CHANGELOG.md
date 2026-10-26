@@ -66,6 +66,13 @@
 - Stated the text-to-speech length limit in bytes, which is how it's measured, rather than characters.
 - Stopped rejecting out-of-order quiz answers as too fast.
 - Logged the reason the server rejects a login.
+- Kept keyboard focus visible and in place.
+- Let a quiz result be saved again after a failed submit.
+- Fixed the lesson toggle labels and announced Translate warnings.
+- Showed quiz and recording states with more than color.
+- Gave each page its own title, a main landmark, and a skip link.
+- Kept error messages on screen until dismissed.
+- Marked Italian text so screen readers pronounce it in Italian.
 
 ## [1.0.0] - 2026-10-22
 
