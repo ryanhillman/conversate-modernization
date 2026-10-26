@@ -24,6 +24,9 @@ class UTCDateTime(TypeDecorator):
 
 
 class User(db.Model):
+    # Not 'user', which is a reserved word in Postgres.
+    __tablename__ = 'account'
+
     id: Mapped[int] = mapped_column(primary_key=True)
     auth0_sub: Mapped[str] = mapped_column(String(255))
     username: Mapped[str] = mapped_column(String(100))
@@ -37,12 +40,12 @@ class User(db.Model):
     # compared case-insensitively in the app, so it's enforced the same way in
     # the database.
     __table_args__ = (
-        db.Index('uq_user_auth0_sub', auth0_sub, unique=True),
-        db.Index('uq_user_username_lower', db.func.lower(username), unique=True),
+        db.Index('uq_account_auth0_sub', auth0_sub, unique=True),
+        db.Index('uq_account_username_lower', db.func.lower(username), unique=True),
         # Matches the leaderboard's ORDER BY. Partial, because the leaderboard
         # only ever reads users who have a best score.
         db.Index(
-            'ix_user_leaderboard',
+            'ix_account_leaderboard',
             quiz_best_score.desc(),
             quiz_best_time_seconds,
             id,
@@ -71,7 +74,7 @@ class QuizAttempt(db.Model):
     a reset, or account deletion. Never serialized to the client."""
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey('user.id'))
+    user_id: Mapped[int] = mapped_column(ForeignKey('account.id'))
     started_at: Mapped[datetime] = mapped_column(UTCDateTime)
     quiz_state: Mapped[list[dict]] = mapped_column(JSON)
     next_index: Mapped[int] = mapped_column(default=0)
