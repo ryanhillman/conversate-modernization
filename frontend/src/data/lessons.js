@@ -2,15 +2,16 @@ export const LESSONS = [
   {
     id: 1,
     slug: "avere-essere",
-    menuTitle: "Avere and Essere",
-    title: "<i>Avere</i> and <i>Essere</i>",
+    answerLang: "it",
+    menuTitle: "<it>Avere</it> and <it>Essere</it>",
+    title: "<i><it>Avere</it></i> and <i><it>Essere</it></i>",
     sections: [
       { t: "h", lvl: 3, html: "To have and to be" },
       {
         t: "p",
-        html: "Two of the most important verbs in the Italian language are <strong>avere</strong> (to have) and <strong>essere</strong> (to be). Both are extremely common in everyday use, and they also support many other verbs and tenses throughout the language.",
+        html: "Two of the most important verbs in the Italian language are <strong><it>avere</it></strong> (to have) and <strong><it>essere</it></strong> (to be). Both are extremely common in everyday use, and they also support many other verbs and tenses throughout the language.",
       },
-      { t: "h", lvl: 4, html: "Avere" },
+      { t: "h", lvl: 4, html: "<it>Avere</it>" },
       {
         t: "conj",
         rows: [
@@ -26,19 +27,19 @@ export const LESSONS = [
       {
         t: "ul",
         items: [
-          '"Ho un gatto." → I have a cat.',
-          '"Hai un ombrello." → You have an umbrella.',
-          '"Lei ha due fratelli." → She has two brothers.',
-          '"Abbiamo pesce per cena stasera." → We have fish for dinner tonight.',
-          '"Avete una casa grande." → You all have a big house.',
-          '"Loro hanno troppo cibo!" → They have too much food!',
+          '"<it>Ho un gatto.</it>" → I have a cat.',
+          '"<it>Hai un ombrello.</it>" → You have an umbrella.',
+          '"<it>Lei ha due fratelli.</it>" → She has two brothers.',
+          '"<it>Abbiamo pesce per cena stasera.</it>" → We have fish for dinner tonight.',
+          '"<it>Avete una casa grande.</it>" → You all have a big house.',
+          '"<it>Loro hanno troppo cibo!</it>" → They have too much food!',
         ],
       },
       {
         t: "p",
-        html: "It's worth becoming familiar with avere, because it not only shows possession or ownership but also acts as an auxiliary verb for many other verbs and tenses — so learning it early is a fundamental step toward mastering the language.",
+        html: "It's worth becoming familiar with <it>avere</it>, because it not only shows possession or ownership but also acts as an auxiliary verb for many other verbs and tenses — so learning it early is a fundamental step toward mastering the language.",
       },
-      { t: "h", lvl: 4, html: "Essere" },
+      { t: "h", lvl: 4, html: "<it>Essere</it>" },
       {
         t: "conj",
         rows: [
@@ -54,17 +55,17 @@ export const LESSONS = [
       {
         t: "ul",
         items: [
-          '"Sono uno studente." → I am a student.',
-          '"Sei in ritardo." → You are late.',
-          '"È una bella giornata." → It is a beautiful day.',
-          '"Siamo in montagna." → We are in the mountains.',
-          '"Siete ragazzi alti." → You are tall kids.',
-          '"Loro sono molto gentili." → They are very kind.',
+          '"<it>Sono uno studente.</it>" → I am a student.',
+          '"<it>Sei in ritardo.</it>" → You are late.',
+          '"<it>È una bella giornata.</it>" → It is a beautiful day.',
+          '"<it>Siamo in montagna.</it>" → We are in the mountains.',
+          '"<it>Siete ragazzi alti.</it>" → You are tall kids.',
+          '"<it>Loro sono molto gentili.</it>" → They are very kind.',
         ],
       },
       {
         t: "p",
-        html: "It's also worth getting comfortable with essere: like avere, it serves as an auxiliary verb for many tenses and verbs, so mastering it early is another fundamental step toward mastering the Italian language.",
+        html: "It's also worth getting comfortable with <it>essere</it>: like <it>avere</it>, it serves as an auxiliary verb for many tenses and verbs, so mastering it early is another fundamental step toward mastering the Italian language.",
       },
     ],
     questions: [
@@ -79,20 +80,21 @@ export const LESSONS = [
   {
     id: 2,
     slug: "basic-greetings",
+    answerLang: "en",
     menuTitle: "Basic Greetings",
     title: "Basic Greetings",
     sections: [
-      { t: "h", lvl: 3, html: "Ciao!" },
+      { t: "h", lvl: 3, html: "<it>Ciao!</it>" },
       {
         t: "p",
-        html: 'One of the most important phrases — and one you may already use — is "ciao". In Italian, ciao can mean both hello and goodbye, and it\'s typically used in informal settings.',
+        html: 'One of the most important phrases — and one you may already use — is "<it>ciao</it>". In Italian, <it>ciao</it> can mean both hello and goodbye, and it\'s typically used in informal settings.',
       },
-      { t: "p", html: "Some different ways to use ciao" },
+      { t: "p", html: "Some different ways to use <it>ciao</it>" },
       {
         t: "ul",
         items: [
-          '"Ciao bella" → Hello beautiful',
-          '"Ciao ciao, come stai oggi?" → Hello hello, how are you today?',
+          '"<it>Ciao bella</it>" → Hello beautiful',
+          '"<it>Ciao ciao, come stai oggi?</it>" → Hello hello, how are you today?',
         ],
       },
       {
@@ -103,20 +105,20 @@ export const LESSONS = [
       {
         t: "ul",
         items: [
-          "Buongiorno! → Good morning (typically only used before noon)",
-          "Buon pomeriggio! → Good afternoon (typically used from noon to around 3 in the afternoon)",
-          "Buona sera! → Good evening (typically used after 4 or 5 in the afternoon)",
-          "Salve! → Similar to ciao, but salve is the formal use.",
+          "<it>Buongiorno!</it> → Good morning (typically only used before noon)",
+          "<it>Buon pomeriggio!</it> → Good afternoon (typically used from noon to around 3 in the afternoon)",
+          "<it>Buona sera!</it> → Good evening (typically used after 4 or 5 in the afternoon)",
+          "<it>Salve!</it> → Similar to <it>ciao</it>, but <it>salve</it> is the formal use.",
         ],
       },
       { t: "h", lvl: 5, html: "Greeting examples" },
       {
         t: "ul",
         items: [
-          '"Buongiorno, come stai oggi?" → Good morning! How are you today?',
-          '"Buon pomeriggio ragazzi!" → Good afternoon kids!',
-          '"Buonasera signor Valentino!" → Good evening Mr. Valentino.',
-          '"Ciao ciao, come va?" → Hi hi, how\'s it going?',
+          '"<it>Buongiorno, come stai oggi?</it>" → Good morning! How are you today?',
+          '"<it>Buon pomeriggio ragazzi!</it>" → Good afternoon kids!',
+          '"<it>Buonasera signor Valentino!</it>" → Good evening Mr. Valentino.',
+          '"<it>Ciao ciao, come va?</it>" → Hi hi, how\'s it going?',
         ],
       },
       {
@@ -127,24 +129,37 @@ export const LESSONS = [
     questions: [
       {
         id: "lesson-2-question-1",
-        prompt: "Ciao:",
+        prompt: "<it>Ciao</it>:",
         correctAnswers: ["hi", "hello", "hey", "goodbye", "bye"],
       },
-      { id: "lesson-2-question-2", prompt: "Buona sera:", correctAnswers: ["good evening"] },
-      { id: "lesson-2-question-3", prompt: "Buon pomeriggio:", correctAnswers: ["good afternoon"] },
-      { id: "lesson-2-question-4", prompt: "Buongiorno:", correctAnswers: ["good morning"] },
+      {
+        id: "lesson-2-question-2",
+        prompt: "<it>Buona sera</it>:",
+        correctAnswers: ["good evening"],
+      },
+      {
+        id: "lesson-2-question-3",
+        prompt: "<it>Buon pomeriggio</it>:",
+        correctAnswers: ["good afternoon"],
+      },
+      {
+        id: "lesson-2-question-4",
+        prompt: "<it>Buongiorno</it>:",
+        correctAnswers: ["good morning"],
+      },
     ],
   },
   {
     id: 3,
     slug: "essere-versus-stare",
-    menuTitle: "Essere versus Stare",
-    title: "<i>Essere vs. Stare</i>",
+    answerLang: "it",
+    menuTitle: "<it>Essere</it> versus <it>Stare</it>",
+    title: "<i><it>Essere</it> vs. <it>Stare</it></i>",
     sections: [
-      { t: "h", lvl: 3, html: "Stare (to be)" },
+      { t: "h", lvl: 3, html: "<it>Stare</it> (to be)" },
       {
         t: "p",
-        html: "Stare is close to essere in literal meaning, but the two are used quite differently depending on the situation.",
+        html: "<it>Stare</it> is close to <it>essere</it> in literal meaning, but the two are used quite differently depending on the situation.",
       },
       {
         t: "h",
@@ -153,20 +168,20 @@ export const LESSONS = [
       },
       {
         t: "p",
-        html: "Use <i>essere</i> for identity and description: who or what someone or something is — nationality, profession, physical traits — as well as where people and things are located. Use <i>stare</i> for how someone is feeling or doing (health), for staying or remaining somewhere, and in a handful of fixed idiomatic expressions you simply memorize.",
+        html: "Use <i><it>essere</it></i> for identity and description: who or what someone or something is — nationality, profession, physical traits — as well as where people and things are located. Use <i><it>stare</it></i> for how someone is feeling or doing (health), for staying or remaining somewhere, and in a handful of fixed idiomatic expressions you simply memorize.",
       },
       {
         t: "ul",
         items: [
-          'When expressing your nationality: "Ciao, sono Paolo e sono tedesco" → Hi, I\'m Paolo and I am German.',
-          'Identifying one\'s profession: "Sono un avvocato!" → I am a lawyer!',
-          'Describing one\'s physical appearance: "Sono basso e grasso" → I am short and fat.',
-          'Describing and locating objects: "Dov\'è lo zucchero?" → Where is the sugar?',
+          'When expressing your nationality: "<it>Ciao, sono Paolo e sono tedesco</it>" → Hi, I\'m Paolo and I am German.',
+          'Identifying one\'s profession: "<it>Sono un avvocato!</it>" → I am a lawyer!',
+          'Describing one\'s physical appearance: "<it>Sono basso e grasso</it>" → I am short and fat.',
+          'Describing and locating objects: "<it>Dov\'è lo zucchero?</it>" → Where is the sugar?',
         ],
       },
       {
         t: "p",
-        html: "First, let's learn to conjugate the verb <i>stare</i> so that we can see how it is used.",
+        html: "First, let's learn to conjugate the verb <i><it>stare</it></i> so that we can see how it is used.",
       },
       {
         t: "conj",
@@ -181,49 +196,61 @@ export const LESSONS = [
       },
       {
         t: "p",
-        html: "In contrast to <i>essere</i>, stare generally deals with transient states or temporary feelings. Below are some examples of when to use <i>stare</i> instead of <i>essere</i>.",
+        html: "In contrast to <i><it>essere</it></i>, <it>stare</it> generally deals with transient states or temporary feelings. Below are some examples of when to use <i><it>stare</it></i> instead of <i><it>essere</it></i>.",
       },
       {
         t: "ul",
         items: [
-          'Stare can be used to express remaining in place: "Oggi sto a casa." → Today I stay home.',
-          'Stare can be used to express one\'s health: "Come stai?" → How are you feeling?',
-          'Stare is used when speaking about someone\'s appearance: "Questa maglia mi sta benissimo." → This shirt looks great on me.',
+          '<it>Stare</it> can be used to express remaining in place: "<it>Oggi sto a casa.</it>" → Today I stay home.',
+          '<it>Stare</it> can be used to express one\'s health: "<it>Come stai?</it>" → How are you feeling?',
+          '<it>Stare</it> is used when speaking about someone\'s appearance: "<it>Questa maglia mi sta benissimo.</it>" → This shirt looks great on me.',
         ],
       },
       {
         t: "p",
-        html: "Stare also has many different idiomatic expressions that it is used with. These require memorization as there is no easy rule set to remember them by.",
+        html: "<it>Stare</it> also has many different idiomatic expressions that it is used with. These require memorization as there is no easy rule set to remember them by.",
       },
       {
         t: "ul",
         items: [
-          "Stare in piedi → to be standing",
-          "Stare attento → to pay attention",
-          "Stare con... → to be in a relationship with...",
-          "Stare a cuore → to matter to someone.",
+          "<it>Stare in piedi</it> → to be standing",
+          "<it>Stare attento</it> → to pay attention",
+          "<it>Stare con...</it> → to be in a relationship with...",
+          "<it>Stare a cuore</it> → to matter to someone.",
         ],
       },
       { t: "h", lvl: 5, html: "Let's see if you can recognize which verb to use where." },
-      { t: "p", html: "Choose the correct verb, <i>stare</i> or <i>essere</i>." },
+      { t: "p", html: "Choose the correct verb, <i><it>stare</it></i> or <i><it>essere</it></i>." },
     ],
     questions: [
-      { id: "lesson-3-question-1", prompt: '"Oggi, (sto/sono) bene!"', correctAnswers: ["sto"] },
+      {
+        id: "lesson-3-question-1",
+        prompt: '"<it>Oggi, (sto/sono) bene!</it>"',
+        correctAnswers: ["sto"],
+      },
       {
         id: "lesson-3-question-2",
-        prompt: "Noi (siamo/stiamo) americani.",
+        prompt: "<it>Noi (siamo/stiamo) americani.</it>",
         correctAnswers: ["siamo"],
       },
-      { id: "lesson-3-question-3", prompt: '"Quanto (sei/stai) alto?"', correctAnswers: ["sei"] },
-      { id: "lesson-3-question-4", prompt: '"Come (sei/stai)?"', correctAnswers: ["stai"] },
+      {
+        id: "lesson-3-question-3",
+        prompt: '"<it>Quanto (sei/stai) alto?</it>"',
+        correctAnswers: ["sei"],
+      },
+      {
+        id: "lesson-3-question-4",
+        prompt: '"<it>Come (sei/stai)?</it>"',
+        correctAnswers: ["stai"],
+      },
       {
         id: "lesson-3-question-5",
-        prompt: '"(Sto/Sono) attento in classe."',
+        prompt: '"<it>(Sto/Sono) attento in classe.</it>"',
         correctAnswers: ["sto"],
       },
       {
         id: "lesson-3-question-6",
-        prompt: '"Dove (siamo/stiamo) adesso?"',
+        prompt: '"<it>Dove (siamo/stiamo) adesso?</it>"',
         correctAnswers: ["siamo"],
       },
     ],
@@ -231,22 +258,33 @@ export const LESSONS = [
   {
     id: 4,
     slug: "regular-ar-verbs",
-    menuTitle: "Conjugating regular -are verbs",
-    title: "Conjugating regular -are verbs",
+    answerLang: "it",
+    menuTitle: "Conjugating regular <it>-are</it> verbs",
+    title: "Conjugating regular <it>-are</it> verbs",
     sections: [
       {
         t: "p",
-        html: "When conjugating verbs that end in -are, most verbs fall into a set pattern that can be repeated in order to correctly conjugate each verb in each different tense. There are irregular verbs that do not follow these rules, but they are rare and must be memorized; we will address those in a future lesson.",
+        html: "When conjugating verbs that end in <it>-are</it>, most verbs fall into a set pattern that can be repeated in order to correctly conjugate each verb in each different tense. There are irregular verbs that do not follow these rules, but they are rare and must be memorized; we will address those in a future lesson.",
       },
       {
         t: "p",
-        html: "The first step is to drop the -are ending and replace it with the following endings, depending on which person the verb requires.",
+        html: "The first step is to drop the <it>-are</it> ending and replace it with the following endings, depending on which person the verb requires.",
       },
-      { t: "ul", items: ["-o", "-i", "-a", "-iamo", "-ate", "-ano"] },
+      {
+        t: "ul",
+        items: [
+          "<it>-o</it>",
+          "<it>-i</it>",
+          "<it>-a</it>",
+          "<it>-iamo</it>",
+          "<it>-ate</it>",
+          "<it>-ano</it>",
+        ],
+      },
       {
         t: "h",
         lvl: 5,
-        html: "Let's begin by looking at the verb <i>parlare</i> which means to speak",
+        html: "Let's begin by looking at the verb <i><it>parlare</it></i> which means to speak",
       },
       {
         t: "conj",
@@ -261,7 +299,7 @@ export const LESSONS = [
       },
       {
         t: "p",
-        html: "Now let's look at another -are ending verb, <i>mangiare</i>, so that we can have another example of how the endings of -are verbs are changed depending on the usage.",
+        html: "Now let's look at another <it>-are</it> ending verb, <i><it>mangiare</it></i>, so that we can have another example of how the endings of <it>-are</it> verbs are changed depending on the usage.",
       },
       {
         t: "conj",
@@ -277,42 +315,77 @@ export const LESSONS = [
       { t: "h", lvl: 6, html: "Fill in the correct form of the verb" },
     ],
     questions: [
-      { id: "lesson-4-question-1", prompt: '"I buy" (comprare)', correctAnswers: ["compro"] },
-      { id: "lesson-4-question-2", prompt: '"We buy" (comprare)', correctAnswers: ["compriamo"] },
-      { id: "lesson-4-question-3", prompt: '"You walk" (camminare)', correctAnswers: ["cammini"] },
+      {
+        id: "lesson-4-question-1",
+        prompt: '"I buy" (<it>comprare</it>)',
+        correctAnswers: ["compro"],
+      },
+      {
+        id: "lesson-4-question-2",
+        prompt: '"We buy" (<it>comprare</it>)',
+        correctAnswers: ["compriamo"],
+      },
+      {
+        id: "lesson-4-question-3",
+        prompt: '"You walk" (<it>camminare</it>)',
+        correctAnswers: ["cammini"],
+      },
       {
         id: "lesson-4-question-4",
-        prompt: '"They walk" (camminare)',
+        prompt: '"They walk" (<it>camminare</it>)',
         correctAnswers: ["camminano"],
       },
       {
         id: "lesson-4-question-5",
-        prompt: '"You all eat" (mangiare)',
+        prompt: '"You all eat" (<it>mangiare</it>)',
         correctAnswers: ["mangiate"],
       },
-      { id: "lesson-4-question-6", prompt: '"I speak" (parlare)', correctAnswers: ["parlo"] },
-      { id: "lesson-4-question-7", prompt: '"You swim" (nuotare)', correctAnswers: ["nuoti"] },
-      { id: "lesson-4-question-8", prompt: '"She swims" (nuotare)', correctAnswers: ["nuota"] },
+      {
+        id: "lesson-4-question-6",
+        prompt: '"I speak" (<it>parlare</it>)',
+        correctAnswers: ["parlo"],
+      },
+      {
+        id: "lesson-4-question-7",
+        prompt: '"You swim" (<it>nuotare</it>)',
+        correctAnswers: ["nuoti"],
+      },
+      {
+        id: "lesson-4-question-8",
+        prompt: '"She swims" (<it>nuotare</it>)',
+        correctAnswers: ["nuota"],
+      },
     ],
   },
   {
     id: 5,
     slug: "regular-ere-verbs",
-    menuTitle: "Conjugating regular -ere verbs",
-    title: "Conjugating regular -ere verbs",
+    answerLang: "it",
+    menuTitle: "Conjugating regular <it>-ere</it> verbs",
+    title: "Conjugating regular <it>-ere</it> verbs",
     sections: [
       {
         t: "p",
-        html: "Similar to -are ending verbs, there are many regular -ere ending verbs that follow a set pattern that will allow you to conjugate any regular -ere verb depending on the situation.",
+        html: "Similar to <it>-are</it> ending verbs, there are many regular <it>-ere</it> ending verbs that follow a set pattern that will allow you to conjugate any regular <it>-ere</it> verb depending on the situation.",
       },
       {
         t: "p",
-        html: "The first step, same as -are verbs, is to drop the -ere ending and replace it with the following endings, depending on which person the verb is in.",
+        html: "The first step, same as <it>-are</it> verbs, is to drop the <it>-ere</it> ending and replace it with the following endings, depending on which person the verb is in.",
       },
-      { t: "ul", items: ["-o", "-i", "-e", "-iamo", "-ete", "-ono"] },
+      {
+        t: "ul",
+        items: [
+          "<it>-o</it>",
+          "<it>-i</it>",
+          "<it>-e</it>",
+          "<it>-iamo</it>",
+          "<it>-ete</it>",
+          "<it>-ono</it>",
+        ],
+      },
       {
         t: "p",
-        html: "First, let's practice with the verb <i>credere</i>, meaning to believe, so that we can see how it looks in action.",
+        html: "First, let's practice with the verb <i><it>credere</it></i>, meaning to believe, so that we can see how it looks in action.",
       },
       {
         t: "conj",
@@ -328,26 +401,53 @@ export const LESSONS = [
       { t: "h", lvl: 6, html: "Fill in the correct form of the verb" },
     ],
     questions: [
-      { id: "lesson-5-question-1", prompt: '"I believe" (credere)', correctAnswers: ["credo"] },
-      { id: "lesson-5-question-2", prompt: '"We believe" (credere)', correctAnswers: ["crediamo"] },
-      { id: "lesson-5-question-3", prompt: "They ask (chiedere)", correctAnswers: ["chiedono"] },
-      { id: "lesson-5-question-4", prompt: "I ask (chiedere)", correctAnswers: ["chiedo"] },
+      {
+        id: "lesson-5-question-1",
+        prompt: '"I believe" (<it>credere</it>)',
+        correctAnswers: ["credo"],
+      },
+      {
+        id: "lesson-5-question-2",
+        prompt: '"We believe" (<it>credere</it>)',
+        correctAnswers: ["crediamo"],
+      },
+      {
+        id: "lesson-5-question-3",
+        prompt: "They ask (<it>chiedere</it>)",
+        correctAnswers: ["chiedono"],
+      },
+      {
+        id: "lesson-5-question-4",
+        prompt: "I ask (<it>chiedere</it>)",
+        correctAnswers: ["chiedo"],
+      },
     ],
   },
   {
     id: 6,
     slug: "regular-ire-verbs",
-    menuTitle: "Conjugating regular -ire verbs",
-    title: "Conjugating regular -ire verbs",
+    answerLang: "it",
+    menuTitle: "Conjugating regular <it>-ire</it> verbs",
+    title: "Conjugating regular <it>-ire</it> verbs",
     sections: [
       {
         t: "p",
-        html: "Like the other two verb groups in Italian, most -ire verbs follow a predictable pattern, so let's look at how their endings are formed.",
+        html: "Like the other two verb groups in Italian, most <it>-ire</it> verbs follow a predictable pattern, so let's look at how their endings are formed.",
       },
-      { t: "ul", items: ["-o", "-i", "-e", "-iamo", "-ite", "-ono"] },
+      {
+        t: "ul",
+        items: [
+          "<it>-o</it>",
+          "<it>-i</it>",
+          "<it>-e</it>",
+          "<it>-iamo</it>",
+          "<it>-ite</it>",
+          "<it>-ono</it>",
+        ],
+      },
       {
         t: "p",
-        html: "First, let's practice with the verb <i>dormire</i>, meaning to sleep, so that we can see how it looks in action.",
+        html: "First, let's practice with the verb <i><it>dormire</it></i>, meaning to sleep, so that we can see how it looks in action.",
       },
       {
         t: "conj",
@@ -363,15 +463,28 @@ export const LESSONS = [
       { t: "h", lvl: 6, html: "Fill in the correct form of the verb" },
     ],
     questions: [
-      { id: "lesson-6-question-1", prompt: '"I sleep" (dormire)', correctAnswers: ["dormo"] },
-      { id: "lesson-6-question-2", prompt: '"We feel" (sentire)', correctAnswers: ["sentiamo"] },
-      { id: "lesson-6-question-3", prompt: "They sleep (dormire)", correctAnswers: ["dormono"] },
-      { id: "lesson-6-question-4", prompt: "I hear (sentire)", correctAnswers: ["sento"] },
+      {
+        id: "lesson-6-question-1",
+        prompt: '"I sleep" (<it>dormire</it>)',
+        correctAnswers: ["dormo"],
+      },
+      {
+        id: "lesson-6-question-2",
+        prompt: '"We feel" (<it>sentire</it>)',
+        correctAnswers: ["sentiamo"],
+      },
+      {
+        id: "lesson-6-question-3",
+        prompt: "They sleep (<it>dormire</it>)",
+        correctAnswers: ["dormono"],
+      },
+      { id: "lesson-6-question-4", prompt: "I hear (<it>sentire</it>)", correctAnswers: ["sento"] },
     ],
   },
   {
     id: 7,
     slug: "irregular-verbs",
+    answerLang: "it",
     menuTitle: "Conjugating irregular verbs",
     title: "Conjugating irregular verbs",
     sections: [
@@ -381,7 +494,7 @@ export const LESSONS = [
       },
       {
         t: "p",
-        html: "Let's begin by looking at one of the more common irregular patterns that we see with the verb <i>capire</i>, meaning to understand something.",
+        html: "Let's begin by looking at one of the more common irregular patterns that we see with the verb <i><it>capire</it></i>, meaning to understand something.",
       },
       {
         t: "conj",
@@ -396,13 +509,13 @@ export const LESSONS = [
       },
       {
         t: "p",
-        html: "As you can see, in the io form we drop the ending and add 'isco'; in the tu form we drop the ending and add 'isci'; while in the third person singular form we drop the ending and add 'isce'. The noi/voi forms follow the old regular pattern, and in the third person plural form we again drop the ending and add a new ending of 'iscono'.",
+        html: "As you can see, in the <it>io</it> form we drop the ending and add '<it>isco</it>'; in the <it>tu</it> form we drop the ending and add '<it>isci</it>'; while in the third person singular form we drop the ending and add '<it>isce</it>'. The <it>noi</it>/<it>voi</it> forms follow the old regular pattern, and in the third person plural form we again drop the ending and add a new ending of '<it>iscono</it>'.",
       },
       {
         t: "p",
-        html: "Now let's look at two verbs almost as common as <i>essere</i> and <i>stare</i>: <i>fare</i>, meaning to do or make, and <i>andare</i>, meaning to go. Both are irregular, with their own conjugation rules, so they take some memorization to master.",
+        html: "Now let's look at two verbs almost as common as <i><it>essere</it></i> and <i><it>stare</it></i>: <i><it>fare</it></i>, meaning to do or make, and <i><it>andare</it></i>, meaning to go. Both are irregular, with their own conjugation rules, so they take some memorization to master.",
       },
-      { t: "h", lvl: 5, html: "Let's begin by taking a look at <i>andare</i>" },
+      { t: "h", lvl: 5, html: "Let's begin by taking a look at <i><it>andare</it></i>" },
       {
         t: "conj",
         rows: [
@@ -414,7 +527,7 @@ export const LESSONS = [
           ["loro", "vanno", "They go"],
         ],
       },
-      { t: "h", lvl: 5, html: "Now let's take a look at <i>fare</i>" },
+      { t: "h", lvl: 5, html: "Now let's take a look at <i><it>fare</it></i>" },
       {
         t: "conj",
         rows: [
@@ -433,16 +546,24 @@ export const LESSONS = [
       { t: "h", lvl: 6, html: "Fill in the correct form of the verb" },
     ],
     questions: [
-      { id: "lesson-7-question-1", prompt: '"I understand" (capire)', correctAnswers: ["capisco"] },
-      { id: "lesson-7-question-2", prompt: '"We do/make" (fare)', correctAnswers: ["facciamo"] },
-      { id: "lesson-7-question-3", prompt: "They go (andare)", correctAnswers: ["vanno"] },
+      {
+        id: "lesson-7-question-1",
+        prompt: '"I understand" (<it>capire</it>)',
+        correctAnswers: ["capisco"],
+      },
+      {
+        id: "lesson-7-question-2",
+        prompt: '"We do/make" (<it>fare</it>)',
+        correctAnswers: ["facciamo"],
+      },
+      { id: "lesson-7-question-3", prompt: "They go (<it>andare</it>)", correctAnswers: ["vanno"] },
       {
         id: "lesson-7-question-4",
-        prompt: "She understands (capire)",
+        prompt: "She understands (<it>capire</it>)",
         correctAnswers: ["capisce"],
       },
-      { id: "lesson-7-question-5", prompt: "We go (andare)", correctAnswers: ["andiamo"] },
-      { id: "lesson-7-question-6", prompt: "I make (fare)", correctAnswers: ["faccio"] },
+      { id: "lesson-7-question-5", prompt: "We go (<it>andare</it>)", correctAnswers: ["andiamo"] },
+      { id: "lesson-7-question-6", prompt: "I make (<it>fare</it>)", correctAnswers: ["faccio"] },
     ],
   },
   {
@@ -458,13 +579,13 @@ export const LESSONS = [
       {
         t: "ul",
         items: [
-          "First person singular: io → I",
-          "Second person singular: tu → you",
-          "Third person singular masculine: lui → he",
-          "Third person singular feminine: lei → she",
-          "First person plural: noi → we",
-          "Second person plural: voi → you all",
-          "Third person plural: loro → they",
+          "First person singular: <it>io</it> → I",
+          "Second person singular: <it>tu</it> → you",
+          "Third person singular masculine: <it>lui</it> → he",
+          "Third person singular feminine: <it>lei</it> → she",
+          "First person plural: <it>noi</it> → we",
+          "Second person plural: <it>voi</it> → you all",
+          "Third person plural: <it>loro</it> → they",
         ],
       },
       {
@@ -477,7 +598,7 @@ export const LESSONS = [
       },
       {
         t: "p",
-        html: "One other thing to note is that <strong>Lei</strong> (capitalized) — the third person singular feminine form — can stand in for the second person singular (tu) when speaking to someone formally, as a sign of respect. This applies regardless of whether you're addressing a man or a woman; lui is never used this way.",
+        html: "One other thing to note is that <strong><it>Lei</it></strong> (capitalized) — the third person singular feminine form — can stand in for the second person singular (<it>tu</it>) when speaking to someone formally, as a sign of respect. This applies regardless of whether you're addressing a man or a woman; <it>lui</it> is never used this way.",
       },
       {
         t: "p",
@@ -489,6 +610,7 @@ export const LESSONS = [
   {
     id: 9,
     slug: "direct-object-pronouns",
+    answerLang: "it",
     menuTitle: "Italian direct object pronouns",
     title: "Italian direct object pronouns",
     sections: [
@@ -505,14 +627,14 @@ export const LESSONS = [
       {
         t: "ul",
         items: [
-          "First person singular: mi → me",
-          "Second person singular: ti → you",
-          "Third person singular masculine: lo → him/it",
-          "Third person singular feminine: la → her/it",
-          "First person plural: ci → us",
-          "Second person plural: vi → you all",
-          "Third person plural masculine: li → them",
-          "Third person plural feminine: le → them",
+          "First person singular: <it>mi</it> → me",
+          "Second person singular: <it>ti</it> → you",
+          "Third person singular masculine: <it>lo</it> → him/it",
+          "Third person singular feminine: <it>la</it> → her/it",
+          "First person plural: <it>ci</it> → us",
+          "Second person plural: <it>vi</it> → you all",
+          "Third person plural masculine: <it>li</it> → them",
+          "Third person plural feminine: <it>le</it> → them",
         ],
       },
       {
@@ -527,9 +649,9 @@ export const LESSONS = [
       {
         t: "ul",
         items: [
-          "Federico legge il libro. → Federico lo legge. <i>(Federico reads the book. → Federico reads it.)</i>",
-          "Margherita beve il vino. → Margherita lo beve. <i>(Margherita drinks the wine. → Margherita drinks it.)</i>",
-          "Paolo mangia il pane. → Paolo lo mangia. <i>(Paolo eats the bread. → Paolo eats it.)</i>",
+          "<it>Federico legge il libro. → Federico lo legge.</it> <i>(Federico reads the book. → Federico reads it.)</i>",
+          "<it>Margherita beve il vino. → Margherita lo beve.</it> <i>(Margherita drinks the wine. → Margherita drinks it.)</i>",
+          "<it>Paolo mangia il pane. → Paolo lo mangia.</it> <i>(Paolo eats the bread. → Paolo eats it.)</i>",
         ],
       },
       {
@@ -541,17 +663,17 @@ export const LESSONS = [
     questions: [
       {
         id: "lesson-9-question-1",
-        prompt: "Io mangio la pizza → io __ mangio.",
+        prompt: "<it>Io mangio la pizza → io __ mangio.</it>",
         correctAnswers: ["la"],
       },
       {
         id: "lesson-9-question-2",
-        prompt: "Tu leggi il libro. → tu __ leggi.",
+        prompt: "<it>Tu leggi il libro. → tu __ leggi.</it>",
         correctAnswers: ["lo"],
       },
       {
         id: "lesson-9-question-3",
-        prompt: "Noi vediamo i ragazzi. → Noi __ vediamo.",
+        prompt: "<it>Noi vediamo i ragazzi. → Noi __ vediamo.</it>",
         correctAnswers: ["li"],
       },
     ],
@@ -559,6 +681,7 @@ export const LESSONS = [
   {
     id: 10,
     slug: "indirect-object-pronouns",
+    answerLang: "it",
     menuTitle: "Italian indirect object pronouns",
     title: "Italian indirect object pronouns",
     sections: [
@@ -575,13 +698,13 @@ export const LESSONS = [
       {
         t: "ul",
         items: [
-          "First person singular: mi → to me",
-          "Second person singular: ti → to you",
-          "Third person singular masculine: gli → to him",
-          "Third person singular feminine: le → to her",
-          "First person plural: ci → to us",
-          "Second person plural: vi → to you all",
-          "Third person plural: gli (or loro) → to them",
+          "First person singular: <it>mi</it> → to me",
+          "Second person singular: <it>ti</it> → to you",
+          "Third person singular masculine: <it>gli</it> → to him",
+          "Third person singular feminine: <it>le</it> → to her",
+          "First person plural: <it>ci</it> → to us",
+          "Second person plural: <it>vi</it> → to you all",
+          "Third person plural: <it>gli</it> (or <it>loro</it>) → to them",
         ],
       },
       {
@@ -596,9 +719,9 @@ export const LESSONS = [
       {
         t: "ul",
         items: [
-          "Io parlo a Marco. → Io gli parlo. <i>(I speak to Marco. → I speak to him.)</i>",
-          "Lei scrive a Maria. → Lei le scrive. <i>(She writes to Maria. → She writes to her.)</i>",
-          "Noi diamo il libro a loro. → Noi gli diamo il libro. <i>(We give the book to them. → We give them the book.)</i>",
+          "<it>Io parlo a Marco. → Io gli parlo.</it> <i>(I speak to Marco. → I speak to him.)</i>",
+          "<it>Lei scrive a Maria. → Lei le scrive.</it> <i>(She writes to Maria. → She writes to her.)</i>",
+          "<it>Noi diamo il libro a loro. → Noi gli diamo il libro.</it> <i>(We give the book to them. → We give them the book.)</i>",
         ],
       },
       {
@@ -610,22 +733,22 @@ export const LESSONS = [
     questions: [
       {
         id: "lesson-10-question-1",
-        prompt: "Io parlo a Marco. → Io __ parlo.",
+        prompt: "<it>Io parlo a Marco. → Io __ parlo.</it>",
         correctAnswers: ["gli"],
       },
       {
         id: "lesson-10-question-2",
-        prompt: "Tu scrivi a Maria. → Tu __ scrivi.",
+        prompt: "<it>Tu scrivi a Maria. → Tu __ scrivi.</it>",
         correctAnswers: ["le"],
       },
       {
         id: "lesson-10-question-3",
-        prompt: "Lui telefona a me. → Lui __ telefona.",
+        prompt: "<it>Lui telefona a me. → Lui __ telefona.</it>",
         correctAnswers: ["mi"],
       },
       {
         id: "lesson-10-question-4",
-        prompt: "Loro danno il regalo a noi. → Loro __ danno il regalo.",
+        prompt: "<it>Loro danno il regalo a noi. → Loro __ danno il regalo.</it>",
         correctAnswers: ["ci"],
       },
     ],

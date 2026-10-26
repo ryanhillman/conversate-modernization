@@ -41,7 +41,9 @@
         </div>
         <transition v-else name="card-flip" mode="out-in" @after-enter="focusQuestion">
           <div class="quiz-card" :key="currentIndex">
-            <h3 ref="questionWord" class="quiz-word" tabindex="-1">{{ currentQuestion.it }}</h3>
+            <h3 ref="questionWord" class="quiz-word" lang="it" tabindex="-1">
+              {{ currentQuestion.it }}
+            </h3>
             <div class="quiz-choices">
               <button
                 v-for="choice in currentQuestion.choices"

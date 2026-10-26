@@ -14,7 +14,8 @@
       <h3>Completed Lessons</h3>
       <ul v-if="completedLessons.length" class="completed-list">
         <li v-for="lesson in completedLessons" :key="lesson.id">
-          <span class="completed-check">✓</span> Lesson {{ lesson.id }}: {{ lesson.menuTitle }}
+          <span class="completed-check">✓</span> Lesson {{ lesson.id }}:
+          <RichText :text="lesson.menuTitle" />
         </li>
       </ul>
       <p v-else>No lessons completed yet.</p>
@@ -25,6 +26,7 @@
 <script setup>
 import { computed } from "vue";
 import RequireProfile from "../components/RequireProfile.vue";
+import RichText from "../components/RichText.vue";
 import { LESSONS } from "../data/lessons.js";
 import { completedLessonIds } from "../stores/profileStore";
 
