@@ -34,7 +34,9 @@ const toasts = computed(() => toastState.toasts);
   flex-direction: column;
   gap: 0.6rem;
 }
+/* Bootstrap's .toast-container lets clicks pass through; take them back here. */
 .toast-item {
+  pointer-events: auto;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
