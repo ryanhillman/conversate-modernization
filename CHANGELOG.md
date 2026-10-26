@@ -40,6 +40,8 @@
 - Declared database columns with typed annotations.
 - Stored quiz times as timezone-aware UTC.
 - Renamed the user_name field to username in the API and database for naming consistency.
+- Renamed the user table to account, since user is a reserved word in Postgres.
+- Replaced the migration history with a single baseline; databases from earlier versions must be recreated.
 - Updated README's How to Run: Docker database address, .env.example files, and Google Cloud billing.
 - Upgraded Vue Router to 5, Vitest to 5, and Auth0's Vue SDK to 2.11.
 - Upgraded SQLAlchemy to 2.1, Alembic to 1.20, and Gunicorn to 26.2, and switched the Postgres driver to psycopg 3.

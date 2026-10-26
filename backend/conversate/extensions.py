@@ -8,8 +8,8 @@ from sqlalchemy.orm import DeclarativeBase
 
 
 class Base(DeclarativeBase):
-    # Names the foreign key that migration 0002 creates. Changing it would give
-    # a fresh database a different constraint name than an existing one.
+    # Names the foreign key the baseline migration creates. Changing it would
+    # give a fresh database a different constraint name than an existing one.
     metadata = MetaData(
         naming_convention={
             'fk': 'fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s',
