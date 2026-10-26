@@ -30,6 +30,9 @@ jobs:
     env:
       DATABASE_URL: postgresql://conversate:conversate@127.0.0.1:5432/conversate_test
       TEST_DATABASE_URL: postgresql://conversate:conversate@127.0.0.1:5432/conversate_test
+      # Run the database session outside UTC, so tests catch times read back in
+      # local time.
+      PGTZ: America/New_York
       # Config requires these; nothing in CI calls Auth0 or Google.
       AUTH0_DOMAIN: ci.invalid
       AUTH0_AUDIENCE: ci

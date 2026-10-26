@@ -5,7 +5,7 @@ Revises: 0007
 Create Date: 2026-10-25 00:00:00.000000
 
 Quiz start and pause times were stored without a timezone, holding UTC by
-convention. timestamptz records the timezone with them. AT TIME ZONE 'UTC'
+convention. timestamptz stores them as moments in time. AT TIME ZONE 'UTC'
 reads the existing values as the UTC they always were, in both directions.
 SQLite has no timezone type, so there it changes nothing.
 

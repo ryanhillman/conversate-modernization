@@ -8,9 +8,8 @@ from .extensions import db
 
 
 class UTCDateTime(TypeDecorator):
-    """A timezone-aware datetime, stored as UTC. Postgres keeps the timezone
-    (timestamptz); SQLite has no timezone type and returns values without
-    one, so they're marked UTC on the way back out."""
+    """A timezone-aware datetime, always returned in UTC. Postgres returns it
+    in the session's timezone; SQLite returns it without one."""
 
     impl = DateTime(timezone=True)
     cache_ok = True
@@ -19,9 +18,9 @@ class UTCDateTime(TypeDecorator):
         return value.astimezone(UTC) if value is not None else None
 
     def process_result_value(self, value, dialect):
-        if value is not None and value.tzinfo is None:
-            return value.replace(tzinfo=UTC)
-        return value
+        if value is None:
+            return None
+        return value.replace(tzinfo=UTC) if value.tzinfo is None else value.astimezone(UTC)
 
 
 class User(db.Model):
