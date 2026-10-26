@@ -99,7 +99,7 @@ import RichText from "../components/RichText.vue";
 import { LESSONS } from "../data/lessons";
 import { isAnswerCorrect, isLessonComplete, normalizeAnswer } from "../utils/grading";
 import { synthesizeSpeech } from "../api/tts";
-import { profile as user, setProfile } from "../stores/profileStore";
+import { completedLessonIds, setProfile } from "../stores/profileStore";
 import { announce } from "../stores/announceStore";
 import { showToast } from "../stores/toastStore";
 
@@ -149,13 +149,11 @@ function checkCurrentLesson() {
   }
 }
 function isComplete(lessonId) {
-  const completed = user.value && user.value.lessons_completed ? user.value.lessons_completed : [];
-  return completed.includes(lessonId);
+  return completedLessonIds.value.includes(lessonId);
 }
 async function markLessonComplete(lessonId) {
   if (completing.value) return;
-  const completed = user.value && user.value.lessons_completed ? user.value.lessons_completed : [];
-  if (!completed.includes(lessonId)) {
+  if (!isComplete(lessonId)) {
     completing.value = true;
     try {
       const data = await completeLesson(lessonId);

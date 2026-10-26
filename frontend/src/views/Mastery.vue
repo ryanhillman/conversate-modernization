@@ -26,12 +26,11 @@
 import { computed } from "vue";
 import RequireProfile from "../components/RequireProfile.vue";
 import { LESSONS } from "../data/lessons.js";
-import { profile as user } from "../stores/profileStore";
+import { completedLessonIds } from "../stores/profileStore";
 
-const completedLessons = computed(() => {
-  const completed = (user.value && user.value.lessons_completed) || [];
-  return LESSONS.filter((lesson) => completed.includes(lesson.id));
-});
+const completedLessons = computed(() =>
+  LESSONS.filter((lesson) => completedLessonIds.value.includes(lesson.id)),
+);
 const masteryPercent = computed(() =>
   Math.round((completedLessons.value.length / LESSONS.length) * 100),
 );
