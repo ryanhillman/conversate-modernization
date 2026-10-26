@@ -82,7 +82,7 @@
           </div>
         </template>
         <div v-else-if="!isComplete(lesson.id)" class="complete-lesson">
-          <button class="lesson-btn" :disabled="completing" @click="markLessonComplete(lesson.id)">
+          <button class="lesson-btn" :disabled="completing" @click="completeWithButton(lesson)">
             Mark lesson complete
           </button>
         </div>
@@ -92,7 +92,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from "vue";
+import { ref, reactive, computed, nextTick } from "vue";
 import { completeLesson } from "../api/users";
 import { generateConfetti } from "../utils/confetti";
 import RequireProfile from "../components/RequireProfile.vue";
@@ -151,6 +151,15 @@ function checkCurrentLesson() {
 }
 function isComplete(lessonId) {
   return completedLessonIds.value.includes(lessonId);
+}
+// The button disappears once the lesson is complete, so move focus to the
+// lesson's Toggle button.
+async function completeWithButton(lesson) {
+  await markLessonComplete(lesson.id);
+  if (isComplete(lesson.id)) {
+    await nextTick();
+    document.getElementById(lesson.slug)?.focus();
+  }
 }
 async function markLessonComplete(lessonId) {
   if (completing.value) return;

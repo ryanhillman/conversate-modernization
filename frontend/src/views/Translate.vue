@@ -49,9 +49,10 @@
           ></textarea>
           <div class="m-3">
             <button
-              v-if="micSupported && !busy"
+              v-if="micSupported"
               type="button"
               class="icon-button"
+              :disabled="busy"
               :aria-label="recording ? 'Stop recording' : 'Start recording'"
               @click="toggleRecording"
             >
@@ -62,9 +63,10 @@
               />
             </button>
             <button
-              v-if="translatedText && !translatedTextTooLong && !busy"
+              v-if="translatedText && !translatedTextTooLong"
               type="button"
               class="icon-button"
+              :disabled="busy"
               aria-label="Listen to translation"
               @click="startTextToSpeech"
             >
@@ -285,6 +287,13 @@ async function startTextToSpeech() {
 .icon-button:hover .translate-icon,
 .icon-button:focus-visible .translate-icon {
   filter: drop-shadow(0 0 6px color-mix(in srgb, var(--brand-accent) 80%, transparent));
+}
+.icon-button:disabled {
+  opacity: 0.5;
+}
+.icon-button:disabled,
+.icon-button:disabled .translate-icon {
+  cursor: default;
 }
 .back-card {
   border-radius: var(--radius);
