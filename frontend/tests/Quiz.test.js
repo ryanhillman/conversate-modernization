@@ -9,6 +9,9 @@ vi.mock("../src/api/quiz", () => ({
   resumeQuiz: vi.fn(),
   submitQuiz: vi.fn(),
 }));
+// The profile store imports this; the real one loads auth.js, which needs
+// Auth0 settings that CI doesn't have.
+vi.mock("../src/api/users", () => ({ getMe: vi.fn() }));
 
 import { answerQuiz, startQuiz, submitQuiz } from "../src/api/quiz";
 import { toastState } from "../src/stores/toastStore";
