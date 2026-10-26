@@ -6,7 +6,7 @@
       </div>
 
       <div v-if="phase === 'ready'" class="card-style quiz-results">
-        <button class="btn btn-accent m-2" @click="start">Start Quiz</button>
+        <button ref="startButton" class="btn btn-accent m-2" @click="start">Start Quiz</button>
       </div>
 
       <div v-else-if="phase === 'loading'" class="loading-state">
@@ -37,11 +37,11 @@
 
         <div v-if="phase === 'paused'" class="quiz-card quiz-paused">
           <p>Paused</p>
-          <button class="btn btn-accent" @click="resume">Resume</button>
+          <button ref="resumeButton" class="btn btn-accent" @click="resume">Resume</button>
         </div>
-        <transition v-else name="card-flip" mode="out-in">
+        <transition v-else name="card-flip" mode="out-in" @after-enter="focusQuestion">
           <div class="quiz-card" :key="currentIndex">
-            <h3 class="quiz-word">{{ currentQuestion.it }}</h3>
+            <h3 ref="questionWord" class="quiz-word" tabindex="-1">{{ currentQuestion.it }}</h3>
             <div class="quiz-choices">
               <button
                 v-for="choice in currentQuestion.choices"
@@ -51,6 +51,9 @@
                 :disabled="advancing"
                 @click="selectAnswer(choice)"
               >
+                <span v-if="choiceClass(choice)" aria-hidden="true">{{
+                  feedback === "correct" ? "✓" : "✗"
+                }}</span>
                 {{ choice }}
               </button>
             </div>
@@ -58,7 +61,12 @@
         </transition>
       </div>
 
-      <div v-else-if="phase === 'results'" class="card-style quiz-results">
+      <div
+        v-else-if="phase === 'results'"
+        ref="resultsCard"
+        class="card-style quiz-results"
+        tabindex="-1"
+      >
         <h3 v-if="result.is_new_best">New best!</h3>
         <p>Score: {{ result.score }} / {{ questions.length }}</p>
         <p>Time: {{ formatTime(result.time_seconds) }}</p>
@@ -68,19 +76,19 @@
 
       <div v-else-if="phase === 'error'" class="card-style">
         <p>Could not load the quiz.</p>
-        <button class="btn btn-accent" @click="start">Try again</button>
+        <button ref="retryButton" class="btn btn-accent" @click="start">Try again</button>
       </div>
 
       <div v-else-if="phase === 'saveError'" class="card-style">
         <p>Could not save your result.</p>
-        <button class="btn btn-accent" @click="finish">Try again</button>
+        <button ref="retryButton" class="btn btn-accent" @click="finish">Try again</button>
       </div>
     </div>
   </RequireProfile>
 </template>
 
 <script setup>
-import { ref, computed, onBeforeUnmount } from "vue";
+import { ref, computed, watch, onBeforeUnmount } from "vue";
 import RequireProfile from "../components/RequireProfile.vue";
 import { startQuiz, answerQuiz, pauseQuiz, resumeQuiz, submitQuiz } from "../api/quiz";
 import { profile, setProfile } from "../stores/profileStore";
@@ -107,6 +115,28 @@ const currentQuestion = computed(() => questions.value[currentIndex.value]);
 const formattedRemaining = computed(() => formatTime(remainingSeconds.value));
 
 onBeforeUnmount(() => clearInterval(tickTimer));
+
+const startButton = ref(null);
+const questionWord = ref(null);
+const resumeButton = ref(null);
+const resultsCard = ref(null);
+const retryButton = ref(null);
+
+// Each screen replaces the one that had focus, so move focus onto the new one.
+const FOCUS_TARGETS = {
+  ready: startButton,
+  active: questionWord,
+  paused: resumeButton,
+  results: resultsCard,
+  error: retryButton,
+  saveError: retryButton,
+};
+watch(phase, (newPhase) => FOCUS_TARGETS[newPhase]?.value?.focus(), { flush: "post" });
+
+// A new question replaces the card once its flip animation ends.
+function focusQuestion() {
+  questionWord.value?.focus();
+}
 
 function choiceClass(choice) {
   if (choice !== selectedChoice.value || !feedback.value) return "";
