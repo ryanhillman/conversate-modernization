@@ -55,6 +55,58 @@ describe("useUsernameAvailability", () => {
     expect(takenUsername.value).toBe(false);
   });
 
+  it("stays checking from the keystroke until the result arrives", async () => {
+    let resolveCheck;
+    checkUsername.mockReturnValue(new Promise((resolve) => (resolveCheck = resolve)));
+    const username = ref("");
+    const { checking, takenUsername } = useUsernameAvailability(username);
+
+    await type(username, "ryan_h");
+    expect(checking.value).toBe(true);
+    await vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
+    expect(checking.value).toBe(true);
+
+    resolveCheck({ available: false });
+    await vi.advanceTimersByTimeAsync(0);
+    expect(checking.value).toBe(false);
+    expect(takenUsername.value).toBe(true);
+  });
+
+  it("stops checking when the name becomes invalid or skipped", async () => {
+    const username = ref("");
+    const { checking } = useUsernameAvailability(username, {
+      skipAvailabilityCheck: (name) => name === "ryan_h",
+    });
+
+    await type(username, "ryan_h2");
+    expect(checking.value).toBe(true);
+    await type(username, "ry");
+    expect(checking.value).toBe(false);
+
+    await type(username, "ryan_h2");
+    await type(username, "ryan_h");
+    expect(checking.value).toBe(false);
+  });
+
+  it("keeps checking when a superseded response settles first", async () => {
+    let resolveFirst;
+    checkUsername
+      .mockReturnValueOnce(new Promise((resolve) => (resolveFirst = resolve)))
+      .mockResolvedValueOnce({ available: true });
+    const username = ref("");
+    const { checking } = useUsernameAvailability(username);
+
+    await type(username, "alice");
+    await vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
+    await type(username, "alicia");
+    resolveFirst({ available: true });
+    await vi.advanceTimersByTimeAsync(0);
+    expect(checking.value).toBe(true);
+
+    await vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
+    expect(checking.value).toBe(false);
+  });
+
   it("does not report a name as taken when the check fails", async () => {
     checkUsername.mockRejectedValue(new Error("network down"));
     const username = ref("");

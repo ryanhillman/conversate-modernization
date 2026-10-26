@@ -9,7 +9,9 @@ import { usernameError } from "../utils/usernameValidation";
 export function useUsernameAvailability(username, { skipAvailabilityCheck = () => false } = {}) {
   // Separate from the host's own "saving" flag for the actual create/rename
   // call: a debounced availability check settling after Save is clicked
-  // must not re-enable the button mid-save.
+  // must not re-enable the button mid-save. True from the keystroke, not just
+  // once the request starts, so Save can't submit a taken name during the
+  // debounce wait.
   const checking = ref(false);
   const takenUsername = ref(false);
   let checkTimer = null;
@@ -18,7 +20,6 @@ export function useUsernameAvailability(username, { skipAvailabilityCheck = () =
   const validationError = computed(() => usernameError(username.value));
 
   async function checkUsername(candidate, seq) {
-    checking.value = true;
     try {
       const data = await apiCheckUsername(candidate);
       // Ignore a response a newer keystroke has already superseded.
@@ -29,7 +30,8 @@ export function useUsernameAvailability(username, { skipAvailabilityCheck = () =
       // "taken" — only an explicit available:false does.
       takenUsername.value = false;
     } finally {
-      checking.value = false;
+      // A superseded check must not clear the flag a newer one still holds.
+      if (seq === checkSeq) checking.value = false;
     }
   }
 
@@ -38,7 +40,11 @@ export function useUsernameAvailability(username, { skipAvailabilityCheck = () =
     takenUsername.value = false;
     const seq = ++checkSeq;
     const candidate = val.trim();
-    if (validationError.value || skipAvailabilityCheck(candidate)) return;
+    if (validationError.value || skipAvailabilityCheck(candidate)) {
+      checking.value = false;
+      return;
+    }
+    checking.value = true;
     checkTimer = setTimeout(() => checkUsername(candidate, seq), 400);
   });
 
