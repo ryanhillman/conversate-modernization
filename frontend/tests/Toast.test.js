@@ -1,12 +1,19 @@
 // @vitest-environment jsdom
-import { beforeEach, describe, expect, it } from "vitest";
-import { mount } from "@vue/test-utils";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { flushPromises, mount } from "@vue/test-utils";
 import Toast from "../src/components/Toast.vue";
 import { showToast, toastState } from "../src/stores/toastStore";
 
+let main;
+
 beforeEach(() => {
   toastState.toasts = [];
+  main = document.createElement("main");
+  main.id = "main";
+  main.tabIndex = -1;
+  document.body.append(main);
 });
+afterEach(() => main.remove());
 
 describe("Toast", () => {
   it("lets an error be dismissed", async () => {
@@ -22,5 +29,22 @@ describe("Toast", () => {
     showToast("Saved", "success");
     const wrapper = mount(Toast);
     expect(wrapper.find("button").exists()).toBe(false);
+  });
+
+  it("moves focus to the next Dismiss button, then to the page, as toasts close", async () => {
+    showToast("First error.", "error");
+    showToast("Second error.", "error");
+    const wrapper = mount(Toast, { attachTo: document.body });
+
+    const first = wrapper.findAll("button")[0];
+    first.element.focus();
+    await first.trigger("click");
+    await flushPromises();
+    expect(document.activeElement.closest(".toast-item").textContent).toContain("Second error.");
+
+    await wrapper.get("button").trigger("click");
+    await flushPromises();
+    expect(document.activeElement).toBe(main);
+    wrapper.unmount();
   });
 });

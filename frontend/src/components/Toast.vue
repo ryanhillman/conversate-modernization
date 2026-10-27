@@ -1,14 +1,19 @@
 <template>
-  <div class="toast-container" role="status" aria-live="polite">
+  <div ref="container" class="toast-container" role="status" aria-live="polite">
     <transition-group name="toast">
-      <div v-for="t in toasts" :key="t.id" :class="['toast-item', 'toast-' + t.type]">
+      <div
+        v-for="t in toasts"
+        :key="t.id"
+        :class="['toast-item', 'toast-' + t.type]"
+        :data-toast-id="t.id"
+      >
         <span>{{ t.message }}</span>
         <button
           v-if="t.type === 'error'"
           type="button"
           class="toast-dismiss"
           aria-label="Dismiss"
-          @click="dismissToast(t.id)"
+          @click="dismiss(t.id, $event)"
         >
           ×
         </button>
@@ -18,10 +23,25 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, nextTick, ref } from "vue";
 import { dismissToast, toastState } from "../stores/toastStore";
 
 const toasts = computed(() => toastState.toasts);
+const container = ref(null);
+
+// Removing the toast would drop focus to the page, so move it to the next
+// error toast's Dismiss button, or else to the main content.
+async function dismiss(id, event) {
+  const hadFocus = event.currentTarget === document.activeElement;
+  const errors = toasts.value.filter((t) => t.type === "error");
+  const index = errors.findIndex((t) => t.id === id);
+  const next = errors[index + 1] ?? errors[index - 1];
+  dismissToast(id);
+  if (!hadFocus) return;
+  await nextTick();
+  const button = next && container.value?.querySelector(`[data-toast-id="${next.id}"] button`);
+  (button ?? document.getElementById("main"))?.focus();
+}
 </script>
 
 <style scoped>
