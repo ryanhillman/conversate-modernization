@@ -6,6 +6,11 @@
       </div>
 
       <div v-if="phase === 'ready'" class="card-style quiz-results">
+        <!-- The limits set in backend/conversate/api/quiz.py. -->
+        <p>
+          Answer 50 questions in 4 minutes 10 seconds. You can pause once; the clock stops for up to
+          2 minutes.
+        </p>
         <button ref="startButton" class="btn btn-accent m-2" @click="start">Start Quiz</button>
       </div>
 

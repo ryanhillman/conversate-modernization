@@ -43,9 +43,11 @@
           Input and output language must be different.
         </p>
         <div>
+          <label for="textToTranslate">Text to translate</label>
+          <br />
           <textarea
+            id="textToTranslate"
             class="m-2 translate-textarea"
-            aria-label="Text to translate"
             :lang="inputLanguage"
             rows="10"
             maxlength="5000"
@@ -85,9 +87,11 @@
               Recording… select the microphone again to stop.
             </p>
           </div>
+          <label for="translation">Translation</label>
+          <br />
           <textarea
+            id="translation"
             class="m-2 translate-textarea"
-            aria-label="Translation"
             :lang="translatedTextLanguage"
             readonly
             v-model="translatedText"

@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { flushPromises, mount } from "@vue/test-utils";
+import { computeAccessibleName } from "dom-accessibility-api";
 
 // The real API modules load auth.js, which needs Auth0 settings that CI
 // doesn't have.
@@ -102,10 +103,22 @@ describe("Translate", () => {
 
   it("lets the translation be focused and selected, but not edited", () => {
     const wrapper = mount(Translate, { global: { stubs: { RequireProfile } } });
-    const output = wrapper.get('textarea[aria-label="Translation"]');
+    const output = wrapper.get("#translation");
 
     expect(output.attributes("readonly")).toBeDefined();
     expect(output.attributes("disabled")).toBeUndefined();
+  });
+
+  it("names each text box by its visible label", () => {
+    const wrapper = mount(Translate, {
+      global: { stubs: { RequireProfile } },
+      attachTo: document.body,
+    });
+    const [input, output] = wrapper.findAll("textarea");
+
+    expect(computeAccessibleName(input.element)).toBe("Text to translate");
+    expect(computeAccessibleName(output.element)).toBe("Translation");
+    wrapper.unmount();
   });
 
   it("marks each text box with the language it holds", async () => {

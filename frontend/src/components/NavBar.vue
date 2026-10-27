@@ -102,7 +102,7 @@
             >
               <img
                 :src="user.picture"
-                alt="User's profile picture"
+                alt="Account menu"
                 referrerpolicy="no-referrer"
                 class="nav-user-profile rounded-circle"
                 width="50"

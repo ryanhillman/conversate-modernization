@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { flushPromises, mount } from "@vue/test-utils";
+import { computeAccessibleName } from "dom-accessibility-api";
 
 // The real modules load auth.js, which needs Auth0 settings that CI doesn't
 // have.
@@ -83,5 +84,14 @@ describe("busy username buttons", () => {
     const wrapper = mount(AccountActions);
 
     await expectBusyAfterTwoClicks(wrapper.findAll("button")[1], resetStats);
+  });
+});
+
+describe("AccountActions", () => {
+  it("names the rename box by its visible label", () => {
+    const wrapper = mount(AccountActions, { attachTo: document.body });
+
+    expect(computeAccessibleName(wrapper.get("input").element)).toBe("New username");
+    wrapper.unmount();
   });
 });

@@ -1,10 +1,10 @@
 <template>
   <div class="d-flex flex-column align-items-center">
+    <label for="new-username" class="account-actions-field text-start mb-1">New username</label>
     <input
+      id="new-username"
       ref="usernameInput"
       v-model="username"
-      placeholder="Edit username"
-      aria-label="New username"
       class="form-control mb-2 account-actions-field"
       maxlength="100"
       autocomplete="username"

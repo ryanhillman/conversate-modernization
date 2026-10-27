@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { describe, expect, it, vi } from "vitest";
 import { mount } from "@vue/test-utils";
+import { computeAccessibleName } from "dom-accessibility-api";
 import { ref } from "vue";
 
 vi.mock("@auth0/auth0-vue", () => ({
@@ -34,5 +35,11 @@ describe("NavBar", () => {
     for (const picture of pictures) {
       expect(picture.attributes("referrerpolicy")).toBe("no-referrer");
     }
+  });
+
+  it("names the profile picture toggle for the menu it opens", () => {
+    const wrapper = mount(NavBar, { global: { stubs: { RouterLink: true } } });
+
+    expect(computeAccessibleName(wrapper.get("#profileDropDown").element)).toBe("Account menu");
   });
 });
