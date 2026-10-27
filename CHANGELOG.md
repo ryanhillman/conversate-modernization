@@ -78,6 +78,7 @@
 - Marked Italian text so screen readers pronounce it in Italian.
 - Showed a leaderboard load failure on the page instead of an empty leaderboard.
 - Stopped a double-clicked microphone from staying on.
+- Showed migration command errors instead of exiting silently.
 
 ## [1.0.0] - 2026-10-22
 
