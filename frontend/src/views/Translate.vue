@@ -89,7 +89,7 @@
             class="m-2 translate-textarea"
             aria-label="Translation"
             :lang="translatedTextLanguage"
-            disabled
+            readonly
             v-model="translatedText"
             rows="10"
           ></textarea>
@@ -287,6 +287,11 @@ async function startTextToSpeech() {
   max-width: 30rem;
   box-sizing: border-box;
   resize: none;
+}
+/* Read-only rather than disabled, so the translation can be focused and
+   selected; shaded so it doesn't look editable. */
+.translate-textarea[readonly] {
+  background-color: var(--bs-secondary-bg);
 }
 /* Real buttons drawn as just the icon, so they work with Tab and screen
    readers. The browser's focus outline is kept. */
