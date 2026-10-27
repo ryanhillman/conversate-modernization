@@ -73,6 +73,7 @@
 - Gave each page its own title, a main landmark, and a skip link.
 - Gave the username and Translate text boxes visible labels.
 - Kept error messages on screen until dismissed.
+- Stopped long error messages from running off the left edge on narrow screens.
 - Showed a leaderboard load failure on the page instead of an empty leaderboard.
 - Stopped a double-clicked microphone from staying on.
 - Showed migration command errors instead of exiting silently.

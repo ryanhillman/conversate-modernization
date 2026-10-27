@@ -49,6 +49,9 @@ async function dismiss(id, event) {
   position: fixed;
   bottom: 1.5rem;
   right: 1.5rem;
+  /* Bootstrap allows the full screen width, which the right offset would push
+     past the left edge. */
+  max-width: calc(100% - 3rem);
   z-index: 2000;
   display: flex;
   flex-direction: column;
