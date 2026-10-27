@@ -176,6 +176,8 @@ async function start() {
   } catch (err) {
     console.error("Failed to start quiz:", err);
     phase.value = "error";
+    // Focus goes to Try again, so the message itself has to be announced.
+    announce("Could not load the quiz.");
   }
 }
 
@@ -272,6 +274,7 @@ async function finish() {
       phase.value = "ready";
     } else {
       phase.value = "saveError";
+      announce("Could not save your result.");
     }
   }
 }

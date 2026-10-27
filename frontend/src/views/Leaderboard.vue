@@ -49,6 +49,7 @@
 import { ref, nextTick, onMounted } from "vue";
 import RequireProfile from "../components/RequireProfile.vue";
 import { getLeaderboard } from "../api/leaderboard";
+import { announce } from "../stores/announceStore";
 import { profile as user } from "../stores/profileStore";
 import { formatTime } from "../utils/formatTime";
 
@@ -67,9 +68,12 @@ async function load() {
   loadFailed.value = false;
   try {
     rows.value = await getLeaderboard();
+    // The result replaces "Loading…" while focus stays put, so say which it was.
+    announce("Leaderboard loaded.");
   } catch (err) {
     console.error("Failed to load leaderboard:", err);
     loadFailed.value = true;
+    announce("Could not load the leaderboard.");
   } finally {
     loading.value = false;
   }

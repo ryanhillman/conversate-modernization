@@ -5,8 +5,10 @@ import { flushPromises, mount } from "@vue/test-utils";
 // The real module loads auth.js, which needs Auth0 settings that CI doesn't
 // have.
 vi.mock("../src/api/users", () => ({ getMe: vi.fn() }));
+vi.mock("../src/stores/announceStore", () => ({ announce: vi.fn() }));
 
 import { getMe } from "../src/api/users";
+import { announce } from "../src/stores/announceStore";
 import RequireProfile from "../src/components/RequireProfile.vue";
 import { toastState } from "../src/stores/toastStore";
 
@@ -23,6 +25,7 @@ describe("RequireProfile", () => {
 
     expect(wrapper.text()).toContain("Could not load your profile.");
     expect(toastState.toasts).toEqual([]);
+    expect(announce).toHaveBeenCalledWith("Could not load your profile.");
   });
 
   it("keeps focus in place when Try again is used", async () => {

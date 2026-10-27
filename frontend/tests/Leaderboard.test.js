@@ -11,8 +11,10 @@ vi.mock("../src/api/leaderboard", () => ({
   ]),
 }));
 vi.mock("../src/api/users", () => ({ getMe: vi.fn() }));
+vi.mock("../src/stores/announceStore", () => ({ announce: vi.fn() }));
 
 import { getLeaderboard } from "../src/api/leaderboard";
+import { announce } from "../src/stores/announceStore";
 import { setProfile } from "../src/stores/profileStore";
 import { toastState } from "../src/stores/toastStore";
 import Leaderboard from "../src/views/Leaderboard.vue";
@@ -33,6 +35,7 @@ describe("Leaderboard", () => {
     const rows = wrapper.findAll("tbody tr");
     expect(rows[0].find(".visually-hidden").exists()).toBe(false);
     expect(rows[1].get(".visually-hidden").text()).toBe("(you)");
+    expect(announce).toHaveBeenCalledWith("Leaderboard loaded.");
   });
 
   it("says when loading failed, instead of showing an empty leaderboard", async () => {
@@ -48,6 +51,7 @@ describe("Leaderboard", () => {
     expect(wrapper.text()).toContain("Could not load the leaderboard.");
     expect(wrapper.text()).not.toContain("be the first");
     expect(toastState.toasts).toEqual([]);
+    expect(announce).toHaveBeenCalledWith("Could not load the leaderboard.");
 
     await wrapper.get("button").trigger("click");
     await flushPromises();

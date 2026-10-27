@@ -16,6 +16,7 @@
 
 <script setup>
 import { ref, nextTick, onMounted } from "vue";
+import { announce } from "../stores/announceStore";
 import { profile, loadProfile } from "../stores/profileStore";
 import SetUsername from "./username/SetUsername.vue";
 
@@ -38,6 +39,7 @@ async function load() {
     if (err.status !== 404) {
       console.error("Failed to load user:", err);
       loadFailed.value = true;
+      announce("Could not load your profile.");
     }
   } finally {
     loading.value = false;

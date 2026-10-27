@@ -56,10 +56,8 @@
 - Removed the gray box behind the Translate image.
 - Raised text, icon, and border contrast to meet WCAG minimums.
 - Prevented double-clicking a quiz answer from highlighting the footer logo.
-- Made every control usable by keyboard and screen readers.
+- Made every control usable by keyboard and screen readers, announced results and errors, and marked Italian text for correct pronunciation.
 - Made Escape close the profile menu.
-- Made the lesson Toggle buttons tell screen readers whether the lesson is open.
-- Announced answer results, lesson completion, and username errors to screen readers.
 - Made the Log out menu item's hover highlight visible.
 - Made the current page's text on the nav bar navy to match its underline.
 - Made the frontend fail with a clear message when its Auth0 settings are missing.
@@ -70,11 +68,9 @@
 - Logged the reason the server rejects a login.
 - Kept keyboard focus visible and in place.
 - Let a quiz result be saved again after a failed submit.
-- Fixed the lesson toggle labels and announced Translate warnings.
 - Showed quiz and recording states with more than color.
 - Gave each page its own title, a main landmark, and a skip link.
 - Kept error messages on screen until dismissed.
-- Marked Italian text so screen readers pronounce it in Italian.
 - Showed a leaderboard load failure on the page instead of an empty leaderboard.
 - Stopped a double-clicked microphone from staying on.
 - Showed migration command errors instead of exiting silently.
