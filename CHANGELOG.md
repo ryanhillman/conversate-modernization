@@ -78,6 +78,7 @@
 - Stopped long error messages from running off the left edge on narrow screens.
 - Kept error messages from covering the control with keyboard focus, and enlarged their Dismiss button.
 - Titled the username setup screen for what it shows.
+- Switched to the phone menu when a larger default text size leaves no room for the full nav bar, and let the username fields grow with the text.
 - Let the quiz's status row wrap instead of running off narrow screens with wider text spacing.
 - Showed a leaderboard load failure on the page instead of an empty leaderboard.
 - Stopped a double-clicked microphone from staying on.

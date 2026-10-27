@@ -254,7 +254,8 @@ function login() {
 .router-link-active {
   color: var(--brand-navy);
 }
-@media (min-width: 1200px) {
+/* The desktop layout; app.css keeps the phone menu until both widths fit. */
+@media (min-width: 1200px) and (min-width: 75em) {
   .container {
     position: relative;
   }
