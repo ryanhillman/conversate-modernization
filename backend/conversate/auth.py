@@ -1,3 +1,4 @@
+import time
 from functools import wraps
 
 import jwt
@@ -5,6 +6,12 @@ from flask import current_app, g, jsonify, request
 from jwt import PyJWKClient, PyJWKClientConnectionError
 
 JWKS_TIMEOUT_SECONDS = 5
+# Waits between attempts when a key download fails fast. After a backend
+# restart the first download is sometimes reset (WinError 10054), and an
+# attempt a moment later gets through, so the request succeeds instead of
+# returning 503. Timeouts aren't retried; each has already waited
+# JWKS_TIMEOUT_SECONDS.
+JWKS_RETRY_DELAYS_SECONDS = (0.5, 1, 2)
 # A token with an unknown key ID forces a key refresh, which anyone can
 # trigger with a forged token; this caps how often that re-downloads.
 JWKS_REFRESH_COOLDOWN_SECONDS = 60
@@ -28,6 +35,26 @@ def _jwks_client(domain):
     return _jwks_clients[domain]
 
 
+def _timed_out(error):
+    cause = error.__cause__
+    return isinstance(cause, TimeoutError) or isinstance(
+        getattr(cause, 'reason', None), TimeoutError
+    )
+
+
+def _signing_key(domain, token):
+    client = _jwks_client(domain)
+    for delay in JWKS_RETRY_DELAYS_SECONDS:
+        try:
+            return client.get_signing_key_from_jwt(token)
+        except PyJWKClientConnectionError as e:
+            if _timed_out(e):
+                raise
+            current_app.logger.info('JWKS fetch failed, retrying in %ss: %s', delay, e)
+            time.sleep(delay)
+    return client.get_signing_key_from_jwt(token)
+
+
 def _verify_token():
     auth_header = request.headers.get('Authorization', '')
     if not auth_header.startswith('Bearer '):
@@ -35,7 +62,7 @@ def _verify_token():
     token = auth_header[7:]
     domain = current_app.config['AUTH0_DOMAIN']
     audience = current_app.config['AUTH0_AUDIENCE']
-    signing_key = _jwks_client(domain).get_signing_key_from_jwt(token)
+    signing_key = _signing_key(domain, token)
     return jwt.decode(
         token,
         signing_key.key,

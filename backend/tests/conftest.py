@@ -79,12 +79,19 @@ class JwksStub:
         self.jwk = jwk
         self.fetches = 0
         self.error = None
+        # How many fetches fail with error before they start succeeding;
+        # None means they all fail.
+        self.failures = None
+        self.sleeps = []
 
     def open(self, request, timeout=None):
         self.fetches += 1
-        if self.error is not None:
+        if self.error is not None and (self.failures is None or self.fetches <= self.failures):
             raise self.error
         return io.BytesIO(json.dumps({'keys': [self.jwk]}).encode())
+
+    def sleep(self, seconds):
+        self.sleeps.append(seconds)
 
 
 @pytest.fixture(autouse=True)
@@ -94,6 +101,8 @@ def stub_jwks(monkeypatch, signing_key):
     # Fresh clients per test, so no test sees keys another one cached.
     monkeypatch.setattr(auth_module, '_jwks_clients', {})
     monkeypatch.setattr(urllib.request, 'build_opener', lambda *handlers: stub)
+    # Record retry waits instead of sleeping through them.
+    monkeypatch.setattr(auth_module.time, 'sleep', stub.sleep)
     return stub
 
 
