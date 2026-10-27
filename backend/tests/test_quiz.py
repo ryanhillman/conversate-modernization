@@ -1,6 +1,7 @@
 import threading
 from datetime import timedelta
 
+import pytest
 from sqlalchemy import select
 
 from conversate.api.common import utcnow
@@ -264,3 +265,19 @@ def test_leaderboard_ranks_score_then_breaks_ties_with_time(client, auth_headers
     # carla: highest score, wins outright. Between alice/bob's tied score,
     # bob's faster time wins the tiebreak.
     assert names == ['carla', 'bob', 'alice']
+
+
+@pytest.mark.parametrize(
+    ('url', 'body'),
+    [
+        ('/api/me/quiz/answer', {'index': 0, 'answer': 'bread'}),
+        ('/api/me/quiz/pause', None),
+        ('/api/me/quiz/resume', None),
+        ('/api/me/quiz/submit', None),
+    ],
+)
+def test_quiz_actions_without_a_quiz_are_409(client, auth_headers, create_user, url, body):
+    create_user()
+    response = client.post(url, json=body, headers=auth_headers())
+    assert response.status_code == 409
+    assert response.get_json() == {'error': 'No quiz in progress; call /api/me/quiz/start first'}
