@@ -92,8 +92,6 @@ def start_quiz(record):
 @resolve_me
 def answer_quiz(record):
     body = json_body()
-    if body is None:
-        return jsonify(error='Request body must be a JSON object'), 400
     index = body.get('index')
     if not isinstance(index, int) or isinstance(index, bool):
         return jsonify(error='index must be an integer'), 400
