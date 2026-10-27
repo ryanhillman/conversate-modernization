@@ -61,8 +61,13 @@ const router = createRouter({
 router.beforeEach((to) => (to.meta.public ? true : authGuard(to)));
 
 router.afterEach((to, from) => {
-  // An error toast is about the page it appeared on.
-  if (to.path !== from.path) clearErrorToasts();
+  if (to.path !== from.path) {
+    // An error toast is about the page it appeared on.
+    clearErrorToasts();
+    // The old page, and whatever had focus on it, is gone; start at the new
+    // page's content. Not on the first load.
+    if (from.matched.length) document.getElementById("main")?.focus();
+  }
   document.title = to.meta.title ? `${to.meta.title} | Conversate` : "Conversate";
 });
 

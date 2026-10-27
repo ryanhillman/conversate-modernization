@@ -30,4 +30,22 @@ describe("router", () => {
     await router.push("/translate");
     expect(toastState.toasts).toEqual([]);
   });
+
+  it("moves focus to the page content on a page change, not on an in-page link", async () => {
+    const main = document.createElement("main");
+    main.id = "main";
+    main.tabIndex = -1;
+    const button = document.createElement("button");
+    document.body.append(main, button);
+
+    await router.push("/quiz");
+    button.focus();
+    await router.push("/quiz#main");
+    expect(document.activeElement).toBe(button);
+
+    await router.push("/translate");
+    expect(document.activeElement).toBe(main);
+    main.remove();
+    button.remove();
+  });
 });
