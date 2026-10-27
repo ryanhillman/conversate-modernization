@@ -27,8 +27,6 @@ MAX_STT_AUDIO_BYTES = 1_000_000
 @limiter.limit(GOOGLE_API_RATE_LIMIT)
 def translate_text():
     body = json_body()
-    if body is None:
-        return jsonify(error='Request body must be a JSON object'), 400
     text = str_field(body, 'text')
     source = str_field(body, 'source')
     target = str_field(body, 'target')
@@ -64,8 +62,6 @@ def translate_text():
 @limiter.limit(GOOGLE_API_RATE_LIMIT)
 def synthesize_speech():
     body = json_body()
-    if body is None:
-        return jsonify(error='Request body must be a JSON object'), 400
     text = str_field(body, 'text')
     voice = TTS_VOICES.get(str_field(body, 'language'))
     if not text or len(text.encode('utf-8')) > MAX_TTS_TEXT_LENGTH:
@@ -97,8 +93,6 @@ def synthesize_speech():
 @limiter.limit(GOOGLE_API_RATE_LIMIT)
 def transcribe_speech():
     body = json_body()
-    if body is None:
-        return jsonify(error='Request body must be a JSON object'), 400
     audio_b64 = str_field(body, 'audio')
     encoding = STT_ENCODINGS.get(str_field(body, 'mime_type'))
     language_code = STT_LANGUAGES.get(str_field(body, 'language'))

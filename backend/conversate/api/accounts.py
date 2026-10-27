@@ -55,8 +55,6 @@ def _validate_username(name, conflict_message, exclude_id=None):
 def create_me():
     sub = g.current_user_sub
     body = json_body()
-    if body is None:
-        return jsonify(error='Request body must be a JSON object'), 400
     username = str_field(body, 'username')
     if find_user(sub) is not None:
         return jsonify(error='User already exists'), 409
@@ -89,8 +87,6 @@ def get_me(record):
 @resolve_me
 def update_me(record):
     body = json_body()
-    if body is None:
-        return jsonify(error='Request body must be a JSON object'), 400
     new_name = str_field(body, 'username')
     error = _validate_username(new_name, 'username already exists', exclude_id=record.id)
     if error:

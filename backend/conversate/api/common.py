@@ -1,7 +1,7 @@
 from datetime import UTC, datetime
 from functools import wraps
 
-from flask import g, jsonify, request
+from flask import abort, g, jsonify, request
 from sqlalchemy import select
 
 from ..extensions import db
@@ -9,8 +9,11 @@ from ..models import User
 
 
 def json_body():
+    """The request's JSON object; anything else is rejected with a 400."""
     body = request.get_json(silent=True)
-    return body if isinstance(body, dict) else None
+    if not isinstance(body, dict):
+        abort(400, description='Request body must be a JSON object')
+    return body
 
 
 def str_field(body, key):
