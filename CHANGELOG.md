@@ -35,6 +35,7 @@
 - Added spacing around opened lessons and practice answers.
 - Added red shading and an X icon on wrong answers in lesson text boxes.
 - Lesson answers are now checked when pressing Enter or leaving the text box, rather than while typing.
+- Stated the quiz's length, time limit, and pause rules before it starts.
 - Consistently used color tokens instead of hard-coded colors.
 - Moved all global CSS into app.css.
 - Styled lesson buttons by class instead of element.
@@ -54,7 +55,7 @@
 - Added .env.local files to .gitignore.
 - Showed the home page images in full instead of cropping.
 - Removed the gray box behind the Translate image.
-- Raised text, icon, and border contrast to meet WCAG minimums.
+- Raised text, icon, border, and focus ring contrast to meet WCAG minimums.
 - Prevented double-clicking a quiz answer from highlighting the footer logo.
 - Made every control usable by keyboard and screen readers, announced results and errors, and marked Italian text for correct pronunciation.
 - Made Escape close the profile menu.
@@ -70,6 +71,7 @@
 - Let a quiz result be saved again after a failed submit.
 - Showed quiz and recording states with more than color.
 - Gave each page its own title, a main landmark, and a skip link.
+- Gave the username and Translate text boxes visible labels.
 - Kept error messages on screen until dismissed.
 - Showed a leaderboard load failure on the page instead of an empty leaderboard.
 - Stopped a double-clicked microphone from staying on.

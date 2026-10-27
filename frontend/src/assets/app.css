@@ -202,8 +202,7 @@ h6 {
   border-color: var(--brand-navy-dark);
 }
 
-/* Bootstrap draws every button state from these variables. The two-tone
-   focus ring shows on both navy and light backgrounds. */
+/* Bootstrap draws every button state from these variables. */
 .btn-accent {
   --bs-btn-color: var(--text-color);
   --bs-btn-bg: var(--brand-accent);
@@ -217,10 +216,25 @@ h6 {
   --bs-btn-disabled-color: var(--text-color);
   --bs-btn-disabled-bg: var(--brand-accent);
   --bs-btn-disabled-border-color: var(--brand-accent);
-  --bs-btn-focus-box-shadow: var(--focus-ring);
   font-family: "Poppins", sans-serif;
   font-weight: 500;
   border-radius: 8px;
+}
+
+/* Bootstrap's focus rings are below WCAG's 3:1; use the two-tone ring, which
+   shows on both navy and light backgrounds. */
+.btn {
+  --bs-btn-focus-box-shadow: var(--focus-ring);
+}
+.btn-close {
+  --bs-btn-close-focus-shadow: var(--focus-ring);
+}
+.form-control:focus {
+  border-color: var(--bs-secondary);
+  box-shadow: var(--focus-ring);
+}
+.nav-link:focus-visible {
+  box-shadow: var(--focus-ring);
 }
 
 .card-style {
