@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex flex-column align-items-center">
-    <label for="new-username" class="account-actions-field text-start mb-1">New username</label>
+    <label for="new-username" class="account-actions-field text-start mb-2">New username</label>
     <input
       id="new-username"
       ref="usernameInput"

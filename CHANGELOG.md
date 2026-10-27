@@ -74,6 +74,7 @@
 - Gave the username and Translate text boxes visible labels.
 - Kept error messages on screen until dismissed.
 - Stopped long error messages from running off the left edge on narrow screens.
+- Let the quiz's status row wrap instead of running off narrow screens with wider text spacing.
 - Showed a leaderboard load failure on the page instead of an empty leaderboard.
 - Stopped a double-clicked microphone from staying on.
 - Showed migration command errors instead of exiting silently.

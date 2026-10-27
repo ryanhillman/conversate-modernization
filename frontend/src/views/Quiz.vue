@@ -293,6 +293,7 @@ async function finish() {
 .quiz-meta {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: 0.75rem;
   font-weight: 600;
@@ -344,6 +345,12 @@ async function finish() {
     background-color 0.15s ease,
     color 0.15s ease,
     border-color 0.15s ease;
+}
+/* The other choices dim while the answer is checked; the feedback stays at
+   full contrast. */
+.quiz-choice-correct,
+.quiz-choice-wrong {
+  opacity: 1;
 }
 .quiz-choice-correct {
   background-color: var(--success);

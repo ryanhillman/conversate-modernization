@@ -87,6 +87,15 @@ describe("busy username buttons", () => {
   });
 });
 
+describe("SetUsername", () => {
+  it("names the username box by its visible label", () => {
+    const wrapper = mount(SetUsername, { attachTo: document.body });
+
+    expect(computeAccessibleName(wrapper.get("input").element)).toBe("Username");
+    wrapper.unmount();
+  });
+});
+
 describe("AccountActions", () => {
   it("names the rename box by its visible label", () => {
     const wrapper = mount(AccountActions, { attachTo: document.body });
