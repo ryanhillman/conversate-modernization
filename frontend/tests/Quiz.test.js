@@ -12,8 +12,10 @@ vi.mock("../src/api/quiz", () => ({
 // The profile store imports this; the real one loads auth.js, which needs
 // Auth0 settings that CI doesn't have.
 vi.mock("../src/api/users", () => ({ getMe: vi.fn() }));
+vi.mock("../src/stores/announceStore", () => ({ announce: vi.fn() }));
 
 import { answerQuiz, pauseQuiz, resumeQuiz, startQuiz, submitQuiz } from "../src/api/quiz";
+import { announce } from "../src/stores/announceStore";
 import { toastState } from "../src/stores/toastStore";
 import Quiz from "../src/views/Quiz.vue";
 
@@ -69,7 +71,7 @@ let wrapper;
 
 beforeEach(() => {
   vi.useFakeTimers();
-  vi.clearAllMocks();
+  vi.resetAllMocks();
   vi.spyOn(console, "error").mockImplementation(() => {});
   toastState.toasts = [];
   quizStarting(1);
@@ -80,6 +82,17 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
+describe("Quiz start", () => {
+  it("announces a quiz that fails to load, since focus goes to Try again", async () => {
+    startQuiz.mockRejectedValueOnce(httpError(500));
+    wrapper = await startQuizPage();
+
+    expect(wrapper.text()).toContain("Could not load the quiz.");
+    expect(document.activeElement.textContent).toBe("Try again");
+    expect(announce).toHaveBeenCalledWith("Could not load the quiz.");
+  });
+});
+
 describe("Quiz submit", () => {
   it("offers to retry saving a failed result, without starting a new quiz", async () => {
     submitQuiz
@@ -88,6 +101,7 @@ describe("Quiz submit", () => {
 
     wrapper = await finishQuiz();
     expect(wrapper.text()).toContain("Could not save your result.");
+    expect(announce).toHaveBeenCalledWith("Could not save your result.");
     expect(document.activeElement.textContent).toBe("Try again");
 
     await wrapper.get("button").trigger("click");

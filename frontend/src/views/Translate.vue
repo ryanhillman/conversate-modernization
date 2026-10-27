@@ -196,6 +196,8 @@ async function translateEnteredText() {
     );
     translatedText.value = result;
     translatedTextLanguage.value = outputLanguage.value;
+    // The result appears while focus stays on the button, so say it arrived.
+    announce("Translation ready.");
   } catch (err) {
     console.error("Translation failed:", err);
     translatedText.value = null;
@@ -255,6 +257,7 @@ async function transcribeRecording() {
     const audio = await blobToBase64(blob);
     const { transcript } = await transcribeSpeech(audio, MIC_MIME_TYPE, inputLanguage.value);
     textToTranslate.value = transcript;
+    announce("Transcript ready.");
   } catch (err) {
     console.error("Transcription failed:", err);
     const message = err.status === 422 ? "No speech detected." : "Could not transcribe audio.";

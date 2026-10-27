@@ -10,6 +10,7 @@ vi.mock("../src/api/stt", () => ({ transcribeSpeech: vi.fn() }));
 vi.mock("../src/api/users", () => ({ getMe: vi.fn() }));
 vi.mock("../src/stores/announceStore", () => ({ announce: vi.fn() }));
 
+import { transcribeSpeech } from "../src/api/stt";
 import { translateText } from "../src/api/translate";
 import { synthesizeSpeech } from "../src/api/tts";
 import { announce } from "../src/stores/announceStore";
@@ -36,12 +37,17 @@ function fakeMicrophone() {
     "MediaRecorder",
     class {
       static isTypeSupported = () => true;
+      listeners = {};
       constructor() {
         recorders.push(this);
       }
-      addEventListener() {}
+      addEventListener(type, listener) {
+        this.listeners[type] = listener;
+      }
       start() {}
-      stop() {}
+      stop() {
+        this.listeners.stop?.();
+      }
     },
   );
   return { getUserMedia, track, recorders, allow: () => grant() };
@@ -66,6 +72,32 @@ describe("Translate", () => {
 
     expect(wrapper.text()).toContain("Input and output language must be different.");
     expect(announce).toHaveBeenCalledWith("Input and output language must be different.");
+  });
+
+  it("announces when the translation arrives", async () => {
+    translateText.mockResolvedValue({ translated_text: "ciao" });
+    const wrapper = mount(Translate, { global: { stubs: { RequireProfile } } });
+    await wrapper.get("textarea").setValue("hello");
+
+    await wrapper.get(".btn-accent").trigger("click");
+    await flushPromises();
+
+    expect(announce).toHaveBeenCalledWith("Translation ready.");
+  });
+
+  it("announces when the transcript arrives", async () => {
+    transcribeSpeech.mockResolvedValue({ transcript: "ciao" });
+    const mic = fakeMicrophone();
+    const wrapper = mount(Translate, { global: { stubs: { RequireProfile } } });
+
+    await wrapper.get('[aria-label="Start recording"]').trigger("click");
+    mic.allow();
+    await flushPromises();
+    await wrapper.get('[aria-label="Stop recording"]').trigger("click");
+    // Reading the recording uses a FileReader, which finishes on a later task.
+    await vi.waitFor(() => expect(wrapper.findAll("textarea")[0].element.value).toBe("ciao"));
+    expect(announce).toHaveBeenCalledWith("Transcript ready.");
+    wrapper.unmount();
   });
 
   it("lets the translation be focused and selected, but not edited", () => {
