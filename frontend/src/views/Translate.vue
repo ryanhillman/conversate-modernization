@@ -366,6 +366,8 @@ async function startTextToSpeech() {
 .lang-select-wrap {
   position: relative;
   display: inline-block;
+  /* Room for the focus ring below the label. */
+  margin-top: 0.4rem;
 }
 .lang-select-wrap::after {
   content: "";
@@ -381,11 +383,6 @@ async function startTextToSpeech() {
   pointer-events: none;
 }
 .lang-select:hover {
-  border-color: var(--brand-accent);
-}
-.lang-select:focus {
   border-color: var(--brand-navy);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-accent) 25%, transparent);
-  outline: none;
 }
 </style>

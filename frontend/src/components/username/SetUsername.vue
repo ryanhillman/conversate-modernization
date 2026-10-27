@@ -1,14 +1,14 @@
 <template>
   <div class="set-username">
     <h1>Set your username!</h1>
+    <label for="setup-username" class="username-label">Username</label>
     <input
+      id="setup-username"
       v-model="username"
-      placeholder="Username"
       class="username-input"
       maxlength="100"
       autocomplete="username"
       aria-describedby="setup-username-error"
-      aria-label="Username"
     />
     <p v-if="errorMessage" id="setup-username-error" class="form-error small mb-2">
       {{ errorMessage }}
@@ -64,6 +64,11 @@ async function saveUsername(name) {
   text-align: center;
   max-width: 40rem;
   margin: 2rem auto;
+}
+.username-label {
+  width: 260px;
+  text-align: start;
+  margin-bottom: 0.25rem;
 }
 .username-input {
   width: 260px;
