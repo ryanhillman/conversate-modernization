@@ -90,7 +90,35 @@
     max-width: 1140px;
   }
 }
-@media (max-width: 1199.98px) {
+/* Bootstrap's xl breakpoint is in px, so a larger default text size doesn't
+   move it and the full nav runs off the screen. The nav also needs 75em (1200px
+   at the default 16px) before it leaves the phone menu. */
+@media (min-width: 1200px) and (max-width: 74.99875em) {
+  .navbar-expand-xl {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  .navbar-expand-xl .navbar-nav {
+    flex-direction: column;
+  }
+  .navbar-expand-xl .navbar-collapse:not(.show) {
+    display: none !important;
+  }
+  .navbar-expand-xl .navbar-collapse.show {
+    display: block !important;
+    flex-basis: 100%;
+  }
+  .navbar-expand-xl .navbar-toggler {
+    display: block;
+  }
+  .navbar .d-xl-none {
+    display: flex !important;
+  }
+  .navbar .d-xl-flex {
+    display: none !important;
+  }
+}
+@media (max-width: 1199.98px), (max-width: 74.99875em) {
   .nav-item {
     margin-bottom: 1rem;
   }

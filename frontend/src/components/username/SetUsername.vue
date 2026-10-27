@@ -65,13 +65,16 @@ async function saveUsername(name) {
   max-width: 40rem;
   margin: 2rem auto;
 }
+/* In rem, so they grow with a larger default text size. */
 .username-label {
-  width: 260px;
+  width: 16.25rem;
+  max-width: 100%;
   text-align: start;
   margin-bottom: 0.25rem;
 }
 .username-input {
-  width: 260px;
+  width: 16.25rem;
+  max-width: 100%;
   padding: 0.5rem 0.75rem;
   border: 1px solid var(--bs-secondary);
   border-radius: 8px;
