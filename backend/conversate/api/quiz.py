@@ -1,7 +1,7 @@
 import random
 from datetime import timedelta
 
-from flask import Blueprint, jsonify
+from flask import Blueprint, abort, jsonify
 from sqlalchemy import select, update
 from sqlalchemy.exc import IntegrityError
 
@@ -53,6 +53,13 @@ def _find_attempt(user_id):
     ).one_or_none()
 
 
+def _require_attempt(user_id):
+    attempt = _find_attempt(user_id)
+    if attempt is None:
+        abort(409, description='No quiz in progress; call /api/me/quiz/start first')
+    return attempt
+
+
 @quiz_bp.route('/api/me/quiz/start', methods=['POST'])
 @require_auth
 @resolve_me
@@ -96,9 +103,7 @@ def answer_quiz(record):
     if not isinstance(index, int) or isinstance(index, bool):
         return jsonify(error='index must be an integer'), 400
 
-    attempt = _find_attempt(record.id)
-    if attempt is None:
-        return jsonify(error='No quiz in progress; call /api/me/quiz/start first'), 409
+    attempt = _require_attempt(record.id)
     if attempt.paused_at is not None:
         return jsonify(error='Quiz is paused; call /api/me/quiz/resume first'), 409
     if _seconds_remaining(attempt.started_at) <= 0:
@@ -137,9 +142,7 @@ def answer_quiz(record):
 @require_auth
 @resolve_me
 def pause_quiz(record):
-    attempt = _find_attempt(record.id)
-    if attempt is None:
-        return jsonify(error='No quiz in progress; call /api/me/quiz/start first'), 409
+    attempt = _require_attempt(record.id)
     if attempt.paused_at is None:
         if attempt.pauses_used >= MAX_QUIZ_PAUSES:
             return jsonify(error='No pauses remaining'), 409
@@ -156,9 +159,7 @@ def pause_quiz(record):
 @require_auth
 @resolve_me
 def resume_quiz(record):
-    attempt = _find_attempt(record.id)
-    if attempt is None:
-        return jsonify(error='No quiz in progress; call /api/me/quiz/start first'), 409
+    attempt = _require_attempt(record.id)
     if attempt.paused_at is not None:
         # Move the start forward by the pause, up to MAX_PAUSE_CREDIT_SECONDS,
         # so it doesn't count against the clock.
@@ -178,9 +179,7 @@ def resume_quiz(record):
 @require_auth
 @resolve_me
 def submit_quiz(record):
-    attempt = _find_attempt(record.id)
-    if attempt is None:
-        return jsonify(error='No quiz in progress; call /api/me/quiz/start first'), 409
+    attempt = _require_attempt(record.id)
 
     score = attempt.correct_count
     time_seconds = int(
