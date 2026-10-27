@@ -28,6 +28,19 @@ describe("RequireProfile", () => {
     expect(announce).toHaveBeenCalledWith("Could not load your profile.");
   });
 
+  it("titles the page for the username form when there's no profile yet", async () => {
+    const error = new Error("Request failed: 404");
+    error.status = 404;
+    getMe.mockReset().mockRejectedValue(error);
+    document.title = "Mastery | Conversate";
+
+    const wrapper = mount(RequireProfile, { global: { stubs: { SetUsername: true } } });
+    await flushPromises();
+
+    expect(document.title).toBe("Set your username | Conversate");
+    wrapper.unmount();
+  });
+
   it("keeps focus in place when Try again is used", async () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
     const error = new Error("Request failed: 500");

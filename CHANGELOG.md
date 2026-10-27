@@ -74,6 +74,8 @@
 - Gave the username and Translate text boxes visible labels.
 - Kept error messages on screen until dismissed.
 - Stopped long error messages from running off the left edge on narrow screens.
+- Kept error messages from covering the control with keyboard focus, and enlarged their Dismiss button.
+- Titled the username setup screen for what it shows.
 - Let the quiz's status row wrap instead of running off narrow screens with wider text spacing.
 - Showed a leaderboard load failure on the page instead of an empty leaderboard.
 - Stopped a double-clicked microphone from staying on.

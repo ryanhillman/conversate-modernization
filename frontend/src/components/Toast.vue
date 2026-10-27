@@ -23,11 +23,37 @@
 </template>
 
 <script setup>
-import { computed, nextTick, ref } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
 import { dismissToast, toastState } from "../stores/toastStore";
 
 const toasts = computed(() => toastState.toasts);
 const container = ref(null);
+
+// Toasts sit over the page, and browsers only scroll a newly focused control
+// into view when it's off-screen, so it could land hidden behind them.
+// app.css uses --toast-space to keep focus clear of them and to leave room
+// to scroll the page's last controls above them.
+function reserveSpace() {
+  const root = document.documentElement;
+  if (!toasts.value.length) {
+    root.style.removeProperty("--toast-space");
+    return;
+  }
+  const top = container.value.getBoundingClientRect().top;
+  root.style.setProperty("--toast-space", `${window.innerHeight - top}px`);
+  // A new toast can also cover the control that already has focus.
+  const focused = document.activeElement?.getBoundingClientRect();
+  if (focused && focused.top >= top && focused.top < window.innerHeight) {
+    document.activeElement.scrollIntoView({ block: "nearest" });
+  }
+}
+
+let observer = null;
+onMounted(() => {
+  observer = new ResizeObserver(reserveSpace);
+  observer.observe(container.value);
+});
+onBeforeUnmount(() => observer.disconnect());
 
 // Removing the toast would drop focus to the page, so move it to the next
 // error toast's Dismiss button, or else to the main content.
@@ -80,6 +106,8 @@ async function dismiss(id, event) {
   background-color: var(--bs-danger);
 }
 .toast-dismiss {
+  min-width: 1.5rem;
+  min-height: 1.5rem;
   background: none;
   border: 0;
   padding: 0 0.25rem;

@@ -15,9 +15,10 @@
 </template>
 
 <script setup>
-import { ref, nextTick, onMounted } from "vue";
+import { ref, computed, watch, nextTick, onMounted } from "vue";
 import { announce } from "../stores/announceStore";
 import { profile, loadProfile } from "../stores/profileStore";
+import { pageTitle } from "../utils/pageTitle";
 import SetUsername from "./username/SetUsername.vue";
 
 // Only the first view after sign-in waits; later ones find the profile in the
@@ -26,6 +27,12 @@ const loading = ref(!profile.value);
 const loadFailed = ref(false);
 const retryButton = ref(null);
 const content = ref(null);
+
+// The setup form replaces the page that was asked for, so title it instead.
+const settingUp = computed(() => !loading.value && !loadFailed.value && !profile.value);
+watch(settingUp, (value) => {
+  if (value) document.title = pageTitle("Set your username");
+});
 
 async function load() {
   if (profile.value) return;
