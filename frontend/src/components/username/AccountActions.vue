@@ -1,6 +1,7 @@
 <template>
   <div class="d-flex flex-column align-items-center">
     <input
+      ref="usernameInput"
       v-model="username"
       placeholder="Edit username"
       aria-label="New username"
@@ -42,7 +43,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import {
   updateUsername as apiUpdateUsername,
@@ -57,6 +58,7 @@ import { showToast } from "../../stores/toastStore";
 const router = useRouter();
 
 const username = ref("");
+const usernameInput = ref(null);
 const { checking, takenUsername, validationError, errorMessage } = useUsernameAvailability(
   username,
   {
@@ -75,6 +77,9 @@ async function updateUsername(name) {
     username.value = "";
     takenUsername.value = false;
     setProfile(data);
+    // Clearing the box disables Update, which would drop focus to the page.
+    await nextTick();
+    usernameInput.value?.focus();
   } catch {
     showToast("Could not update username.", "error");
   } finally {

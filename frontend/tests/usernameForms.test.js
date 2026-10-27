@@ -62,6 +62,21 @@ describe("busy username buttons", () => {
     await expectBusyAfterTwoClicks(wrapper.findAll("button")[0], updateUsername);
   });
 
+  it("moves focus to the box after a rename, since the cleared box disables Update", async () => {
+    updateUsername.mockResolvedValue({ username: "new_name" });
+    const wrapper = mount(AccountActions, { attachTo: document.body });
+    await typeAvailableName(wrapper);
+
+    const update = wrapper.findAll("button")[0];
+    update.element.focus();
+    await update.trigger("click");
+    await flushPromises();
+
+    expect(update.attributes("disabled")).toBeDefined();
+    expect(document.activeElement).toBe(wrapper.get("input").element);
+    wrapper.unmount();
+  });
+
   it("keeps Reset progress focusable while it resets", async () => {
     vi.stubGlobal("confirm", () => true);
     resetStats.mockReturnValue(new Promise(() => {}));
