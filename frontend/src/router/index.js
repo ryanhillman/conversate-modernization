@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { authGuard } from "@auth0/auth0-vue";
 import { clearErrorToasts } from "../stores/toastStore";
+import { pageTitle } from "../utils/pageTitle";
 import Home from "../views/Home.vue";
 
 const router = createRouter({
@@ -68,7 +69,7 @@ router.afterEach((to, from) => {
     // page's content. Not on the first load.
     if (from.matched.length) document.getElementById("main")?.focus();
   }
-  document.title = to.meta.title ? `${to.meta.title} | Conversate` : "Conversate";
+  document.title = pageTitle(to.meta.title);
 });
 
 export default router;

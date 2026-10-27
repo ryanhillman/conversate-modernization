@@ -130,6 +130,17 @@ footer {
   text-align: center;
   padding: 32px;
 }
+/* --toast-space is the toasts' height while any show (set in Toast.vue). The
+   scroll padding makes browsers treat the strip under them as off-screen when
+   focus moves; the footer's margin gives the page room to scroll above them.
+   The page is 100% tall with its content overflowing, so padding on html or
+   body wouldn't add that room. */
+html {
+  scroll-padding-bottom: var(--toast-space, 0px);
+}
+footer {
+  margin-bottom: var(--toast-space, 0px);
+}
 .profile-header {
   text-align: center;
   margin-bottom: 3rem;

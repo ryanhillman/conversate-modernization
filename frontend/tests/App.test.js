@@ -7,6 +7,14 @@ vi.mock("@auth0/auth0-vue", () => ({ useAuth0: () => ({ error: { value: null } }
 vi.mock("../src/auth", () => ({ auth0: {}, logout: vi.fn() }));
 // The footer logo is served from public/, which tests can't import.
 vi.mock("/logo.png", () => ({ default: "/logo.png" }));
+// jsdom has no ResizeObserver, which the toasts use.
+vi.stubGlobal(
+  "ResizeObserver",
+  class {
+    observe() {}
+    disconnect() {}
+  },
+);
 
 import App from "../src/App.vue";
 
