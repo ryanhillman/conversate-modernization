@@ -11,7 +11,13 @@
           Answer 50 questions in 4 minutes 10 seconds. You can pause once; the clock stops for up to
           2 minutes.
         </p>
-        <button ref="startButton" class="btn btn-accent m-2" @click="start">Start Quiz</button>
+        <button ref="startButton" class="btn btn-accent m-2" @click="start(false)">
+          Start Quiz
+        </button>
+        <button class="btn btn-outline-light m-2" @click="start(true)">
+          Practice without a timer
+        </button>
+        <p class="small mt-2 mb-0">Practice results aren't saved to the leaderboard.</p>
       </div>
 
       <div v-else-if="phase === 'loading'" class="loading-state">
@@ -25,19 +31,22 @@
       >
         <div class="quiz-meta">
           <span>Question {{ currentIndex + 1 }} / {{ questions.length }}</span>
-          <span class="quiz-timer">{{ formattedRemaining }}</span>
-          <span class="quiz-pauses">Pauses left: {{ pausesRemaining }}</span>
-          <button
-            v-if="phase === 'active' && pausesRemaining > 0"
-            class="btn btn-sm btn-outline-primary"
-            :disabled="advancing"
-            @click="pause"
-          >
-            Pause
-          </button>
-          <button v-else-if="phase === 'paused'" class="btn btn-sm btn-accent" @click="resume">
-            Resume
-          </button>
+          <span v-if="practice">Practice: no timer</span>
+          <template v-else>
+            <span class="quiz-timer">{{ formattedRemaining }}</span>
+            <span class="quiz-pauses">Pauses left: {{ pausesRemaining }}</span>
+            <button
+              v-if="phase === 'active' && pausesRemaining > 0"
+              class="btn btn-sm btn-outline-primary"
+              :disabled="advancing"
+              @click="pause"
+            >
+              Pause
+            </button>
+            <button v-else-if="phase === 'paused'" class="btn btn-sm btn-accent" @click="resume">
+              Resume
+            </button>
+          </template>
         </div>
 
         <div v-if="phase === 'paused'" class="quiz-card quiz-paused">
@@ -75,15 +84,16 @@
         tabindex="-1"
       >
         <h3 v-if="result.is_new_best">New best!</h3>
+        <p v-if="result.practice">Practice result, not saved to the leaderboard.</p>
         <p>Score: {{ result.score }} / {{ questions.length }}</p>
         <p>Time: {{ formatTime(result.time_seconds) }}</p>
-        <button class="btn btn-accent m-2" @click="start">Play again</button>
+        <button class="btn btn-accent m-2" @click="start(practice)">Play again</button>
         <router-link to="/leaderboard" class="btn btn-accent m-2"> View leaderboard </router-link>
       </div>
 
       <div v-else-if="phase === 'error'" class="card-style">
         <p>Could not load the quiz.</p>
-        <button ref="retryButton" class="btn btn-accent" @click="start">Try again</button>
+        <button ref="retryButton" class="btn btn-accent" @click="start(practice)">Try again</button>
       </div>
 
       <div v-else-if="phase === 'saveError'" class="card-style">
@@ -106,6 +116,8 @@ import { formatTime } from "../utils/formatTime";
 const FEEDBACK_DISPLAY_MS = 500;
 
 const phase = ref("ready");
+// Untimed, and not saved to the leaderboard.
+const practice = ref(false);
 const questions = ref([]);
 const currentIndex = ref(0);
 const result = ref(null);
@@ -164,12 +176,12 @@ function tick() {
   }
 }
 
-async function start() {
+async function start(isPractice) {
   clearInterval(tickTimer);
+  practice.value = isPractice;
   phase.value = "loading";
   try {
-    const data = await startQuiz();
-    resetDisplayClock(data.seconds_remaining);
+    const data = await startQuiz(isPractice);
     questions.value = data.questions;
     currentIndex.value = 0;
     advancing.value = false;
@@ -177,7 +189,10 @@ async function start() {
     feedback.value = null;
     pausesRemaining.value = data.pauses_remaining;
     phase.value = "active";
-    tickTimer = setInterval(tick, 1000);
+    if (!isPractice) {
+      resetDisplayClock(data.seconds_remaining);
+      tickTimer = setInterval(tick, 1000);
+    }
   } catch (err) {
     console.error("Failed to start quiz:", err);
     phase.value = "error";

@@ -267,6 +267,84 @@ def test_leaderboard_ranks_score_then_breaks_ties_with_time(client, auth_headers
     assert names == ['carla', 'bob', 'alice']
 
 
+def test_practice_start_has_no_timer(client, auth_headers, create_user):
+    user = create_user()
+    body = client.post(START, json={'practice': True}, headers=auth_headers()).get_json()
+    assert body['practice'] is True
+    assert body['seconds_remaining'] is None
+    assert body['pauses_remaining'] == 0
+    assert _attempt_for(user.id).practice is True
+
+
+def test_start_without_a_body_or_with_practice_false_is_timed(client, auth_headers, create_user):
+    user = create_user()
+    for kwargs in ({}, {'json': {'practice': False}}):
+        body = client.post(START, headers=auth_headers(), **kwargs).get_json()
+        assert body['practice'] is False
+        assert body['seconds_remaining'] <= 250
+        assert _attempt_for(user.id).practice is False
+
+
+def test_start_rejects_a_practice_flag_that_isnt_a_boolean(client, auth_headers, create_user):
+    create_user()
+    response = client.post(START, json={'practice': 'yes'}, headers=auth_headers())
+    assert response.status_code == 400
+
+
+def test_practice_accepts_answers_past_the_time_limit(client, auth_headers, create_user):
+    user = create_user()
+    client.post(START, json={'practice': True}, headers=auth_headers())
+    attempt = _attempt_for(user.id)
+    attempt.started_at = utcnow() - timedelta(seconds=1000)
+    db.session.commit()
+
+    response = client.post(
+        ANSWER,
+        json={'index': 0, 'answer': attempt.quiz_state[0]['correct']},
+        headers=auth_headers(),
+    )
+
+    assert response.status_code == 200
+    assert response.get_json()['correct'] is True
+
+
+@pytest.mark.parametrize('url', [PAUSE, RESUME])
+def test_practice_has_no_timer_to_pause(client, auth_headers, create_user, url):
+    create_user()
+    client.post(START, json={'practice': True}, headers=auth_headers())
+    response = client.post(url, headers=auth_headers())
+    assert response.status_code == 409
+    assert response.get_json() == {'error': 'A practice quiz has no timer'}
+
+
+def test_practice_submit_leaves_the_best_score_alone(client, auth_headers, create_user):
+    user = create_user()
+    client.post(START, json={'practice': True}, headers=auth_headers())
+    attempt = _attempt_for(user.id)
+    attempt.started_at = utcnow() - timedelta(seconds=10)
+    db.session.commit()
+    client.post(
+        ANSWER,
+        json={'index': 0, 'answer': attempt.quiz_state[0]['correct']},
+        headers=auth_headers(),
+    )
+
+    body = client.post(SUBMIT, headers=auth_headers()).get_json()
+
+    assert body == {
+        'score': 1,
+        'time_seconds': body['time_seconds'],
+        'is_new_best': False,
+        'practice': True,
+    }
+    db.session.refresh(user)
+    assert user.quiz_best_score is None
+    assert (
+        db.session.scalars(select(QuizAttempt).where(QuizAttempt.user_id == user.id)).first()
+        is None
+    )
+
+
 @pytest.mark.parametrize(
     ('url', 'body'),
     [

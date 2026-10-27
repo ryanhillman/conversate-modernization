@@ -1,7 +1,7 @@
 import { api } from "./http";
 
-export function startQuiz() {
-  return api("/api/me/quiz/start", { method: "POST" });
+export function startQuiz(practice = false) {
+  return api("/api/me/quiz/start", { method: "POST", body: { practice } });
 }
 
 export function answerQuiz(index, answer) {

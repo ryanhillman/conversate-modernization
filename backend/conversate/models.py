@@ -1,6 +1,6 @@
 from datetime import UTC, datetime
 
-from sqlalchemy import JSON, DateTime, ForeignKey, String, text
+from sqlalchemy import JSON, DateTime, ForeignKey, String, false, text
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.types import TypeDecorator
 
@@ -80,5 +80,7 @@ class QuizAttempt(db.Model):
     correct_count: Mapped[int] = mapped_column(default=0)
     paused_at: Mapped[datetime | None] = mapped_column(UTCDateTime)
     pauses_used: Mapped[int] = mapped_column(default=0)
+    # Untimed, and never counts toward the leaderboard.
+    practice: Mapped[bool] = mapped_column(default=False, server_default=false())
 
     __table_args__ = (db.Index('uq_quiz_attempt_user_id', user_id, unique=True),)

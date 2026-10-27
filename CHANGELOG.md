@@ -13,6 +13,7 @@
 - Added a Delete account option to the profile page.
 - Added an API endpoint reference to the README.
 - Added Dependabot to keep backend, frontend, and GitHub Actions dependencies up to date.
+- Added an untimed practice quiz that isn't saved to the leaderboard.
 
 ### Changed
 - Made pages reuse the loaded profile instead of fetching it on every visit.
