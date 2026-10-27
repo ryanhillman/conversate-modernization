@@ -27,6 +27,7 @@
 - Made lesson completion load and lock the user in one query instead of two.
 - Stopped re-reading the user from the database after saving changes.
 - Shortened the maximum speech-to-text recording from 60 to 30 seconds.
+- Added each recording's transcript to the Translate text instead of replacing it, and stated the 30-second limit.
 - Extended the speech-to-text timeout from 10 to 40 seconds.
 - Added an expanding navy underline to nav bar links while hovering.
 - Added a gold glow to the home cards, Translate mic and speaker, Log in button, and profile picture while hovering.
