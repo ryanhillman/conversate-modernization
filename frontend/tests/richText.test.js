@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseRichText, plainText } from "../src/utils/richText";
+import { parseRichText } from "../src/utils/richText";
 
 describe("parseRichText", () => {
   it("marks Italian, including inside italics and bold", () => {
@@ -20,11 +20,5 @@ describe("parseRichText", () => {
       { text: " ", italic: false, bold: false, italian: false },
       { text: "(Reads it.)", italic: true, bold: false, italian: false },
     ]);
-  });
-});
-
-describe("plainText", () => {
-  it("drops the markup", () => {
-    expect(plainText("<it>Avere</it> and <it>Essere</it>")).toBe("Avere and Essere");
   });
 });

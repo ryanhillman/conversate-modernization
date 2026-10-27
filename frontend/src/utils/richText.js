@@ -22,10 +22,3 @@ export function parseRichText(text) {
   }
   return segments;
 }
-
-// The text without its markup, for places that take a plain string.
-export function plainText(text) {
-  return parseRichText(text)
-    .map((segment) => segment.text)
-    .join("");
-}

@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { describe, expect, it, vi } from "vitest";
 import { flushPromises, mount } from "@vue/test-utils";
+import { computeAccessibleName } from "dom-accessibility-api";
 
 // The real API modules load auth.js, which needs Auth0 settings that CI
 // doesn't have.
@@ -24,12 +25,30 @@ describe("Lesson", () => {
     expect(wrapper.get("h1").text()).toBe("Select any lesson to begin!");
   });
 
-  it("names each Toggle button with its visible text and the lesson title", () => {
+  it("names each Toggle button from its own text and the marked-up title", () => {
     const wrapper = mount(Lesson, { global: { stubs: { RequireProfile } } });
-    const button = wrapper.get(`#${LESSONS[0].slug}`);
+    const button = wrapper.get("#avere-essere");
 
     expect(button.text()).toBe("Toggle lesson");
-    expect(button.attributes("aria-label")).toBe("Toggle lesson: Avere and Essere");
+    expect(button.attributes("aria-label")).toBeUndefined();
+    expect(button.attributes("aria-labelledby")).toBe("avere-essere-toggle avere-essere-title");
+    const title = wrapper.get("#avere-essere-title");
+    expect(title.text()).toBe("Avere and Essere");
+    expect(title.findAll('[lang="it"]').map((span) => span.text())).toEqual(["Avere", "Essere"]);
+  });
+
+  it("gives each Toggle button the accessible name Toggle lesson plus its title", () => {
+    const wrapper = mount(Lesson, {
+      attachTo: document.body,
+      global: { stubs: { RequireProfile } },
+    });
+
+    for (const lesson of LESSONS) {
+      const button = wrapper.get(`#${lesson.slug}`).element;
+      const title = wrapper.get(`#${lesson.slug}-title`).text();
+      expect(computeAccessibleName(button)).toBe(`Toggle lesson ${title}`);
+    }
+    wrapper.unmount();
   });
 
   it("marks Italian in titles, conjugations, prompts, and answer boxes", async () => {
