@@ -6,7 +6,7 @@ from flask import current_app
 from sqlalchemy import engine_from_config, pool
 
 config = context.config
-fileConfig(config.config_file_name)
+fileConfig(config.config_file_name, disable_existing_loggers=False)
 logger = logging.getLogger('alembic.env')
 
 config.set_main_option(
