@@ -1,7 +1,7 @@
 import random
 from datetime import timedelta
 
-from flask import Blueprint, abort, jsonify
+from flask import Blueprint, abort, jsonify, request
 from sqlalchemy import select, update
 from sqlalchemy.exc import IntegrityError
 
@@ -62,10 +62,26 @@ def _require_attempt(user_id):
     return attempt
 
 
+def _require_timed(attempt):
+    if attempt.practice:
+        abort(409, description='A practice quiz has no timer')
+
+
+def _practice_requested():
+    """Whether start was asked for a practice quiz. The body is optional."""
+    if not request.get_data():
+        return False
+    practice = json_body().get('practice', False)
+    if not isinstance(practice, bool):
+        abort(400, description='practice must be a boolean')
+    return practice
+
+
 @quiz_bp.route('/api/me/quiz/start', methods=['POST'])
 @require_auth
 @resolve_me
 def start_quiz(record):
+    practice = _practice_requested()
     questions = _build_quiz()
     started_at = utcnow()
 
@@ -79,6 +95,7 @@ def start_quiz(record):
     attempt.correct_count = 0
     attempt.paused_at = None
     attempt.pauses_used = 0
+    attempt.practice = practice
     try:
         db.session.commit()
     except IntegrityError:
@@ -88,11 +105,11 @@ def start_quiz(record):
         return jsonify(error='Quiz already starting'), 409
 
     client_questions = [{'it': q['it'], 'choices': q['choices']} for q in questions]
-    seconds_remaining = _seconds_remaining(started_at)
     return jsonify(
         questions=client_questions,
-        seconds_remaining=seconds_remaining,
-        pauses_remaining=MAX_QUIZ_PAUSES,
+        practice=practice,
+        seconds_remaining=None if practice else _seconds_remaining(started_at),
+        pauses_remaining=0 if practice else MAX_QUIZ_PAUSES,
     ), 200
 
 
@@ -108,7 +125,7 @@ def answer_quiz(record):
     attempt = _require_attempt(record.id)
     if attempt.paused_at is not None:
         return jsonify(error='Quiz is paused; call /api/me/quiz/resume first'), 409
-    if _seconds_remaining(attempt.started_at) <= 0:
+    if not attempt.practice and _seconds_remaining(attempt.started_at) <= 0:
         return jsonify(error='Time is up; call /api/me/quiz/submit'), 409
     if attempt.next_index >= len(attempt.quiz_state):
         return jsonify(error='All questions have already been answered'), 409
@@ -145,6 +162,7 @@ def answer_quiz(record):
 @resolve_me
 def pause_quiz(record):
     attempt = _require_attempt(record.id)
+    _require_timed(attempt)
     if attempt.paused_at is None:
         if attempt.pauses_used >= MAX_QUIZ_PAUSES:
             return jsonify(error='No pauses remaining'), 409
@@ -162,6 +180,7 @@ def pause_quiz(record):
 @resolve_me
 def resume_quiz(record):
     attempt = _require_attempt(record.id)
+    _require_timed(attempt)
     if attempt.paused_at is not None:
         # Move the start forward by the pause, up to MAX_PAUSE_CREDIT_SECONDS,
         # so it doesn't count against the clock.
@@ -184,6 +203,14 @@ def submit_quiz(record):
     attempt = _require_attempt(record.id)
 
     score = attempt.correct_count
+    if attempt.practice:
+        time_seconds = int((utcnow() - attempt.started_at).total_seconds())
+        db.session.delete(attempt)
+        db.session.commit()
+        return jsonify(
+            score=score, time_seconds=time_seconds, is_new_best=False, practice=True
+        ), 200
+
     time_seconds = int(
         QUIZ_TIME_LIMIT_SECONDS - _seconds_remaining(attempt.started_at, attempt.paused_at)
     )
@@ -204,7 +231,9 @@ def submit_quiz(record):
     db.session.commit()
     is_new_best = result.rowcount > 0
 
-    return jsonify(score=score, time_seconds=time_seconds, is_new_best=is_new_best), 200
+    return jsonify(
+        score=score, time_seconds=time_seconds, is_new_best=is_new_best, practice=False
+    ), 200
 
 
 @quiz_bp.route('/api/leaderboard', methods=['GET'])

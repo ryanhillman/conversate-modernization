@@ -171,11 +171,11 @@ Translation and speech endpoints are limited to 30 requests per minute per user.
 
 | Method | Path | Purpose |
 |---|---|---|
-| POST | `/api/me/quiz/start` | Start a timed quiz and get its questions |
+| POST | `/api/me/quiz/start` | Start a timed quiz and get its questions; send `{"practice": true}` for an untimed one |
 | POST | `/api/me/quiz/answer` | Answer the current question |
-| POST | `/api/me/quiz/pause` | Pause the quiz timer (once per quiz) |
+| POST | `/api/me/quiz/pause` | Pause the quiz timer (once per quiz; timed quizzes only) |
 | POST | `/api/me/quiz/resume` | Resume the quiz timer |
-| POST | `/api/me/quiz/submit` | Finish the quiz and save a new best |
+| POST | `/api/me/quiz/submit` | Finish the quiz and save a new best (practice results aren't saved) |
 | GET | `/api/leaderboard` | Top 100 quiz scores |
 
 ### Translation & speech

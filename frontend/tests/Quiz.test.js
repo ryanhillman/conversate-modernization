@@ -93,6 +93,42 @@ describe("Quiz start", () => {
   });
 });
 
+describe("Quiz practice", () => {
+  it("runs without a timer or Pause, and says the result isn't saved", async () => {
+    startQuiz.mockResolvedValue({
+      questions: [QUESTION],
+      practice: true,
+      seconds_remaining: null,
+      pauses_remaining: 0,
+    });
+    submitQuiz.mockResolvedValue({
+      score: 1,
+      time_seconds: 400,
+      is_new_best: false,
+      practice: true,
+    });
+    wrapper = mount(Quiz, {
+      attachTo: document.body,
+      global: { stubs: { RequireProfile, transition: false } },
+    });
+
+    await wrapper.findAll("button")[1].trigger("click");
+    await flushPromises();
+    expect(startQuiz).toHaveBeenCalledWith(true);
+    expect(wrapper.get(".quiz-meta").text()).toContain("Practice: no timer");
+    expect(wrapper.find(".quiz-timer").exists()).toBe(false);
+    expect(wrapper.find(".quiz-meta button").exists()).toBe(false);
+
+    // Well past the timed quiz's limit, the question is still there.
+    await vi.advanceTimersByTimeAsync(400000);
+    expect(submitQuiz).not.toHaveBeenCalled();
+
+    await answer(wrapper);
+    await vi.advanceTimersByTimeAsync(500);
+    expect(wrapper.text()).toContain("Practice result, not saved to the leaderboard.");
+  });
+});
+
 describe("Quiz submit", () => {
   it("offers to retry saving a failed result, without starting a new quiz", async () => {
     submitQuiz
@@ -118,7 +154,7 @@ describe("Quiz submit", () => {
     wrapper = await finishQuiz();
 
     expect(wrapper.text()).toContain("Start Quiz");
-    expect(document.activeElement.textContent).toBe("Start Quiz");
+    expect(document.activeElement.textContent.trim()).toBe("Start Quiz");
     expect(toastState.toasts.map((t) => t.message)).toContain(
       "This quiz is no longer in progress.",
     );
