@@ -1,7 +1,7 @@
 import { createAuth0 } from "@auth0/auth0-vue";
 
-// Fail fast with a clear message, like the backend's ConfigError, instead of
-// letting Log in send the browser to https://undefined/authorize.
+// Fail fast with a clear message instead of Log in going to
+// https://undefined/authorize.
 const REQUIRED_ENV = ["VITE_AUTH0_DOMAIN", "VITE_AUTH0_CLIENT_ID", "VITE_AUTH0_AUDIENCE"];
 const missing = REQUIRED_ENV.filter((name) => !import.meta.env[name]);
 if (missing.length) {
@@ -21,9 +21,8 @@ export const auth0 = createAuth0({
   useRefreshTokens: true,
 });
 
-// Logout leaves for Auth0 and comes back with a full page load, which resets
-// the profile store. Clearing it first would briefly show the username setup
-// form on the current page.
+// Logout returns with a full page load, which resets the profile store.
+// Clearing it first would flash the username setup form.
 export function logout() {
   auth0.logout({ logoutParams: { returnTo: window.location.origin } });
 }

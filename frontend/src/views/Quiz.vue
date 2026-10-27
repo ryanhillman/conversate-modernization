@@ -218,14 +218,12 @@ async function selectAnswer(choice) {
   } catch (err) {
     console.error("Failed to submit answer:", err);
     if (err.status === 409) {
-      // Time ran out server-side between clicking and this request landing,
-      // or the question is out of sync. Finalize with whatever's been
-      // graded so far instead of leaving the user stuck on a dead question.
+      // Time ran out or the question is out of sync: finish with what's been
+      // graded.
       finish();
       return;
     }
-    // A network blip or server error shouldn't end the quiz — let the user
-    // retry the same question.
+    // Other failures may be temporary, so let the user retry.
     showToast("Could not submit your answer. Try again.", "error");
     selectedChoice.value = null;
     advancing.value = false;
@@ -243,10 +241,9 @@ async function selectAnswer(choice) {
   }, FEEDBACK_DISPLAY_MS);
 }
 
-// Answer buttons are disabled the moment one is clicked, and Bootstrap gives
-// disabled buttons pointer-events: none, so a double-click's second click
-// falls through to the page and the browser's word selection jumps to the
-// footer logo. Single clicks and drag-selecting text are unaffected.
+// While an answer is checked, Bootstrap's .disabled gives the buttons
+// pointer-events: none, so a double-click's second click selects text behind
+// them. Single clicks and drag-selecting are unaffected.
 function preventDoubleClickSelection(event) {
   if (event.detail > 1) event.preventDefault();
 }
@@ -257,8 +254,7 @@ async function finish() {
   phase.value = "loading";
   try {
     result.value = await submitQuiz();
-    // Submit returns only this attempt's result, so update the stored
-    // profile's best directly rather than re-fetching it.
+    // Submit returns only this attempt, so update the stored best directly.
     if (result.value.is_new_best && profile.value) {
       setProfile({
         ...profile.value,

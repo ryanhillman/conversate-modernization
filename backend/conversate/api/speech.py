@@ -7,8 +7,7 @@ from .common import json_body, str_field
 
 speech_bp = Blueprint('speech_bp', __name__)
 
-# Each of these endpoints calls a paid Google Cloud API; without a limit, an
-# Auth0 account (free to create) can run up the bill without restriction.
+# These call paid Google APIs, so limit each account's use of them.
 GOOGLE_API_RATE_LIMIT = '30 per minute'
 
 TRANSLATE_LANGUAGES = frozenset({'en', 'it'})

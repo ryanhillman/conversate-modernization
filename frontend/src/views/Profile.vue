@@ -38,6 +38,6 @@ import AccountActions from "../components/username/AccountActions.vue";
 import { profile as user } from "../stores/profileStore";
 import { formatTime } from "../utils/formatTime";
 
-// Named apart from user, the Conversate profile.
+// authUser is the Auth0 login; user is the Conversate profile.
 const { user: authUser } = useAuth0();
 </script>

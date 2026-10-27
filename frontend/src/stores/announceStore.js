@@ -7,8 +7,7 @@ export const announcement = ref("");
 let pending = null;
 
 export function announce(message) {
-  // Clear first, then set after a beat, so the same message twice in a row
-  // (two wrong answers, say) still counts as a change and is read again.
+  // Clear, then set after a beat, so a repeated message is read again.
   announcement.value = "";
   clearTimeout(pending);
   pending = setTimeout(() => {

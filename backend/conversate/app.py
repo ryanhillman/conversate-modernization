@@ -11,8 +11,7 @@ def _register_error_handlers(app):
     def handle_http_exception(error):
         return jsonify(error=error.description), error.code
 
-    # In tests, let unexpected exceptions propagate so failures surface with a
-    # traceback instead of a swallowed 500.
+    # In tests, let unexpected errors raise, so they show a traceback.
     if not app.config.get('TESTING'):
 
         @app.errorhandler(Exception)

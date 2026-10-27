@@ -138,18 +138,9 @@ def test_completing_a_lesson_past_the_sanity_bound_is_400(client, auth_headers, 
 def test_concurrent_lesson_completions_do_not_lose_one(
     app, client, auth_headers, create_user, monkeypatch
 ):
-    # lessons_completed is a JSON blob, so completing two different lessons
-    # "at once" is a read-modify-write race: without a lock, both requests
-    # can read the same starting list and the second commit overwrites the
-    # first's addition.
-    #
-    # Just starting two threads together doesn't reliably hit that window —
-    # each request does real work (JWT verification, etc.) before reaching
-    # the locked query, so the two rarely arrive at the same instant. Instead,
-    # make whichever request wins the lock hold it open (sleep before
-    # returning, transaction still uncommitted) long enough that the other
-    # request's own with_for_update() genuinely blocks on it at the database
-    # level — a deterministic overlap instead of a timing hope.
+    # Two completions at once race to read and rewrite the JSON list. Threads
+    # rarely overlap by chance, so the request that gets the lock holds it,
+    # making the other wait on it in the database.
     import conversate.api.accounts as accounts_module
 
     user = create_user()

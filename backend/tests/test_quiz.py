@@ -46,13 +46,9 @@ def test_start_issues_fifty_questions_without_answers(client, auth_headers, crea
 def test_concurrent_first_starts_returns_409_not_500(
     client, auth_headers, create_user, monkeypatch
 ):
-    # Unlike the answer-race test, real threads can't reliably reproduce this
-    # one: restarting a quiz that already has an attempt is valid (it just
-    # overwrites it), so if the two requests don't truly overlap, both
-    # legitimately get 200 — that's not a bug, just this test failing to hit
-    # the narrow window. Simulate the window deterministically instead: let
-    # start_quiz's own "no existing attempt" check see None, while a
-    # "concurrent" request slips in and actually commits one first.
+    # Real threads rarely hit this window, and a restart that doesn't overlap
+    # is valid. So start_quiz's check finds no attempt while a "concurrent"
+    # request commits one first.
     import conversate.api.quiz as quiz_module
 
     user = create_user()
@@ -97,9 +93,7 @@ def test_answer_grades_against_the_servers_answer_key(client, auth_headers, crea
 
 
 def test_answering_too_fast_is_429(client, auth_headers, create_user):
-    # A human never hits this — the UI itself holds each answer on screen
-    # for 500ms. This exists to slow down a script racing through the
-    # quiz without a real answer key.
+    # The UI shows each answer for 500ms, so only a script answers this fast.
     user = create_user()
     client.post(START, headers=auth_headers())
     attempt = _attempt_for(user.id)
@@ -118,11 +112,8 @@ def test_answering_too_fast_is_429(client, auth_headers, create_user):
 
 
 def test_answer_after_time_is_up_is_rejected(client, auth_headers, create_user):
-    # Without this, a client that never calls /submit (a bug, a backgrounded
-    # tab, or a raw client bypassing the timed UI entirely) could keep
-    # answering indefinitely past the 250s cap and still have every answer
-    # graded — only the *reported* time was ever capped, not the actual
-    # opportunity to keep scoring.
+    # Otherwise a client that never submits could keep scoring past the time
+    # limit.
     user = create_user()
     client.post(START, headers=auth_headers())
     attempt = _attempt_for(user.id)
@@ -142,11 +133,8 @@ def test_answer_after_time_is_up_is_rejected(client, auth_headers, create_user):
 def test_concurrent_guesses_for_one_question_only_score_once(
     app, client, auth_headers, create_user
 ):
-    # This must use genuine concurrency, not four sequential calls: the
-    # earlier "index != attempt.next_index" check already rejects a second
-    # *sequential* call by itself, regardless of whether the atomic update
-    # exists. The bug this guards against only shows up when multiple
-    # requests' reads of next_index overlap before any of them commits.
+    # Needs real concurrency: the index check alone rejects sequential repeats,
+    # so the bug only shows when reads of next_index overlap.
     user = create_user()
     client.post(START, headers=auth_headers())
     attempt = _attempt_for(user.id)

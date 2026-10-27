@@ -3,16 +3,12 @@ import { checkUsername as apiCheckUsername } from "../api/users";
 import { announce } from "../stores/announceStore";
 import { usernameError } from "../utils/usernameValidation";
 
-// Shared debounced username-availability check for the create and rename forms.
-// Takes the host's `username` ref. `skipAvailabilityCheck` can be overridden
-// to suppress the request for values the host already considers available
-// (e.g. the user's own current name).
+// Debounced username checks for the create and rename forms.
+// skipAvailabilityCheck skips the request for names the host knows are fine,
+// e.g. the user's own.
 export function useUsernameAvailability(username, { skipAvailabilityCheck = () => false } = {}) {
-  // Separate from the host's own "saving" flag for the actual create/rename
-  // call: a debounced availability check settling after Save is clicked
-  // must not re-enable the button mid-save. True from the keystroke, not just
-  // once the request starts, so Save can't submit a taken name during the
-  // debounce wait.
+  // True from the keystroke until the check returns, so Save can't submit a
+  // taken name meanwhile.
   const checking = ref(false);
   const takenUsername = ref(false);
   let checkTimer = null;
@@ -27,8 +23,7 @@ export function useUsernameAvailability(username, { skipAvailabilityCheck = () =
       if (seq === checkSeq) takenUsername.value = !data.available;
     } catch {
       if (seq !== checkSeq) return;
-      // Auth failures, outages, and network errors must not masquerade as
-      // "taken" — only an explicit available:false does.
+      // Only an explicit available: false means taken; errors don't.
       takenUsername.value = false;
     } finally {
       // A superseded check must not clear the flag a newer one still holds.
@@ -54,8 +49,7 @@ export function useUsernameAvailability(username, { skipAvailabilityCheck = () =
     if (username.value && validationError.value) return validationError.value;
     return takenUsername.value ? "That username is taken" : "";
   });
-  // Errors appear as you type, without moving focus, so screen readers are
-  // told when one appears or changes.
+  // Errors appear as you type, so announce them to screen readers.
   watch(errorMessage, (message) => {
     if (message) announce(message);
   });

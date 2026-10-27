@@ -1,10 +1,8 @@
 import { computed, ref } from "vue";
 import { getMe } from "../api/users";
 
-// The signed-in user's profile, loaded once and shared by every view so that
-// moving between pages doesn't re-fetch it. Views that change the profile
-// (rename, lesson completion, reset, quiz submit) update it here instead of
-// triggering another GET /api/me.
+// The signed-in user's profile, loaded once and shared by every view. Views
+// that change it update it here instead of fetching it again.
 export const profile = ref(null);
 
 export const completedLessonIds = computed(() => profile.value?.lessons_completed ?? []);

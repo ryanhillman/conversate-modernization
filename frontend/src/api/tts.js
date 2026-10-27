@@ -1,8 +1,7 @@
 import { api } from "./http";
 
-// Replaying the same text (a lesson conjugation, the speaker on a translation)
-// would otherwise be a fresh paid Google call each time. Cache the request's
-// promise rather than its result, so rapid repeat clicks share one request.
+// Cache each request's promise, so replaying text doesn't call Google again
+// and rapid repeat clicks share one request.
 const MAX_CACHED_CLIPS = 100;
 const cache = new Map();
 
@@ -17,7 +16,7 @@ export function synthesizeSpeech(text, language) {
   }
   const request = api("/api/tts", { method: "POST", body: { text, language } });
   cache.set(key, request);
-  // A failed request must not be cached, or every replay would fail too.
+  // Don't cache failures, or every replay would fail.
   request.catch(() => {
     if (cache.get(key) === request) cache.delete(key);
   });

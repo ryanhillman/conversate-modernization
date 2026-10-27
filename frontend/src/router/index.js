@@ -57,9 +57,7 @@ const router = createRouter({
   ],
 });
 
-// Fail closed: every route requires authentication unless it opts out with
-// meta.public, so a route added later without any annotation is protected by
-// default.
+// Fail closed: every route needs a login unless it sets meta.public.
 router.beforeEach((to) => (to.meta.public ? true : authGuard(to)));
 
 router.afterEach((to, from) => {
