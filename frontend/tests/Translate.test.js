@@ -68,6 +68,14 @@ describe("Translate", () => {
     expect(announce).toHaveBeenCalledWith("Input and output language must be different.");
   });
 
+  it("lets the translation be focused and selected, but not edited", () => {
+    const wrapper = mount(Translate, { global: { stubs: { RequireProfile } } });
+    const output = wrapper.get('textarea[aria-label="Translation"]');
+
+    expect(output.attributes("readonly")).toBeDefined();
+    expect(output.attributes("disabled")).toBeUndefined();
+  });
+
   it("marks each text box with the language it holds", async () => {
     translateText.mockResolvedValue({ translated_text: "ciao" });
     const wrapper = mount(Translate, { global: { stubs: { RequireProfile } } });

@@ -56,8 +56,7 @@
 - Removed the gray box behind the Translate image.
 - Raised text, icon, and border contrast to meet WCAG minimums.
 - Prevented double-clicking a quiz answer from highlighting the footer logo.
-- Made the Translate mic and speaker buttons usable by keyboard and screen readers.
-- Labeled the Translate text boxes and the username field for screen readers.
+- Made every control usable by keyboard and screen readers.
 - Made Escape close the profile menu.
 - Made the lesson Toggle buttons tell screen readers whether the lesson is open.
 - Announced answer results, lesson completion, and username errors to screen readers.
