@@ -50,7 +50,7 @@
             class="m-2 translate-textarea"
             :lang="inputLanguage"
             rows="10"
-            maxlength="5000"
+            :maxlength="MAX_TEXT_LENGTH"
             placeholder="Type here to translate…"
             v-model="textToTranslate"
           ></textarea>
@@ -62,6 +62,7 @@
               class="icon-button"
               :aria-disabled="busy || startingMic"
               :aria-label="recording ? 'Stop recording' : 'Start recording'"
+              aria-describedby="mic-hint"
               @click="toggleRecording"
             >
               <Icon
@@ -85,6 +86,11 @@
             </p>
             <p v-if="recording" class="small m-2">
               Recording… select the microphone again to stop.
+            </p>
+            <!-- Stated up front, not announced while recording, where a screen
+                 reader on speakers would be recorded too. -->
+            <p v-if="micSupported" id="mic-hint" class="text-muted small m-2">
+              Recordings stop after {{ MAX_RECORDING_SECONDS }} seconds and are added to the text.
             </p>
           </div>
           <label for="translation">Translation</label>
@@ -124,7 +130,8 @@ import { showToast } from "../stores/toastStore";
 
 const MIC_MIME_TYPE = "audio/webm;codecs=opus";
 const MAX_TTS_LENGTH = 5000;
-const MAX_RECORDING_MS = 30000;
+const MAX_RECORDING_SECONDS = 30;
+const MAX_TEXT_LENGTH = 5000;
 
 function blobToBase64(blob) {
   return new Promise((resolve, reject) => {
@@ -251,7 +258,7 @@ async function toggleRecording() {
   });
   mediaRecorder.start();
   recording.value = true;
-  recordingTimeout = setTimeout(() => mediaRecorder.stop(), MAX_RECORDING_MS);
+  recordingTimeout = setTimeout(() => mediaRecorder.stop(), MAX_RECORDING_SECONDS * 1000);
 }
 
 async function transcribeRecording() {
@@ -260,8 +267,13 @@ async function transcribeRecording() {
     const blob = new Blob(audioChunks, { type: MIC_MIME_TYPE });
     const audio = await blobToBase64(blob);
     const { transcript } = await transcribeSpeech(audio, MIC_MIME_TYPE, inputLanguage.value);
-    textToTranslate.value = transcript;
-    announce("Transcript ready.");
+    // Added to what's there, so a long message can be spoken in parts. Capped
+    // at the box's maxlength, as typing is.
+    textToTranslate.value = [textToTranslate.value.trim(), transcript]
+      .filter(Boolean)
+      .join(" ")
+      .slice(0, MAX_TEXT_LENGTH);
+    announce("Transcript added.");
   } catch (err) {
     console.error("Transcription failed:", err);
     const message = err.status === 422 ? "No speech detected." : "Could not transcribe audio.";

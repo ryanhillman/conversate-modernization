@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { flushPromises, mount } from "@vue/test-utils";
-import { computeAccessibleName } from "dom-accessibility-api";
+import { computeAccessibleDescription, computeAccessibleName } from "dom-accessibility-api";
 
 // The real API modules load auth.js, which needs Auth0 settings that CI
 // doesn't have.
@@ -97,7 +97,38 @@ describe("Translate", () => {
     await wrapper.get('[aria-label="Stop recording"]').trigger("click");
     // Reading the recording uses a FileReader, which finishes on a later task.
     await vi.waitFor(() => expect(wrapper.findAll("textarea")[0].element.value).toBe("ciao"));
-    expect(announce).toHaveBeenCalledWith("Transcript ready.");
+    expect(announce).toHaveBeenCalledWith("Transcript added.");
+    wrapper.unmount();
+  });
+
+  it("adds each transcript to the text, so a long message can be spoken in parts", async () => {
+    transcribeSpeech.mockResolvedValue({ transcript: "come stai" });
+    const mic = fakeMicrophone();
+    const wrapper = mount(Translate, { global: { stubs: { RequireProfile } } });
+    await wrapper.get("textarea").setValue("ciao, ");
+
+    await wrapper.get('[aria-label="Start recording"]').trigger("click");
+    mic.allow();
+    await flushPromises();
+    await wrapper.get('[aria-label="Stop recording"]').trigger("click");
+
+    await vi.waitFor(() =>
+      expect(wrapper.findAll("textarea")[0].element.value).toBe("ciao, come stai"),
+    );
+    wrapper.unmount();
+  });
+
+  it("states the recording limit before recording starts", () => {
+    fakeMicrophone();
+    const wrapper = mount(Translate, {
+      global: { stubs: { RequireProfile } },
+      attachTo: document.body,
+    });
+    const micButton = wrapper.get('[aria-label="Start recording"]').element;
+
+    expect(computeAccessibleDescription(micButton)).toBe(
+      "Recordings stop after 30 seconds and are added to the text.",
+    );
     wrapper.unmount();
   });
 
