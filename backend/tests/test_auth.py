@@ -53,9 +53,27 @@ def test_large_clock_skew_in_the_future_is_401(client, auth_headers):
     assert client.get(URL, headers=headers).status_code == 401
 
 
-def test_jwks_unreachable_is_503_not_401(client, auth_headers, stub_jwks):
+def test_jwks_unreachable_is_503_not_401_after_retrying(client, auth_headers, stub_jwks):
     stub_jwks.error = URLError('connection refused')
     assert client.get(URL, headers=auth_headers()).status_code == 503
+    assert stub_jwks.fetches == 4
+    assert stub_jwks.sleeps == [0.5, 1, 2]
+
+
+def test_a_failed_key_download_is_retried(client, auth_headers, create_user, stub_jwks):
+    create_user()
+    stub_jwks.error = URLError(ConnectionResetError(10054, 'connection forcibly closed'))
+    stub_jwks.failures = 2
+    assert client.get(URL, headers=auth_headers()).status_code == 200
+    assert stub_jwks.fetches == 3
+    assert stub_jwks.sleeps == [0.5, 1]
+
+
+def test_a_key_download_timeout_isnt_retried(client, auth_headers, stub_jwks):
+    stub_jwks.error = URLError(TimeoutError('timed out'))
+    assert client.get(URL, headers=auth_headers()).status_code == 503
+    assert stub_jwks.fetches == 1
+    assert stub_jwks.sleeps == []
 
 
 def test_unknown_key_ids_dont_refetch_keys_during_the_cooldown(client, auth_headers, stub_jwks):

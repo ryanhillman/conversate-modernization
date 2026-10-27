@@ -69,6 +69,7 @@
 - Stated the text-to-speech length limit in bytes, which is how it's measured, rather than characters.
 - Stopped rejecting out-of-order quiz answers as too fast.
 - Logged the reason the server rejects a login.
+- Retried Auth0's key download after a dropped connection.
 - Kept keyboard focus visible and in place.
 - Let a quiz result be saved again after a failed submit.
 - Showed quiz and recording states with more than color.
