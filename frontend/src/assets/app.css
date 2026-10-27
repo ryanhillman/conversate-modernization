@@ -152,12 +152,13 @@ a {
   color: var(--brand-navy);
 }
 
-/* Base styles for the app's shared elements, buttons, and cards. */
 /* <main> takes focus after a page change or the skip link, but isn't a
    control, so it gets no focus ring. */
 #main:focus {
   outline: none;
 }
+
+/* Base styles for the app's shared elements, buttons, and cards. */
 body {
   font-family:
     "Inter",
