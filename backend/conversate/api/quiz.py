@@ -15,25 +15,18 @@ quiz_bp = Blueprint('quiz_bp', __name__)
 
 QUIZ_TIME_LIMIT_SECONDS = 250
 MAX_QUIZ_PAUSES = 1
-# A human never answers this fast — the UI itself holds each answer on
-# screen for 500ms before advancing. This slows down a script racing
-# through the quiz without a real answer key; it can't stop one, since
-# a script can simply pace itself slower than this.
+# The UI shows each answer for 500ms, so faster answering is a script. This
+# only slows one down.
 MIN_SECONDS_PER_ANSWER = 0.5
-# How much of a pause actually gets excluded from the 250s clock. Longer
-# than this and the clock resumes running anyway, capping how much total
-# time a pause can buy back.
+# The most pause time kept off the quiz clock; anything longer counts.
 MAX_PAUSE_CREDIT_SECONDS = 120
 
 
 def _build_quiz():
     words = list(QUIZ_WORDS)
     random.shuffle(words)
-    # Picking distractors independently per question lets some words get
-    # drawn far more often than others by chance. Track how many times each
-    # word has been used as a distractor and always draw from the
-    # least-used ones, so usage stays balanced across the whole quiz instead
-    # of clustering on a handful of repeats.
+    # Draw distractors from the least-used words, so they're spread evenly
+    # across the quiz.
     usage = {w['en']: 0 for w in QUIZ_WORDS}
     questions = []
     for word in words:
@@ -80,9 +73,8 @@ def start_quiz(record):
     try:
         db.session.commit()
     except IntegrityError:
-        # Two simultaneous first-time starts both saw no existing attempt and
-        # both tried to insert one; the unique index on user_id lets only one
-        # through.
+        # A simultaneous first start inserted first; the unique index on
+        # user_id lets only one through.
         db.session.rollback()
         return jsonify(error='Quiz already starting'), 409
 
@@ -122,10 +114,8 @@ def answer_quiz(record):
 
     correct = body.get('answer') == attempt.quiz_state[index]['correct']
 
-    # Checking next_index and incrementing it must be one atomic operation:
-    # separate read-then-write steps let concurrent requests for the same
-    # index all pass the check before any of them commits, so every
-    # simultaneous guess would score.
+    # Check and advance next_index in one statement, so concurrent guesses at
+    # one question can't all score.
     result = db.session.execute(
         update(QuizAttempt)
         .where(
@@ -172,9 +162,8 @@ def resume_quiz(record):
     if attempt is None:
         return jsonify(error='No quiz in progress; call /api/me/quiz/start first'), 409
     if attempt.paused_at is not None:
-        # Shift the anchor forward by however long the pause lasted, so the
-        # paused time is never counted against the 250s cap — but only up to
-        # a cap, so a pause can't be stretched out into unlimited extra time.
+        # Move the start forward by the pause, up to MAX_PAUSE_CREDIT_SECONDS,
+        # so it doesn't count against the clock.
         paused_duration = min(
             (utcnow() - attempt.paused_at).total_seconds(), MAX_PAUSE_CREDIT_SECONDS
         )
@@ -201,9 +190,8 @@ def submit_quiz(record):
     )
     db.session.delete(attempt)
 
-    # Same atomicity concern as /answer: two concurrent submits must not
-    # both read the old best, decide "I'm better", and write — the second
-    # write would silently clobber the first with a stale is_new_best.
+    # One conditional update, so concurrent submits can't replace a better
+    # score with a stale one.
     result = db.session.execute(
         update(User)
         .where(
@@ -223,15 +211,12 @@ def submit_quiz(record):
 @quiz_bp.route('/api/leaderboard', methods=['GET'])
 @require_auth
 def leaderboard():
-    # Only the three columns the response uses, not whole User rows; the
-    # filter and sort match ix_user_leaderboard, so Postgres can read the top
-    # rows straight off the index instead of scanning and sorting the table.
+    # Only the columns shown. The filter and sort match ix_account_leaderboard,
+    # so Postgres reads the top rows straight from the index.
     users = db.session.execute(
         select(User.username, User.quiz_best_score, User.quiz_best_time_seconds)
         .where(User.quiz_best_score.is_not(None))
-        # id as a final tiebreak: without it, two rows tied on both score and
-        # time have no defined relative order, so the leaderboard could show
-        # them in either order from one request to the next.
+        # id breaks ties on score and time, so the order is stable.
         .order_by(User.quiz_best_score.desc(), User.quiz_best_time_seconds.asc(), User.id.asc())
         .limit(100)
     ).all()

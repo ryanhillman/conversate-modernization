@@ -28,7 +28,6 @@ class Config:
         self.SQLALCHEMY_ENGINE_OPTIONS = {'pool_pre_ping': True}
         self.ALLOWED_ORIGIN = config('ALLOWED_ORIGIN', default='http://localhost:3000')
         self.DEBUG = config('DEBUG', cast=bool, default=False)
-        # The largest legitimate body is the base64-encoded STT audio upload
-        # (~1.33MB for a 1MB clip); 2MB leaves headroom without letting a
-        # logged-in client make Flask parse an arbitrarily large body.
+        # The largest valid body is a speech-to-text upload, about 1.33MB of
+        # base64 for a 1MB clip; 2MB leaves headroom.
         self.MAX_CONTENT_LENGTH = 2 * 1024 * 1024

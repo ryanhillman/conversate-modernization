@@ -23,9 +23,8 @@ TEST_AUDIENCE = 'test-audience'
 ISSUER = f'https://{TEST_DOMAIN}/'
 KID = 'test-key'
 
-# The app fixture below calls db.drop_all()/create_all() around every test.
-# Pointed at the app's own database by mistake, that wipes its data — refuse
-# to run rather than risk it.
+# The app fixture drops every table around each test, so refuse to run
+# against a database whose name doesn't end in _test.
 _test_db_url = os.environ.get('TEST_DATABASE_URL')
 if _test_db_url and not (make_url(_test_db_url).database or '').endswith('_test'):
     pytest.exit('TEST_DATABASE_URL must point at a database whose name ends in _test')

@@ -36,14 +36,13 @@ class User(db.Model):
     quiz_best_score: Mapped[int | None] = mapped_column()
     quiz_best_time_seconds: Mapped[int | None] = mapped_column()
 
-    # Identity is the Auth0 subject, so that's the unique key. username is
-    # compared case-insensitively in the app, so it's enforced the same way in
-    # the database.
+    # Accounts are keyed by Auth0 subject. Usernames are unique ignoring case,
+    # as the app compares them.
     __table_args__ = (
         db.Index('uq_account_auth0_sub', auth0_sub, unique=True),
         db.Index('uq_account_username_lower', db.func.lower(username), unique=True),
-        # Matches the leaderboard's ORDER BY. Partial, because the leaderboard
-        # only ever reads users who have a best score.
+        # Matches the leaderboard's ORDER BY; partial, since it only reads
+        # accounts with a best score.
         db.Index(
             'ix_account_leaderboard',
             quiz_best_score.desc(),
@@ -69,9 +68,9 @@ class User(db.Model):
 
 
 class QuizAttempt(db.Model):
-    """An in-flight quiz: the server's private answer key and start time for
-    one user. Written by /api/me/quiz/start, and deleted by /api/me/quiz/submit,
-    a reset, or account deletion. Never serialized to the client."""
+    """One user's in-flight quiz, with an answer key that never leaves the
+    server. Written by /api/me/quiz/start; deleted by submit, a reset, or
+    account deletion."""
 
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey('account.id'))

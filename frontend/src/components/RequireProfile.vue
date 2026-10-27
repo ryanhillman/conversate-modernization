@@ -19,8 +19,8 @@ import { ref, nextTick, onMounted } from "vue";
 import { profile, loadProfile } from "../stores/profileStore";
 import SetUsername from "./username/SetUsername.vue";
 
-// Only the first view after sign-in (or a reload) waits on the request;
-// later views find the profile already in the store and render immediately.
+// Only the first view after sign-in waits; later ones find the profile in the
+// store.
 const loading = ref(!profile.value);
 const loadFailed = ref(false);
 const retryButton = ref(null);
@@ -33,9 +33,8 @@ async function load() {
   try {
     await loadProfile();
   } catch (err) {
-    // A 404 means no profile yet; the slot falls back to the setup form.
-    // Any other failure (an outage, a network error) is not the same as
-    // "no profile" and must not silently fall into that signup flow.
+    // 404 means no profile yet, so the setup form shows. Other failures
+    // aren't "no profile" and mustn't show it.
     if (err.status !== 404) {
       console.error("Failed to load user:", err);
       loadFailed.value = true;

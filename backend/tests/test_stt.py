@@ -32,8 +32,7 @@ def test_no_speech_detected_is_422(client, auth_headers, google_stub):
 
 
 def test_gives_google_longer_to_transcribe(client, auth_headers, google_stub):
-    # Google replies only after transcribing the whole clip, so STT waits
-    # longer for the answer than the 8s other Google calls get.
+    # Speech-to-text waits longer than the 8s other Google calls get.
     google_stub.respond({'results': [{'alternatives': [{'transcript': 'ciao'}]}]})
     client.post(STT, json=VALID, headers=auth_headers())
     timeout = google_stub.last_call.timeout

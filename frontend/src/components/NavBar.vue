@@ -155,8 +155,7 @@ function onDocumentClick(event) {
   }
 }
 
-// Escape closes the menu and returns focus to the profile picture that opened
-// it, the standard behavior for dropdown menus.
+// Escape closes the menu and returns focus to its toggle.
 function onDocumentKeydown(event) {
   if (event.key === "Escape" && dropdownOpen.value) {
     dropdownOpen.value = false;
@@ -179,7 +178,7 @@ function login() {
 </script>
 
 <style scoped>
-/* Styled like the <h6> it replaced; the user's name isn't a heading. */
+/* Styled like a small heading, though the user's name isn't one. */
 .nav-user-name {
   margin-bottom: 0.5rem;
   font-family: "Poppins", sans-serif;
@@ -209,8 +208,8 @@ function login() {
   padding-bottom: 0.35rem;
   border-bottom: 3px solid transparent;
 }
-/* Underline: grows out from the center on hover, and is always shown for the
-   current page. It sits over the label's transparent border. */
+/* An underline that grows from the center on hover and stays on the current
+   page, drawn over the label's transparent border. */
 .nav-label::after {
   content: "";
   position: absolute;
@@ -226,8 +225,6 @@ function login() {
 .nav-link:focus-visible .nav-label::after {
   transform: scaleX(1);
 }
-/* The current page shows the same underline at full width, so both always
-   match exactly. */
 .router-link-active .nav-label::after {
   transform: scaleX(1);
 }
@@ -236,8 +233,8 @@ function login() {
     transition: none;
   }
 }
-/* Gold hover glow on Log in, like the home cards. Keyboard focus keeps
-   Bootstrap's own focus ring. */
+/* Gold hover glow on Log in, like the home cards; keyboard focus keeps
+   Bootstrap's ring. */
 .navbar-nav .btn-primary {
   transition: box-shadow 0.15s ease;
 }

@@ -136,9 +136,8 @@ const startingMic = ref(false);
 const busy = ref(false);
 const textToTranslate = ref("");
 const translatedText = ref(null);
-// The language translatedText is actually written in, captured at
-// translation time — not the live picker, which the user can change
-// afterward without re-translating.
+// The language translatedText is in, captured when translated; the picker may
+// have changed since.
 const translatedTextLanguage = ref(null);
 const inputLanguage = ref("en");
 const outputLanguage = ref("it");
@@ -163,8 +162,7 @@ const micSupported = computed(
 );
 const translatedTextTooLong = computed(() => {
   if (!translatedText.value) return false;
-  // Google's TTS limit is measured in UTF-8 bytes, not JS string length
-  // (UTF-16 code units) — accented characters take more than one byte.
+  // Google's limit is in UTF-8 bytes, and accented letters take more than one.
   return new TextEncoder().encode(translatedText.value).length > MAX_TTS_LENGTH;
 });
 const sameLanguageOnBothSides = computed(() => inputLanguage.value === outputLanguage.value);
@@ -178,9 +176,8 @@ watch(translatedTextTooLong, (tooLong) => {
 });
 
 onBeforeUnmount(() => {
-  // Stopping the tracks below fires the recorder's own "stop" handler,
-  // which would otherwise still kick off a paid transcription call for a
-  // page the user has already left.
+  // Stopping the tracks fires the recorder's stop handler; leavingPage keeps
+  // it from starting a paid transcription.
   leavingPage = true;
   clearTimeout(recordingTimeout);
   if (micStream) {
@@ -291,9 +288,8 @@ async function startTextToSpeech() {
   box-sizing: border-box;
   resize: none;
 }
-/* Real buttons, so the mic and speaker can be reached with Tab and used by
-   screen readers, but drawn as just the icon. The browser's focus outline
-   is kept so keyboard users can see which one is selected. */
+/* Real buttons drawn as just the icon, so they work with Tab and screen
+   readers. The browser's focus outline is kept. */
 .icon-button {
   background: none;
   border: 0;

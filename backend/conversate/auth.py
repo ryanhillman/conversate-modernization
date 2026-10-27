@@ -5,15 +5,12 @@ from flask import current_app, g, jsonify, request
 from jwt import PyJWKClient, PyJWKClientConnectionError
 
 JWKS_TIMEOUT_SECONDS = 5
-# A forced refresh is normally triggered by a token naming an unknown key ID.
-# An attacker can trigger that for free on every request with a forged kid,
-# so this cooldown caps how often a single domain's keys are re-downloaded
-# regardless of how many such requests arrive.
+# A token with an unknown key ID forces a key refresh, which anyone can
+# trigger with a forged token; this caps how often that re-downloads.
 JWKS_REFRESH_COOLDOWN_SECONDS = 60
-# Each re-download is a chance for a network blip to fail a sign-in, so keep
-# the keys for 10 hours rather than PyJWT's 5 minutes. A new key is still
-# fetched when a token first uses it (subject to the cooldown above), but a key
-# Auth0 removes stays trusted until the cache expires.
+# Keep keys 10 hours (PyJWT's default is 5 minutes), so fewer downloads can
+# fail a sign-in. A new key is fetched when first used, subject to the cooldown;
+# a key Auth0 removes stays trusted until the cache expires.
 JWKS_CACHE_SECONDS = 10 * 60 * 60
 
 # One client per Auth0 domain, each caching that domain's keys.
@@ -45,9 +42,7 @@ def _verify_token():
         algorithms=['RS256'],
         audience=audience,
         issuer=f'https://{domain}/',
-        # Tolerate small clock differences between this server and Auth0's —
-        # without it, a token's iat/exp can fail validation purely from
-        # clock skew, with no actual timing problem.
+        # Allow a minute of clock difference with Auth0.
         leeway=60,
     )
 

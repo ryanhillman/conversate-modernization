@@ -14,9 +14,8 @@ def json_body():
 
 
 def str_field(body, key):
-    """A JSON body field as a stripped string, or '' if missing or not a
-    string (e.g. a number, list, or object) — never raises, so callers can
-    validate the result the same way regardless of what the client sent."""
+    """A JSON body field as a stripped string, or '' if it's missing or not a
+    string."""
     value = body.get(key)
     return value.strip() if isinstance(value, str) else ''
 

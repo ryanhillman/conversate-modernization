@@ -8,8 +8,8 @@ from sqlalchemy.orm import DeclarativeBase
 
 
 class Base(DeclarativeBase):
-    # Names the foreign key the baseline migration creates. Changing it would
-    # give a fresh database a different constraint name than an existing one.
+    # Names the baseline migration's foreign key; changing it would make new
+    # databases differ from existing ones.
     metadata = MetaData(
         naming_convention={
             'fk': 'fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s',
@@ -17,16 +17,15 @@ class Base(DeclarativeBase):
     )
 
 
-# Each request gets its own short-lived session, so keeping values loaded after
-# commit can't serve stale data, and serializing a just-saved row needs no
-# re-read.
+# Each request has its own session, so values kept after commit can't go
+# stale, and serializing a saved row needs no re-read.
 db = SQLAlchemy(model_class=Base, session_options={'expire_on_commit': False})
 migrate = Migrate()
 
 
 def _rate_limit_key():
-    # Routes that rate-limit run @require_auth first, so the authenticated
-    # user's sub is already set; fall back to the IP only for safety.
+    # Rate-limited routes run @require_auth first, so the user's sub is set;
+    # the IP is only a fallback.
     return getattr(g, 'current_user_sub', None) or get_remote_address()
 
 

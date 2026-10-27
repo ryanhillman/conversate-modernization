@@ -113,8 +113,8 @@ import { showToast } from "../stores/toastStore";
 const lessons = LESSONS;
 
 const answers = reactive({});
-// An answer is only marked right or wrong once it's submitted (Enter or
-// leaving the box), not while it's still being typed.
+// Answers are marked right or wrong once submitted (Enter or leaving the box),
+// not while typing.
 const submitted = reactive({});
 LESSONS.forEach((lesson) =>
   lesson.questions.forEach((q) => {
@@ -163,8 +163,7 @@ function checkCurrentLesson() {
 function isComplete(lessonId) {
   return completedLessonIds.value.includes(lessonId);
 }
-// The button disappears once the lesson is complete, so move focus to the
-// lesson's Toggle button.
+// The button disappears once the lesson is done, so move focus to its Toggle.
 async function completeWithButton(lesson) {
   await markLessonComplete(lesson.id);
   if (isComplete(lesson.id)) {
@@ -252,7 +251,7 @@ function launchCelebration() {
 .individual-lesson:hover {
   transform: translateY(-3px);
 }
-/* A heading, styled like the plain text it replaced. */
+/* A heading, styled as plain text. */
 .lesson-header {
   font-family: inherit;
   font-size: 1rem;
@@ -413,9 +412,8 @@ function launchCelebration() {
     transform: translateX(-50%) translateY(-20px);
   }
 }
-/* Completed lessons: a check on the card's corner, and the title and Toggle
-   button turn the site's green (white text on it is 5.14:1). Toggle keeps
-   its amber hover. */
+/* Completed lessons: a corner check, and a green title and Toggle (5.14:1
+   with white text). Toggle keeps its amber hover. */
 .completed-check {
   position: absolute;
   top: -0.75rem;
@@ -435,8 +433,7 @@ function launchCelebration() {
 .is-complete .toggle-lesson-btn:not(:hover) {
   background-color: var(--success);
 }
-/* Title on the left, Toggle on the right, on one row (wrapping on narrow
-   screens). */
+/* Title and Toggle on one row, wrapping on narrow screens. */
 .lesson-row {
   display: flex;
   align-items: center;
