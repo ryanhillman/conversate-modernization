@@ -17,16 +17,18 @@
       </span>
       <div class="lesson-row">
         <label :for="lesson.slug" class="lesson-label"
-          ><RichText :text="lesson.menuTitle" />:
+          ><span :id="`${lesson.slug}-title`"><RichText :text="lesson.menuTitle" /></span>:
         </label>
+        <!-- Named from its own text plus the title, so the title's Italian keeps
+             its lang marking (an aria-label string can't carry it). -->
         <button
           :id="lesson.slug"
           class="lesson-btn toggle-lesson-btn"
-          :aria-label="`Toggle lesson: ${plainText(lesson.menuTitle)}`"
+          :aria-labelledby="`${lesson.slug}-toggle ${lesson.slug}-title`"
           :aria-expanded="currentLessonId === lesson.id ? 'true' : 'false'"
           @click="selectLesson(lesson.id)"
         >
-          Toggle lesson
+          <span :id="`${lesson.slug}-toggle`">Toggle lesson</span>
         </button>
       </div>
 
@@ -103,7 +105,6 @@ import { generateConfetti } from "../utils/confetti";
 import RequireProfile from "../components/RequireProfile.vue";
 import RichText from "../components/RichText.vue";
 import { LESSONS } from "../data/lessons";
-import { plainText } from "../utils/richText";
 import { isAnswerCorrect, isLessonComplete, normalizeAnswer } from "../utils/grading";
 import { synthesizeSpeech } from "../api/tts";
 import { completedLessonIds, setProfile } from "../stores/profileStore";
