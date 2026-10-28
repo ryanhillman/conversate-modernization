@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-column h-100">
+  <div class="d-flex flex-column app-shell">
     <a href="#main" class="visually-hidden-focusable">Skip to main content</a>
     <Toast />
     <div class="visually-hidden" role="status">{{ announcement }}</div>
@@ -26,3 +26,12 @@ import AuthError from "./components/AuthError.vue";
 import Toast from "./components/Toast.vue";
 import { announcement } from "./stores/announceStore";
 </script>
+
+<style scoped>
+/* At least the window's height, so the footer sits at the bottom of short
+   pages; longer pages grow it, which keeps the room reserved below the footer
+   for toasts (app.css) scrollable. */
+.app-shell {
+  min-height: 100%;
+}
+</style>

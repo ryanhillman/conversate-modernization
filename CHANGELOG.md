@@ -55,12 +55,13 @@
 
 ### Fixed
 - Made the "View leaderboard" button on the quiz results screen visible by switching from navy-on-navy to amber.
-- Removed the duplicate active-page marker from the phone menu.
-- Added .env.local files to .gitignore.
+- Stopped the phone menu showing two active-page markers.
+- Ignored .env.local files in Git.
 - Showed the home page images in full instead of cropping.
-- Removed the profile page's extra container, so it lines up with the other pages.
+- Lined up the profile page with the other pages.
 - Matched the username setup field to the profile page's.
-- Removed the gray box behind the Translate image.
+- Stopped gray space showing below the footer on short pages.
+- Stopped a gray box showing behind the Translate image.
 - Raised text, icon, border, and focus ring contrast to meet WCAG minimums.
 - Prevented double-clicking a quiz answer from highlighting the footer logo.
 - Made every control usable by keyboard and screen readers, announced results and errors, and marked Italian text for correct pronunciation.
