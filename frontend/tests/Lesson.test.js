@@ -5,8 +5,10 @@ import { computeAccessibleName } from "dom-accessibility-api";
 vi.mock("../src/api/users", () => ({ getMe: vi.fn(), completeLesson: vi.fn() }));
 vi.mock("../src/api/tts", () => ({ synthesizeSpeech: vi.fn() }));
 
+import { synthesizeSpeech } from "../src/api/tts";
 import { completeLesson } from "../src/api/users";
 import { LESSONS } from "../src/data/lessons";
+import { toastState } from "../src/stores/toastStore";
 import Lesson from "../src/views/Lesson.vue";
 import { RequireProfile } from "./helpers";
 
@@ -66,6 +68,21 @@ describe("Lesson", () => {
       .findAll("h4")
       .find((h) => h.text() === "Now let's practice some on your own!").element;
     expect(heading.nextElementSibling.textContent).toBe("Fill in the correct form of the verb.");
+  });
+
+  it("says to wait a minute when playing a word hits the rate limit", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    synthesizeSpeech.mockRejectedValueOnce(
+      Object.assign(new Error("30 per 1 minute"), { status: 429 }),
+    );
+    toastState.toasts = [];
+    const wrapper = mount(Lesson, { global: { stubs: { RequireProfile } } });
+    await wrapper.get("#avere-essere").trigger("click");
+
+    await wrapper.get(".speakable").trigger("click");
+    await flushPromises();
+
+    expect(toastState.toasts.at(-1).message).toBe("Too many requests. Try again in a minute.");
   });
 
   it("gives each Toggle button the accessible name Toggle lesson plus its title", () => {

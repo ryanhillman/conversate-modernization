@@ -118,6 +118,7 @@ import { synthesizeSpeech } from "../api/tts";
 import { transcribeSpeech } from "../api/stt";
 import { announce } from "../stores/announceStore";
 import { showToast } from "../stores/toastStore";
+import { errorMessage } from "../utils/errorMessage";
 
 const MIC_MIME_TYPE = "audio/webm;codecs=opus";
 const MAX_TTS_LENGTH = 5000;
@@ -201,7 +202,7 @@ async function translateEnteredText() {
     console.error("Translation failed:", err);
     translatedText.value = null;
     translatedTextLanguage.value = null;
-    showToast("Could not translate.", "error");
+    showToast(errorMessage(err, "Could not translate."), "error");
   } finally {
     busy.value = false;
   }
@@ -265,7 +266,7 @@ async function transcribeRecording() {
   } catch (err) {
     console.error("Transcription failed:", err);
     const message = err.status === 422 ? "No speech detected." : "Could not transcribe audio.";
-    showToast(message, "error");
+    showToast(errorMessage(err, message), "error");
   } finally {
     busy.value = false;
   }
@@ -282,7 +283,7 @@ async function startTextToSpeech() {
     await new Audio(`data:audio/mpeg;base64,${audio_content}`).play();
   } catch (err) {
     console.error("Speech synthesis failed:", err);
-    showToast("Could not play audio.", "error");
+    showToast(errorMessage(err, "Could not play audio."), "error");
   } finally {
     busy.value = false;
   }

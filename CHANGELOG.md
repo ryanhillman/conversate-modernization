@@ -110,6 +110,7 @@
 - Warned that resetting progress and deleting an account can't be undone.
 - Made lesson prompts and translations consistent in quotes, punctuation, and capitalization.
 - Kept a local virtual environment out of the backend's Docker image.
+- Said to wait a minute when translation or speech hits the rate limit, instead of a generic error.
 
 ### Security
 - Made the backend's code read-only to the user it runs as.

@@ -11,6 +11,7 @@ import { transcribeSpeech } from "../src/api/stt";
 import { translateText } from "../src/api/translate";
 import { synthesizeSpeech } from "../src/api/tts";
 import { announce } from "../src/stores/announceStore";
+import { toastState } from "../src/stores/toastStore";
 import Translate from "../src/views/Translate.vue";
 import { RequireProfile } from "./helpers";
 
@@ -93,6 +94,39 @@ describe("Translate", () => {
     // Reading the recording uses a FileReader, which finishes on a later task.
     await vi.waitFor(() => expect(wrapper.findAll("textarea")[0].element.value).toBe("ciao"));
     expect(announce).toHaveBeenCalledWith("Transcript added.");
+    wrapper.unmount();
+  });
+
+  it("says to wait a minute when translate, listen, or record hits the rate limit", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    const limited = Object.assign(new Error("30 per 1 minute"), { status: 429 });
+    const wait = "Too many requests. Try again in a minute.";
+    const lastToast = () => toastState.toasts.at(-1)?.message;
+    const mic = fakeMicrophone();
+    const wrapper = mount(Translate, { global: { stubs: { RequireProfile } } });
+    await wrapper.get("textarea").setValue("hello");
+
+    translateText.mockRejectedValueOnce(limited);
+    await wrapper.get(".btn-accent").trigger("click");
+    await flushPromises();
+    expect(lastToast()).toBe(wait);
+
+    toastState.toasts = [];
+    translateText.mockResolvedValueOnce({ translated_text: "ciao" });
+    synthesizeSpeech.mockRejectedValueOnce(limited);
+    await wrapper.get(".btn-accent").trigger("click");
+    await flushPromises();
+    await wrapper.get('[aria-label="Listen to translation"]').trigger("click");
+    await flushPromises();
+    expect(lastToast()).toBe(wait);
+
+    toastState.toasts = [];
+    transcribeSpeech.mockRejectedValueOnce(limited);
+    await wrapper.get('[aria-label="Start recording"]').trigger("click");
+    mic.allow();
+    await flushPromises();
+    await wrapper.get('[aria-label="Stop recording"]').trigger("click");
+    await vi.waitFor(() => expect(lastToast()).toBe(wait));
     wrapper.unmount();
   });
 
