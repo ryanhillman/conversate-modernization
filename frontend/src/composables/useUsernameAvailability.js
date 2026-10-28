@@ -57,7 +57,7 @@ export function useUsernameAvailability(username, { skipAvailabilityCheck = () =
   // Someone can take the name between the check and saving. Marks it taken
   // and returns true when that's why saving failed.
   function takenOnSave(err) {
-    if (err?.status !== 409 || err.message !== "username already exists") return false;
+    if (err?.code !== "username_taken") return false;
     takenUsername.value = true;
     return true;
   }

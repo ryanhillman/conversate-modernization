@@ -84,12 +84,13 @@ describe("api requests", () => {
     expect(fetchMock.mock.calls[0][1].headers).toEqual({});
   });
 
-  it("throws the server's error message with the status", async () => {
-    respond(409, { error: "username already exists" });
+  it("throws the server's error message with the status and code", async () => {
+    respond(409, { error: "username already exists", code: "username_taken" });
 
     await expect(api("/api/me", { method: "PUT", body: {} })).rejects.toMatchObject({
       message: "username already exists",
       status: 409,
+      code: "username_taken",
     });
   });
 

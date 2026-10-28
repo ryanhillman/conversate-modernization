@@ -45,6 +45,8 @@ export async function api(path, { method = "GET", body, timeoutMs = 10000 } = {}
   if (!res.ok || data === undefined) {
     const error = new Error((data && data.error) || `Request failed: ${res.status}`);
     error.status = res.status;
+    // A machine-readable reason, when the server gives one.
+    if (data?.code) error.code = data.code;
     throw error;
   }
   return data;

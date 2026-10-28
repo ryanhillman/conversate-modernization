@@ -4,6 +4,7 @@
     <label for="setup-username" class="username-label">Username</label>
     <input
       id="setup-username"
+      ref="usernameInput"
       v-model="username"
       class="form-control mb-2 username-input"
       maxlength="100"
@@ -28,7 +29,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import { createMe } from "../../api/users";
 import { useUsernameAvailability } from "../../composables/useUsernameAvailability";
@@ -38,6 +39,7 @@ import { showToast } from "../../stores/toastStore";
 const router = useRouter();
 
 const username = ref("");
+const usernameInput = ref(null);
 const { checking, takenUsername, validationError, errorMessage, takenOnSave } =
   useUsernameAvailability(username);
 const saving = ref(false);
@@ -51,7 +53,13 @@ async function saveUsername(name) {
     router.push("/");
   } catch (err) {
     saving.value = false;
-    if (!takenOnSave(err)) showToast("Could not save username.", "error");
+    if (takenOnSave(err)) {
+      // A taken name disables Save, which would drop focus to the page.
+      await nextTick();
+      usernameInput.value?.focus();
+    } else {
+      showToast("Could not save username.", "error");
+    }
   }
 }
 </script>

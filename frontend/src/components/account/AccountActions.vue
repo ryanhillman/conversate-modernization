@@ -79,7 +79,13 @@ async function updateUsername(name) {
     await nextTick();
     usernameInput.value?.focus();
   } catch (err) {
-    if (!takenOnSave(err)) showToast("Could not update username.", "error");
+    if (takenOnSave(err)) {
+      // A taken name disables Update, which would drop focus to the page.
+      await nextTick();
+      usernameInput.value?.focus();
+    } else {
+      showToast("Could not update username.", "error");
+    }
   } finally {
     saving.value = false;
   }

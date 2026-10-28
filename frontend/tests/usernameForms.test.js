@@ -106,20 +106,27 @@ describe.each([
   ["SetUsername", SetUsername],
   ["AccountActions", AccountActions],
 ])("%s", (_, form) => {
-  it("says the name is taken when someone takes it before Save, not a generic error", async () => {
+  it("says the name is taken when someone takes it before Save, and moves focus to the box", async () => {
     const taken = new Error("username already exists");
     taken.status = 409;
+    taken.code = "username_taken";
     createMe.mockRejectedValue(taken);
     updateUsername.mockRejectedValue(taken);
     toastState.toasts = [];
-    const wrapper = mount(form);
+    const wrapper = mount(form, { attachTo: document.body });
     await typeAvailableName(wrapper);
 
-    await wrapper.get("button").trigger("click");
+    const save = wrapper.get("button");
+    save.element.focus();
+    await save.trigger("click");
     await flushPromises();
 
     expect(wrapper.get(".form-error").text()).toBe("That username is taken");
     expect(toastState.toasts).toEqual([]);
+    // Save is now disabled, so focus can't stay on it.
+    expect(save.attributes("disabled")).toBeDefined();
+    expect(document.activeElement).toBe(wrapper.get("input").element);
+    wrapper.unmount();
   });
 
   it("marks the box invalid and points it at the error only while one shows", async () => {

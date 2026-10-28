@@ -42,7 +42,7 @@ def test_create_losing_a_username_race_reports_the_username(
     monkeypatch.setattr(accounts_module, '_validate_username', lambda *args, **kwargs: None)
     response = client.post(ME, json={'username': 'TESTER'}, headers=auth_headers(sub='auth0|me'))
     assert response.status_code == 409
-    assert response.get_json() == {'error': 'username already exists'}
+    assert response.get_json() == {'error': 'username already exists', 'code': 'username_taken'}
 
 
 def test_create_losing_a_same_account_race_reports_the_account(
@@ -94,15 +94,12 @@ def test_rename_rejects_a_non_string_username(client, auth_headers, create_user)
     assert response.status_code == 400
 
 
-def test_rename_to_a_taken_username_is_409(client, auth_headers, create_user):
+def test_rename_to_a_taken_username_is_409_with_a_code(client, auth_headers, create_user):
     create_user(sub='auth0|me', username='tester')
     create_user(sub='auth0|other', username='taken')
-    assert (
-        client.put(
-            ME, json={'username': 'taken'}, headers=auth_headers(sub='auth0|me')
-        ).status_code
-        == 409
-    )
+    response = client.put(ME, json={'username': 'taken'}, headers=auth_headers(sub='auth0|me'))
+    assert response.status_code == 409
+    assert response.get_json()['code'] == 'username_taken'
 
 
 def test_completing_a_lesson_twice_does_not_double_count(client, auth_headers, create_user):

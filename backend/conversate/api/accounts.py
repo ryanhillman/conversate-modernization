@@ -40,13 +40,18 @@ def _username_taken(name, exclude_id=None):
     return db.session.scalar(query.limit(1)) is not None
 
 
+def _username_taken_response():
+    # The frontend checks the code, so the wording can change freely.
+    return jsonify(error='username already exists', code='username_taken'), 409
+
+
 def _validate_username(name, exclude_id=None):
     """Shared by create and rename: returns an error response, or None."""
     name_error = _username_error(name)
     if name_error:
         return jsonify(error=name_error), 400
     if _username_taken(name, exclude_id=exclude_id):
-        return jsonify(error='username already exists'), 409
+        return _username_taken_response()
     return None
 
 
@@ -70,7 +75,7 @@ def create_me():
         # account creating twice, or another account taking the name.
         db.session.rollback()
         if _username_taken(username):
-            return jsonify(error='username already exists'), 409
+            return _username_taken_response()
         return jsonify(error='Profile already exists'), 409
     return jsonify(new_user.serialize()), 201
 
@@ -96,7 +101,7 @@ def update_me(record):
         db.session.commit()
     except IntegrityError:
         db.session.rollback()
-        return jsonify(error='username already exists'), 409
+        return _username_taken_response()
     return jsonify(record.serialize()), 200
 
 
