@@ -20,7 +20,7 @@
       :class="{ disabled: saving }"
       :disabled="!!validationError || checking || takenUsername"
       :aria-disabled="saving"
-      @click.prevent="updateUsername(username)"
+      @click="updateUsername(username)"
     >
       Update username
     </button>
@@ -28,7 +28,7 @@
       class="btn btn-warning mb-2 account-actions-field"
       :class="{ disabled: saving }"
       :aria-disabled="saving"
-      @click.prevent="resetProgress()"
+      @click="resetProgress()"
     >
       Reset progress
     </button>
@@ -36,7 +36,7 @@
       class="btn btn-danger account-actions-field"
       :class="{ disabled: saving }"
       :aria-disabled="saving"
-      @click.prevent="deleteAccount()"
+      @click="deleteAccount()"
     >
       Delete account
     </button>

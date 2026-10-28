@@ -21,7 +21,7 @@
       :class="{ disabled: saving }"
       :disabled="!!validationError || checking || takenUsername"
       :aria-disabled="saving"
-      @click.prevent="saveUsername(username)"
+      @click="saveUsername(username)"
     >
       Save username
     </button>

@@ -94,7 +94,6 @@ describe("Quiz start screen", () => {
   });
 
   it("hides the title once a quiz starts, keeping it for screen readers", async () => {
-    quizStarting(2);
     wrapper = await startQuizPage();
     const h1 = wrapper.get("h1");
     expect(h1.text()).toBe("Timed Quiz");
@@ -201,7 +200,6 @@ describe("Quiz answers", () => {
   });
 
   it("keep Pause focusable while an answer is checked, ignoring clicks on it", async () => {
-    quizStarting(2);
     answerQuiz.mockReturnValue(new Promise(() => {}));
     wrapper = await startQuizPage();
 
@@ -217,7 +215,6 @@ describe("Quiz answers", () => {
 
 describe("Quiz timer", () => {
   it("labels the time left for screen readers", async () => {
-    quizStarting(2);
     wrapper = await startQuizPage();
     expect(wrapper.get(".quiz-timer").text()).toBe("Time left: 4:10");
     expect(wrapper.get(".quiz-timer .visually-hidden").text()).toBe("Time left:");

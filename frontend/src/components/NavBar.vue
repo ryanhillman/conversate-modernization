@@ -56,7 +56,7 @@
 
         <ul class="navbar-nav nav-side nav-right d-none d-xl-flex">
           <li v-if="!isAuthenticated && !isLoading" class="nav-item">
-            <button class="btn btn-primary" @click.prevent="login">Log in</button>
+            <button class="btn btn-primary" @click="login">Log in</button>
           </li>
 
           <li

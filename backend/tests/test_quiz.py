@@ -4,6 +4,7 @@ from datetime import timedelta
 import pytest
 from sqlalchemy import select
 
+from conversate.api import quiz as quiz_module
 from conversate.api.common import utcnow
 from conversate.api.quiz import _build_quiz
 from conversate.extensions import db
@@ -51,8 +52,6 @@ def test_concurrent_first_starts_returns_409_not_500(
     # Real threads rarely hit this window, and a restart that doesn't overlap
     # is valid. So start_quiz's check finds no attempt while a "concurrent"
     # request commits one first.
-    import conversate.api.quiz as quiz_module
-
     user = create_user()
 
     def find_attempt_then_let_a_rival_insert(user_id):
@@ -349,10 +348,10 @@ def test_practice_submit_leaves_the_best_score_alone(client, auth_headers, creat
 @pytest.mark.parametrize(
     ('url', 'body'),
     [
-        ('/api/me/quiz/answer', {'index': 0, 'answer': 'bread'}),
-        ('/api/me/quiz/pause', None),
-        ('/api/me/quiz/resume', None),
-        ('/api/me/quiz/submit', None),
+        (ANSWER, {'index': 0, 'answer': 'bread'}),
+        (PAUSE, None),
+        (RESUME, None),
+        (SUBMIT, None),
     ],
 )
 def test_quiz_actions_without_a_quiz_are_409(client, auth_headers, create_user, url, body):

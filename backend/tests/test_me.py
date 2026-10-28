@@ -5,12 +5,11 @@ import time
 import pytest
 from sqlalchemy import select
 
+from conversate.api import accounts as accounts_module
 from conversate.extensions import db
 from conversate.models import QuizAttempt, User
 
 ME = '/api/me'
-
-VALID = {'username': 'tester'}
 
 
 def test_create_stores_the_username(client, auth_headers):
@@ -36,8 +35,6 @@ def test_create_losing_a_username_race_reports_the_username(
     # Simulates another account claiming the name between this request's
     # availability check and its commit: the check passes, and the database's
     # unique index rejects the insert.
-    import conversate.api.accounts as accounts_module
-
     create_user(sub='auth0|other', username='tester')
     monkeypatch.setattr(accounts_module, '_validate_username', lambda *args, **kwargs: None)
     response = client.post(ME, json={'username': 'TESTER'}, headers=auth_headers(sub='auth0|me'))
@@ -51,8 +48,6 @@ def test_create_losing_a_same_account_race_reports_the_account(
     # Simulates this account's own concurrent create committing first: the
     # existing-profile check passes, and the unique index on auth0_sub
     # rejects the insert.
-    import conversate.api.accounts as accounts_module
-
     create_user(sub='auth0|me', username='tester')
     monkeypatch.setattr(accounts_module, 'find_user', lambda sub: None)
     response = client.post(ME, json={'username': 'other'}, headers=auth_headers(sub='auth0|me'))
@@ -131,8 +126,6 @@ def test_concurrent_lesson_completions_do_not_lose_one(
     # Two completions at once race to read and rewrite the JSON list. Threads
     # rarely overlap by chance, so the request that gets the lock holds it,
     # making the other wait on it in the database.
-    import conversate.api.accounts as accounts_module
-
     user = create_user()
     headers = auth_headers()
 
