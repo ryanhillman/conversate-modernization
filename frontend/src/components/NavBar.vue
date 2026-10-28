@@ -189,10 +189,14 @@ function login() {
 .nav-link {
   margin: 0;
   padding: 0.85rem 0.9rem;
-  min-width: 7.5rem;
   text-align: center;
   color: var(--text-color);
   transition: color 0.15s ease;
+}
+/* The same space either side of every word, so the gaps between words match
+   and the words sit on the page's center. */
+#navbarNav .nav-link {
+  padding-inline: 1.85rem;
 }
 .nav-link:hover,
 .nav-link:focus-visible {

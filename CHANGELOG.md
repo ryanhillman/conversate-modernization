@@ -118,6 +118,7 @@
 - Labeled the quiz timer for screen readers.
 - Said in each lesson's heading when it's completed, for screen readers.
 - Explained why the microphone is missing when the browser can't record.
+- Spaced the nav bar's links evenly and centered them on the page.
 - Returned a 400, not a server error, for deeply nested JSON.
 
 ### Security
