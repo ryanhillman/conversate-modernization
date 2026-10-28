@@ -19,6 +19,7 @@ vi.mock("/logo.png", () => ({ default: "/logo.png" }));
 
 import { logout } from "../src/auth";
 import NavBar from "../src/components/NavBar.vue";
+import { pages } from "../src/router/pages";
 
 describe("NavBar", () => {
   it("shows the user's name without making it a heading", () => {
@@ -80,6 +81,14 @@ describe("NavBar", () => {
     // Tab from the menu to something after it.
     await menuItem.trigger("focusout", { relatedTarget: document.body });
     expect(toggle.attributes("aria-expanded")).toBe("false");
+  });
+
+  it("links every page, in order", () => {
+    const wrapper = mount(NavBar, { global: { stubs: { RouterLink: true } } });
+
+    expect(wrapper.findAll("router-link-stub").map((link) => link.attributes("to"))).toEqual(
+      pages.map((page) => page.path),
+    );
   });
 
   it("names the profile picture toggle for the menu it opens", () => {

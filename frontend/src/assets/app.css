@@ -284,6 +284,17 @@ h6,
   opacity: 0;
 }
 
+/* Users who ask for less motion get animations and transitions that finish at
+   once. Near zero rather than 0s, so transitionend events still fire. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* Bootstrap's input borders are below WCAG's 3:1; use its secondary gray. */
 .form-control,
 .form-select {

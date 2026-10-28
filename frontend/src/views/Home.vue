@@ -4,10 +4,11 @@
       <h1>Welcome to Conversate!</h1>
     </div>
     <div class="cards">
-      <div v-for="card in cards" :key="card.to" class="card">
-        <img class="card-img-top" :src="card.img" :alt="card.alt" />
+      <div v-for="card in cards" :key="card.path" class="card">
+        <!-- Decorative: the button below names the page. -->
+        <img class="card-img-top" :src="card.img" alt="" />
         <div class="card-body">
-          <router-link :to="card.to" class="btn btn-primary">{{ card.label }}</router-link>
+          <router-link :to="card.path" class="btn btn-primary">{{ card.label }}</router-link>
         </div>
       </div>
     </div>
@@ -15,14 +16,9 @@
 </template>
 
 <script setup>
-const cards = [
-  { img: "/profile.webp", alt: "Profile", to: "/profile", label: "Profile" },
-  { img: "/mastery.webp", alt: "Mastery", to: "/mastery", label: "Mastery" },
-  { img: "/study.webp", alt: "Learn", to: "/lesson", label: "Lessons" },
-  { img: "/translate.webp", alt: "Translate", to: "/translate", label: "Translate" },
-  { img: "/quiz.webp", alt: "Quiz", to: "/quiz", label: "Quiz" },
-  { img: "/leaderboard.webp", alt: "Leaderboard", to: "/leaderboard", label: "Leaderboard" },
-];
+import { pages } from "../router/pages";
+
+const cards = pages.filter((page) => page.img);
 </script>
 
 <style scoped>
@@ -64,11 +60,6 @@ const cards = [
   box-shadow:
     var(--card-shadow),
     0 0 18px color-mix(in srgb, var(--brand-accent) 55%, transparent);
-}
-@media (prefers-reduced-motion: reduce) {
-  .cards > .card {
-    transition: none;
-  }
 }
 .card .btn-primary {
   display: block;

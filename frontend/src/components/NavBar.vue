@@ -18,39 +18,13 @@
 
         <div id="navbarNav" class="collapse navbar-collapse" :class="{ show: navOpen }">
           <ul class="navbar-nav">
-            <li v-if="isAuthenticated" class="nav-item">
-              <router-link to="/" class="nav-link"><span class="nav-label">Home</span></router-link>
-            </li>
-            <li v-if="isAuthenticated" class="nav-item">
-              <router-link to="/profile" class="nav-link"
-                ><span class="nav-label">Profile</span></router-link
-              >
-            </li>
-            <li v-if="isAuthenticated" class="nav-item">
-              <router-link to="/mastery" class="nav-link"
-                ><span class="nav-label">Mastery</span></router-link
-              >
-            </li>
-            <li v-if="isAuthenticated" class="nav-item">
-              <router-link to="/lesson" class="nav-link"
-                ><span class="nav-label">Lessons</span></router-link
-              >
-            </li>
-            <li v-if="isAuthenticated" class="nav-item">
-              <router-link to="/translate" class="nav-link"
-                ><span class="nav-label">Translate</span></router-link
-              >
-            </li>
-            <li v-if="isAuthenticated" class="nav-item">
-              <router-link to="/quiz" class="nav-link"
-                ><span class="nav-label">Quiz</span></router-link
-              >
-            </li>
-            <li v-if="isAuthenticated" class="nav-item">
-              <router-link to="/leaderboard" class="nav-link"
-                ><span class="nav-label">Leaderboard</span></router-link
-              >
-            </li>
+            <template v-if="isAuthenticated">
+              <li v-for="page in pages" :key="page.path" class="nav-item">
+                <router-link :to="page.path" class="nav-link"
+                  ><span class="nav-label">{{ page.label }}</span></router-link
+                >
+              </li>
+            </template>
           </ul>
 
           <ul v-if="!isAuthenticated && !isLoading" class="navbar-nav d-xl-none">
@@ -64,7 +38,7 @@
               <span class="user-info">
                 <img
                   :src="user.picture"
-                  alt="User's profile picture"
+                  alt=""
                   referrerpolicy="no-referrer"
                   class="nav-user-profile d-inline-block rounded-circle me-3"
                   width="50"
@@ -134,6 +108,7 @@ import { useRoute } from "vue-router";
 import { useAuth0 } from "@auth0/auth0-vue";
 import Icon from "./Icon.vue";
 import { logout } from "../auth";
+import { pages } from "../router/pages";
 
 const auth0 = useAuth0();
 const { isAuthenticated, isLoading, user } = auth0;
@@ -248,11 +223,6 @@ function login() {
 }
 .router-link-active .nav-label::after {
   transform: scaleX(1);
-}
-@media (prefers-reduced-motion: reduce) {
-  .nav-label::after {
-    transition: none;
-  }
 }
 /* Gold hover glow on Log in, like the home cards; keyboard focus keeps
    Bootstrap's ring. */

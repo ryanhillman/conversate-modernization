@@ -14,7 +14,6 @@
               v-model="inputLanguage"
               name="selectInputLanguage"
               class="form-select lang-select"
-              aria-label="Select input language"
             >
               <option v-for="language in languages" :key="language.code" :value="language.code">
                 {{ language.name }}
@@ -31,7 +30,6 @@
               v-model="outputLanguage"
               name="selectOutputLanguage"
               class="form-select lang-select"
-              aria-label="Select output language"
             >
               <option v-for="language in languages" :key="language.code" :value="language.code">
                 {{ language.name }}

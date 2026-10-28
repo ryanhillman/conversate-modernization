@@ -44,6 +44,28 @@ describe("Lesson", () => {
     }
   });
 
+  it("makes each conjugation a button named Play plus the word, Play in English", async () => {
+    const wrapper = mount(Lesson, {
+      attachTo: document.body,
+      global: { stubs: { RequireProfile } },
+    });
+    const lesson = LESSONS.find((l) => l.sections.some((s) => s.t === "conj"));
+    await wrapper.get(`#${lesson.slug}`).trigger("click");
+
+    const words = lesson.sections
+      .filter((s) => s.t === "conj")
+      .flatMap((s) => s.rows.map((r) => r[1]));
+    const buttons = wrapper.findAll(".speakable");
+    expect(buttons).toHaveLength(words.length);
+    buttons.forEach((button, i) => {
+      expect(button.element.tagName).toBe("BUTTON");
+      expect(button.attributes("type")).toBe("button");
+      expect(button.get(".visually-hidden").attributes("lang")).toBe("en");
+      expect(computeAccessibleName(button.element)).toBe(`Play ${words[i]}`);
+    });
+    wrapper.unmount();
+  });
+
   it("gives each Toggle button the accessible name Toggle lesson plus its title", () => {
     const wrapper = mount(Lesson, {
       attachTo: document.body,
@@ -60,7 +82,13 @@ describe("Lesson", () => {
 
   it("marks Italian in titles, conjugations, prompts, and answer boxes", async () => {
     const wrapper = mount(Lesson, { global: { stubs: { RequireProfile } } });
-    const italian = (el) => el.findAll('[lang="it"]').map((span) => span.text());
+    // The text marked Italian, minus any text inside it marked otherwise.
+    const italian = (el) =>
+      el.findAll('[lang="it"]').map((it) => {
+        const copy = it.element.cloneNode(true);
+        copy.querySelectorAll('[lang]:not([lang="it"])').forEach((other) => other.remove());
+        return copy.textContent.trim();
+      });
 
     expect(italian(wrapper.get('label[for="avere-essere"]'))).toEqual(["Avere", "Essere"]);
 

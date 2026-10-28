@@ -8,7 +8,8 @@
       class="form-control mb-2 account-actions-field"
       maxlength="100"
       autocomplete="username"
-      aria-describedby="edit-username-error"
+      :aria-describedby="errorMessage ? 'edit-username-error' : undefined"
+      :aria-invalid="errorMessage ? 'true' : undefined"
     />
     <p v-if="errorMessage" id="edit-username-error" class="form-error small mb-2">
       {{ errorMessage }}

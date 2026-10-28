@@ -8,7 +8,8 @@
       class="form-control mb-2 username-input"
       maxlength="100"
       autocomplete="username"
-      aria-describedby="setup-username-error"
+      :aria-describedby="errorMessage ? 'setup-username-error' : undefined"
+      :aria-invalid="errorMessage ? 'true' : undefined"
     />
     <p v-if="errorMessage" id="setup-username-error" class="form-error small mb-2">
       {{ errorMessage }}
