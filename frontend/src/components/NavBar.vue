@@ -224,12 +224,12 @@ function login() {
 .router-link-active .nav-label::after {
   transform: scaleX(1);
 }
-/* Gold hover glow on Log in, like the home cards; keyboard focus keeps
-   Bootstrap's ring. */
+/* Gold hover glow on Log in, like the home cards; keyboard focus keeps its
+   focus ring. */
 .navbar-nav .btn-primary {
   transition: box-shadow 0.15s ease;
 }
-.navbar-nav .btn-primary:hover {
+.navbar-nav .btn-primary:hover:not(:focus-visible) {
   box-shadow: 0 0 12px color-mix(in srgb, var(--brand-accent) 60%, transparent);
 }
 /* Gold ring on the profile picture while hovered or while its menu is open. */
