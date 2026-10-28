@@ -1,6 +1,9 @@
+venv/
+.venv/
 **/__pycache__/
 **/*.py[cod]
 .pytest_cache/
+.ruff_cache/
 **/*.db
 
 .env
@@ -11,4 +14,4 @@ Dockerfile
 
 tests/
 requirements-dev.txt
-pytest.ini
+pyproject.toml
