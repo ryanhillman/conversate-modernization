@@ -22,8 +22,9 @@ venv/
 .DS_Store
 Thumbs.db
 
-# Local databases
+# Local databases, and Flask's instance folder
 *.db
+instance/
 
 # Environment files (keep *.env.example templates)
 *.env

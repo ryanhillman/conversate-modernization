@@ -68,6 +68,7 @@
 - Raised text, icon, border, and focus ring contrast to meet WCAG minimums.
 - Prevented double-clicking a quiz answer from highlighting the footer logo.
 - Made every control usable by keyboard and screen readers, announced results and errors, and marked Italian text for correct pronunciation.
+- Let keyboard and screen reader users reach and select the translation.
 - Made Escape close the profile menu.
 - Turned the profile menu and Log out links into buttons; the menu closes when focus leaves.
 - Made the Log out menu item's hover highlight visible.
