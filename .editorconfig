@@ -1,0 +1,5 @@
+root = true
+
+# Only this rule, since Prettier also reads .editorconfig.
+[*]
+insert_final_newline = true

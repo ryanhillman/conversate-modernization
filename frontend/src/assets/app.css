@@ -63,6 +63,8 @@
 .nav-item.dropdown .dropdown-item:focus-visible {
   background-color: var(--bs-gray-300);
 }
+/* Keeps the layout 1140px wide on screens 1400px and wider too, where
+   Bootstrap would widen it to 1320px. */
 @media (min-width: 1200px) {
   .container {
     max-width: 1140px;

@@ -6,7 +6,7 @@
       </div>
       <div class="back-card">
         <div class="m-3">
-          <label class="d-block" for="selectInputLanguage">Select input language</label>
+          <label class="d-block" for="selectInputLanguage">Input language</label>
           <span class="lang-select-wrap">
             <select
               id="selectInputLanguage"
@@ -20,7 +20,7 @@
           </span>
         </div>
         <div class="m-3">
-          <label class="d-block" for="selectOutputLanguage">Select output language</label>
+          <label class="d-block" for="selectOutputLanguage">Output language</label>
           <span class="lang-select-wrap">
             <select
               id="selectOutputLanguage"

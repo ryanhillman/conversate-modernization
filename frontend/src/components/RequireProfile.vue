@@ -1,5 +1,5 @@
 <template>
-  <!-- The page's own h1 comes with it, so title these states for it. -->
+  <!-- The page's h1 is in the slot, which these states replace, so they need their own. -->
   <div v-if="loading" class="loading-state">
     <h1 class="visually-hidden">{{ route.meta.title }}</h1>
     <p>Loading…</p>
