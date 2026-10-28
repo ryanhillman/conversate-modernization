@@ -114,7 +114,7 @@ import { synthesizeSpeech } from "../api/tts";
 import { completedLessonIds, setProfile } from "../stores/profileStore";
 import { announce } from "../stores/announceStore";
 import { showToast } from "../stores/toastStore";
-import { errorMessage } from "../utils/errorMessage";
+import { rateLimitMessage } from "../utils/rateLimitMessage";
 
 const answers = reactive({});
 // Answers are marked right or wrong once submitted (Enter or leaving the box),
@@ -198,7 +198,7 @@ async function speak(text) {
     await new Audio(`data:audio/mpeg;base64,${audio_content}`).play();
   } catch (err) {
     console.error("Speech synthesis failed:", err);
-    showToast(errorMessage(err, "Could not play audio."), "error");
+    showToast(rateLimitMessage(err, "Could not play audio."), "error");
   }
 }
 function launchCelebration() {
