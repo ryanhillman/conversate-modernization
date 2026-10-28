@@ -92,10 +92,7 @@ export const LESSONS = [
       { t: "p", html: "Some different ways to use <it>ciao</it>" },
       {
         t: "ul",
-        items: [
-          '"<it>Ciao bella</it>" → Hello beautiful',
-          '"<it>Ciao ciao, come stai oggi?</it>" → Hello hello, how are you today?',
-        ],
+        items: ['"<it>Ciao bella</it>" → Hello beautiful', '"<it>Ciao ciao!</it>" → Bye-bye!'],
       },
       {
         t: "p",
@@ -118,7 +115,7 @@ export const LESSONS = [
           '"<it>Buongiorno, come stai oggi?</it>" → Good morning! How are you today?',
           '"<it>Buon pomeriggio ragazzi!</it>" → Good afternoon kids!',
           '"<it>Buonasera signor Valentino!</it>" → Good evening Mr. Valentino.',
-          '"<it>Ciao ciao, come va?</it>" → Hi hi, how\'s it going?',
+          '"<it>Ciao, come va?</it>" → Hi, how\'s it going?',
         ],
       },
       {
@@ -263,7 +260,7 @@ export const LESSONS = [
   },
   {
     id: 4,
-    slug: "regular-ar-verbs",
+    slug: "regular-are-verbs",
     answerLang: "it",
     menuTitle: "Conjugating regular <it>-are</it> verbs",
     title: "Conjugating regular <it>-are</it> verbs",
