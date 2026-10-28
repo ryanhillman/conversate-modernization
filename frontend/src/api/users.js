@@ -16,7 +16,7 @@ export function completeLesson(lessonId) {
   return api(`/api/me/lessons/${lessonId}`, { method: "POST" });
 }
 
-export function resetStats() {
+export function resetProgress() {
   return api("/api/me/reset", { method: "POST" });
 }
 

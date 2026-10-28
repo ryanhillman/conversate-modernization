@@ -9,13 +9,13 @@ vi.mock("../src/api/users", () => ({
   checkUsername: vi.fn(),
   createMe: vi.fn(),
   updateUsername: vi.fn(),
-  resetStats: vi.fn(),
+  resetProgress: vi.fn(),
   deleteMe: vi.fn(),
 }));
 vi.mock("../src/auth", () => ({ logout: vi.fn() }));
 vi.mock("vue-router", () => ({ useRouter: () => ({ push: vi.fn() }) }));
 
-import { checkUsername, createMe, resetStats, updateUsername } from "../src/api/users";
+import { checkUsername, createMe, resetProgress, updateUsername } from "../src/api/users";
 import AccountActions from "../src/components/account/AccountActions.vue";
 import SetUsername from "../src/components/account/SetUsername.vue";
 import { toastState } from "../src/stores/toastStore";
@@ -80,10 +80,10 @@ describe("busy username buttons", () => {
 
   it("keeps Reset progress focusable while it resets", async () => {
     vi.stubGlobal("confirm", () => true);
-    resetStats.mockReturnValue(new Promise(() => {}));
+    resetProgress.mockReturnValue(new Promise(() => {}));
     const wrapper = mount(AccountActions);
 
-    await expectBusyAfterTwoClicks(wrapper.findAll("button")[1], resetStats);
+    await expectBusyAfterTwoClicks(wrapper.findAll("button")[1], resetProgress);
   });
 });
 

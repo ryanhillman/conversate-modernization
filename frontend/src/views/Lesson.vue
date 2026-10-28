@@ -42,18 +42,18 @@
           <!-- level places it in the outline under the lesson title; size is
                only how big it looks. -->
           <component
-            :is="'h' + (s.level + 3)"
+            :is="`h${s.level + 3}`"
             v-if="s.t === 'h'"
-            :key="'s' + si"
-            :class="'h' + s.size"
+            :key="`s${si}`"
+            :class="`h${s.size}`"
           >
             <RichText :text="s.html" />
           </component>
-          <p v-else-if="s.t === 'p'" :key="'s' + si"><RichText :text="s.html" /></p>
-          <ul v-else-if="s.t === 'ul'" :key="'s' + si">
+          <p v-else-if="s.t === 'p'" :key="`s${si}`"><RichText :text="s.html" /></p>
+          <ul v-else-if="s.t === 'ul'" :key="`s${si}`">
             <li v-for="(it, ii) in s.items" :key="ii"><RichText :text="it" /></li>
           </ul>
-          <ul v-else-if="s.t === 'conj'" :key="'s' + si">
+          <ul v-else-if="s.t === 'conj'" :key="`s${si}`">
             <li v-for="(r, ri) in s.rows" :key="ri">
               <span lang="it">{{ r[0] }}</span
               >:

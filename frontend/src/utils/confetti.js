@@ -8,10 +8,10 @@ const COLORS = [
 
 export function generateConfetti(count = 60) {
   return Array.from({ length: count }, (_, i) => ({
-    left: Math.random() * 100 + "%",
+    left: `${Math.random() * 100}%`,
     background: COLORS[i % COLORS.length],
-    animationDelay: Math.random() * 0.5 + "s",
-    animationDuration: 2 + Math.random() * 1.5 + "s",
-    transform: "rotate(" + Math.random() * 360 + "deg)",
+    animationDelay: `${Math.random() * 0.5}s`,
+    animationDuration: `${2 + Math.random() * 1.5}s`,
+    transform: `rotate(${Math.random() * 360}deg)`,
   }));
 }

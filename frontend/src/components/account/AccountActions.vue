@@ -48,7 +48,7 @@ import { ref, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import {
   updateUsername as apiUpdateUsername,
-  resetStats as apiResetStats,
+  resetProgress as apiResetProgress,
   deleteMe as apiDeleteMe,
 } from "../../api/users";
 import { logout } from "../../auth";
@@ -90,7 +90,7 @@ async function resetProgress() {
   if (confirm("Reset your progress? This can't be undone.")) {
     saving.value = true;
     try {
-      setProfile(await apiResetStats());
+      setProfile(await apiResetProgress());
       showToast("Your progress has been reset", "success");
       router.push("/mastery");
     } catch {

@@ -1,7 +1,7 @@
 <template>
   <svg
     v-if="icon"
-    :viewBox="'0 0 ' + icon.w + ' 512'"
+    :viewBox="`0 0 ${icon.w} 512`"
     xmlns="http://www.w3.org/2000/svg"
     fill="currentColor"
     aria-hidden="true"

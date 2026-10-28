@@ -7,7 +7,7 @@
         {{ LESSONS.length }})
       </p>
       <div class="mastery-bar">
-        <div class="mastery-bar-fill" :style="{ width: masteryPercent + '%' }"></div>
+        <div class="mastery-bar-fill" :style="{ width: `${masteryPercent}%` }"></div>
       </div>
     </div>
     <div class="card-style">
@@ -27,7 +27,7 @@
 import { computed } from "vue";
 import RequireProfile from "../components/RequireProfile.vue";
 import RichText from "../components/RichText.vue";
-import { LESSONS } from "../data/lessons.js";
+import { LESSONS } from "../data/lessons";
 import { completedLessonIds } from "../stores/profileStore";
 
 const completedLessons = computed(() =>
