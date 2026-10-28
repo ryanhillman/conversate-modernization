@@ -2,10 +2,6 @@
 
 ## [Unreleased]
 
-### Breaking
-- The API's user_name field is now username.
-- The migration history is replaced with a single baseline (the user table is now account; databases from 1.x must be recreated).
-
 ### Added
 - Added GitHub Actions CI.
 - Added frontend unit and component tests with Vitest.
@@ -20,6 +16,8 @@
 - Added the MIT license.
 
 ### Changed
+- **Breaking:** The API's user_name field is now username.
+- **Breaking:** The migration history is replaced with a single baseline (the user table is now account; databases from 1.x must be recreated).
 - Made pages reuse the loaded profile instead of fetching it on every visit.
 - Made the profile page read and update the shared profile store directly.
 - Read completed lessons from the shared profile store in one place.
@@ -96,6 +94,7 @@
 - Showed a leaderboard load failure on the page instead of an empty leaderboard.
 - Stopped a double-clicked microphone from staying on.
 - Showed migration command errors instead of exiting silently.
+- Made the 30-a-minute limit on Google calls apply per user across translation and speech, not per endpoint and server process.
 - Corrected Lesson 2's "ciao ciao" examples, which said hello instead of goodbye.
 - Returned a clear error, not a server error, when Google sends speech-to-text an unexpected response.
 - Rejected translation requests whose source and target languages match.
@@ -189,3 +188,6 @@
 - Added a global route guard that requires authentication by default.
 - Added server-side validation for API request bodies.
 - Capped the maximum request body size.
+
+[Unreleased]: https://github.com/ryanhillman/conversate-modernization/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/ryanhillman/conversate-modernization/releases/tag/v1.0.0

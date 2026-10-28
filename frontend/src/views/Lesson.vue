@@ -282,6 +282,7 @@ function launchCelebration() {
 .answer-field {
   position: relative;
   display: inline-block;
+  max-width: 100%;
   margin: 2rem auto;
 }
 .answer-input {

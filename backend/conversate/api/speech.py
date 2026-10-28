@@ -9,8 +9,10 @@ from .common import json_body, str_field
 
 speech_bp = Blueprint('speech_bp', __name__)
 
-# These call paid Google APIs, so limit each account's use of them.
+# These call paid Google APIs, so limit each account's use of them, all three
+# together.
 GOOGLE_API_RATE_LIMIT = '30 per minute'
+google_api_limit = limiter.shared_limit(GOOGLE_API_RATE_LIMIT, scope='google_api')
 
 TRANSLATE_LANGUAGES = frozenset({'en', 'it'})
 MAX_TRANSLATE_TEXT_LENGTH = 5000
@@ -26,7 +28,7 @@ MAX_STT_AUDIO_BYTES = 1_000_000
 
 @speech_bp.route('/api/translate', methods=['POST'])
 @require_auth
-@limiter.limit(GOOGLE_API_RATE_LIMIT)
+@google_api_limit
 def translate_text():
     body = json_body()
     text = str_field(body, 'text')
@@ -63,7 +65,7 @@ def translate_text():
 
 @speech_bp.route('/api/tts', methods=['POST'])
 @require_auth
-@limiter.limit(GOOGLE_API_RATE_LIMIT)
+@google_api_limit
 def synthesize_speech():
     body = json_body()
     text = str_field(body, 'text')
@@ -94,7 +96,7 @@ def synthesize_speech():
 
 @speech_bp.route('/api/stt', methods=['POST'])
 @require_auth
-@limiter.limit(GOOGLE_API_RATE_LIMIT)
+@google_api_limit
 def transcribe_speech():
     body = json_body()
     audio_b64 = str_field(body, 'audio')

@@ -52,6 +52,7 @@ def upgrade():
         sa.Column('correct_count', sa.Integer(), nullable=False),
         sa.Column('paused_at', sa.DateTime(timezone=True), nullable=True),
         sa.Column('pauses_used', sa.Integer(), nullable=False),
+        sa.Column('practice', sa.Boolean(), nullable=False, server_default=sa.false()),
         sa.ForeignKeyConstraint(['user_id'], ['account.id']),
         sa.PrimaryKeyConstraint('id'),
     )

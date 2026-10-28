@@ -1,11 +1,10 @@
-// @vitest-environment jsdom
 import { describe, expect, it, vi } from "vitest";
 import { mount } from "@vue/test-utils";
 
 // auth.js needs Auth0 settings that CI doesn't have.
 vi.mock("@auth0/auth0-vue", () => ({ useAuth0: () => ({ error: { value: null } }) }));
 vi.mock("../src/auth", () => ({ auth0: {}, logout: vi.fn() }));
-// The footer logo is served from public/, which tests can't import.
+// On Windows, Vitest can't resolve the template's /logo.png, a public/ file.
 vi.mock("/logo.png", () => ({ default: "/logo.png" }));
 // jsdom has no ResizeObserver, which the toasts use.
 vi.stubGlobal(

@@ -1,4 +1,3 @@
-// @vitest-environment jsdom
 import { describe, expect, it, vi } from "vitest";
 import { mount } from "@vue/test-utils";
 import { computeAccessibleName } from "dom-accessibility-api";
@@ -14,7 +13,7 @@ vi.mock("@auth0/auth0-vue", () => ({
 vi.mock("vue-router", () => ({ useRoute: () => ({ fullPath: "/" }) }));
 // auth.js needs Auth0 settings that CI doesn't have.
 vi.mock("../src/auth", () => ({ logout: vi.fn() }));
-// The logo is served from public/, which tests can't import.
+// On Windows, Vitest can't resolve the template's /logo.png, a public/ file.
 vi.mock("/logo.png", () => ({ default: "/logo.png" }));
 
 import { logout } from "../src/auth";

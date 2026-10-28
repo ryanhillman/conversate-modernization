@@ -28,6 +28,9 @@ def create_app(config):
     migrate.init_app(app, db)
     # Off under TESTING; the rate-limit test turns it back on.
     app.config.setdefault('RATELIMIT_ENABLED', not app.config.get('TESTING', False))
+    # Counts live in this process, which is correct only while the backend runs
+    # as one process (see the Dockerfile).
+    app.config.setdefault('RATELIMIT_STORAGE_URI', 'memory://')
     limiter.init_app(app)
     _register_error_handlers(app)
     for blueprint in api_blueprints:

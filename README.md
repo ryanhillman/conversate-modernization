@@ -153,7 +153,7 @@ docker exec conversate-postgres createdb -U conversate conversate_test
 ## API
 
 All `/api` endpoints require an Auth0 access token (`Authorization: Bearer <token>`).
-Translation and speech endpoints are limited to 30 requests per minute per user.
+Translation and speech endpoints share a limit of 30 requests per minute per user.
 
 ### Account
 
