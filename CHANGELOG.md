@@ -13,7 +13,6 @@
 - Added hover effects: a navy underline on nav links, and a gold glow on the home cards, Translate mic and speaker, Log in button, and profile picture.
 - Added red shading and an X icon to wrong lesson answers.
 - Made animations finish instantly when the system asks for reduced motion.
-- Added the MIT license.
 
 ### Changed
 - **Breaking:** The API's user_name field is now username.
@@ -47,7 +46,7 @@
 - Upgraded Vue Router to 5 and Auth0's Vue SDK to 2.11.
 - Upgraded SQLAlchemy to 2.1, Alembic to 1.20, and Gunicorn to 26.2, and switched the Postgres driver to psycopg 3.
 - Upgraded the GitHub Actions used in CI.
-- Raised the Node requirement to 22.13, which the frontend's tools need.
+- Raised the Node requirement to 22.22.2 (or 24.15), which the frontend's tools need.
 
 ### Removed
 - Removed the old Auth0 wrapper's $auth compatibility layer.

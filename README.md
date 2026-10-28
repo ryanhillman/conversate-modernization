@@ -70,7 +70,7 @@ Vocabulary quiz with user scores and times ranked on a leaderboard.
 
 ## How to Run
 
-Requires Python 3.14, Node 22.13+, Docker, Auth0, and Google Cloud.
+Requires Python 3.14, Node 22.22.2+ or 24.15+, Docker, Auth0, and Google Cloud.
 
 ### Auth0
 
@@ -197,9 +197,3 @@ Translation and speech endpoints share a limit of 30 requests per minute per use
 ## Credits
 
 Icons by [Icons8](https://icons8.com).
-
----
-
-## License
-
-Released under the [MIT License](LICENSE). Icons8 icons are used under [Icons8's license](https://icons8.com/license), and Font Awesome icons under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
