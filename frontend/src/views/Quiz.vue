@@ -1,23 +1,16 @@
 <template>
   <RequireProfile>
     <div class="text-center">
-      <div class="card-style">
-        <h1 class="h2">Quiz</h1>
+      <!-- The title shows until a quiz starts; after that, only screen readers
+           get it, named for the mode being played. -->
+      <div v-if="phase === 'ready'" class="card-style">
+        <h1 class="h2">Timed Quiz</h1>
       </div>
+      <h1 v-else class="visually-hidden">{{ practice ? "Practice" : "Timed Quiz" }}</h1>
 
       <div v-if="phase === 'ready'" class="card-style quiz-results">
-        <!-- The limits set in backend/conversate/api/quiz.py. -->
-        <p>
-          Answer 50 questions in 4 minutes 10 seconds. You can pause once; the clock stops for up to
-          2 minutes.
-        </p>
-        <button ref="startButton" class="btn btn-accent m-2" @click="start(false)">
-          Start Quiz
-        </button>
-        <button class="btn btn-outline-light m-2" @click="start(true)">
-          Practice without a timer
-        </button>
-        <p class="small mt-2 mb-0">Practice results aren't saved to the leaderboard.</p>
+        <button ref="startButton" class="btn btn-accent m-2" @click="start(false)">Start</button>
+        <button class="btn btn-practice m-2" @click="start(true)">Practice</button>
       </div>
 
       <div v-else-if="phase === 'loading'" class="loading-state">
@@ -307,6 +300,18 @@ async function finish() {
   font-weight: 600;
   color: var(--text-muted);
   margin-bottom: 1rem;
+}
+/* Solid white, second to the gold Start on the navy card. */
+.btn-practice {
+  --bs-btn-color: var(--brand-navy);
+  --bs-btn-bg: var(--card-bg);
+  --bs-btn-border-color: var(--card-bg);
+  --bs-btn-hover-color: var(--brand-navy);
+  --bs-btn-hover-bg: var(--border-subtle);
+  --bs-btn-hover-border-color: var(--border-subtle);
+  --bs-btn-active-color: var(--brand-navy);
+  --bs-btn-active-bg: var(--border-subtle);
+  --bs-btn-active-border-color: var(--border-subtle);
 }
 /* The site's navy, not Bootstrap's blue, for Pause and the answers. */
 .btn-outline-primary {

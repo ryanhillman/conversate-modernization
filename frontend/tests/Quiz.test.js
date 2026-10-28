@@ -83,6 +83,25 @@ describe("Quiz start", () => {
   });
 });
 
+describe("Quiz start screen", () => {
+  it("titles the start screen Timed Quiz, and offers Start and Practice", () => {
+    wrapper = mount(Quiz, { global: { stubs: { RequireProfile } } });
+
+    const h1 = wrapper.get("h1");
+    expect(h1.text()).toBe("Timed Quiz");
+    expect(h1.classes()).not.toContain("visually-hidden");
+    expect(wrapper.findAll("button").map((b) => b.text())).toEqual(["Start", "Practice"]);
+  });
+
+  it("hides the title once a quiz starts, keeping it for screen readers", async () => {
+    quizStarting(2);
+    wrapper = await startQuizPage();
+    const h1 = wrapper.get("h1");
+    expect(h1.text()).toBe("Timed Quiz");
+    expect(h1.classes()).toContain("visually-hidden");
+  });
+});
+
 describe("Quiz practice", () => {
   it("runs without a timer or Pause, and says the result isn't saved", async () => {
     startQuiz.mockResolvedValue({
@@ -106,6 +125,7 @@ describe("Quiz practice", () => {
     await flushPromises();
     expect(startQuiz).toHaveBeenCalledWith(true);
     expect(wrapper.get(".quiz-meta").text()).toContain("Practice: no timer");
+    expect(wrapper.get("h1").text()).toBe("Practice");
     expect(wrapper.find(".quiz-timer").exists()).toBe(false);
     expect(wrapper.find(".quiz-meta button").exists()).toBe(false);
 
@@ -143,8 +163,8 @@ describe("Quiz submit", () => {
 
     wrapper = await finishQuiz();
 
-    expect(wrapper.text()).toContain("Start Quiz");
-    expect(document.activeElement.textContent.trim()).toBe("Start Quiz");
+    expect(wrapper.text()).toContain("Practice");
+    expect(document.activeElement.textContent.trim()).toBe("Start");
     expect(toastState.toasts.map((t) => t.message)).toContain(
       "This quiz is no longer in progress.",
     );
@@ -215,7 +235,7 @@ describe("Quiz headings", () => {
   it("has one h1, with the question word and New best! as h2s under it", async () => {
     submitQuiz.mockResolvedValue({ score: 1, time_seconds: 10, is_new_best: true });
     wrapper = await startQuizPage();
-    expect(wrapper.findAll("h1").map((h) => h.text())).toEqual(["Quiz"]);
+    expect(wrapper.findAll("h1").map((h) => h.text())).toEqual(["Timed Quiz"]);
     expect(wrapper.get(".quiz-word").element.tagName).toBe("H2");
 
     await answer(wrapper);

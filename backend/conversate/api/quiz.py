@@ -13,8 +13,6 @@ from .common import json_body, resolve_me, utcnow
 
 quiz_bp = Blueprint('quiz_bp', __name__)
 
-# The quiz page states these limits, MAX_PAUSE_CREDIT_SECONDS, and the number
-# of QUIZ_WORDS; keep it in step.
 QUIZ_TIME_LIMIT_SECONDS = 250
 MAX_QUIZ_PAUSES = 1
 # The UI shows each answer for 500ms, so faster answering is a script. This
