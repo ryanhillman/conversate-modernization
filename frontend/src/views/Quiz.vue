@@ -121,11 +121,12 @@ const result = ref(null);
 const advancing = ref(false);
 const selectedChoice = ref(null);
 const feedback = ref(null);
-const displayStart = ref(0);
-const secondsRemainingAtStart = ref(0);
 const remainingSeconds = ref(0);
 const pausesRemaining = ref(0);
 let tickTimer = null;
+// When the clock was last synced with the server, and its reading then.
+let displayStart = 0;
+let secondsRemainingAtStart = 0;
 
 const currentQuestion = computed(() => questions.value[currentIndex.value]);
 const formattedRemaining = computed(() => formatTime(remainingSeconds.value));
@@ -160,14 +161,14 @@ function choiceClass(choice) {
 }
 
 function resetDisplayClock(secondsRemaining) {
-  displayStart.value = Date.now();
-  secondsRemainingAtStart.value = secondsRemaining;
+  displayStart = Date.now();
+  secondsRemainingAtStart = secondsRemaining;
   remainingSeconds.value = secondsRemaining;
 }
 
 function tick() {
-  const elapsed = Math.floor((Date.now() - displayStart.value) / 1000);
-  remainingSeconds.value = Math.max(0, secondsRemainingAtStart.value - elapsed);
+  const elapsed = Math.floor((Date.now() - displayStart) / 1000);
+  remainingSeconds.value = Math.max(0, secondsRemainingAtStart - elapsed);
   if (remainingSeconds.value === 0) {
     finish();
   }

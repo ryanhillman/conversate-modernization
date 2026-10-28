@@ -10,3 +10,4 @@ quote-style = "preserve"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = ["rate_limited: turn rate limiting on for this test"]

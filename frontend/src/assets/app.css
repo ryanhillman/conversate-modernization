@@ -24,6 +24,8 @@
   --focus-ring: 0 0 0 0.2rem #ffffff, 0 0 0 0.4rem var(--brand-navy);
   --confetti-blue: #2c6df8;
   --radius: 12px;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-heading: "Poppins", sans-serif;
 }
 
 .navbar {
@@ -151,12 +153,7 @@ a {
 
 /* Base styles for the app's shared elements, buttons, and cards. */
 body {
-  font-family:
-    "Inter",
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
+  font-family: var(--font-body);
   background-color: var(--page-bg);
   color: var(--text-color);
 }
@@ -179,12 +176,12 @@ h6,
 .h4,
 .h5,
 .h6 {
-  font-family: "Poppins", sans-serif;
+  font-family: var(--font-heading);
   font-weight: 600;
 }
 
 .btn {
-  font-family: "Poppins", sans-serif;
+  font-family: var(--font-heading);
   font-weight: 500;
   border-radius: 8px;
   user-select: none;

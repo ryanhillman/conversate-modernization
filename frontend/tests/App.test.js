@@ -1,9 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 import { mount } from "@vue/test-utils";
 
-// auth.js needs Auth0 settings that CI doesn't have.
-vi.mock("@auth0/auth0-vue", () => ({ useAuth0: () => ({ error: { value: null } }) }));
-vi.mock("../src/auth", () => ({ auth0: {}, logout: vi.fn() }));
+vi.mock("@auth0/auth0-vue", async (importOriginal) => ({
+  ...(await importOriginal()),
+  useAuth0: () => ({ error: { value: null } }),
+}));
 // On Windows, Vitest can't resolve the template's /logo.png, a public/ file.
 vi.mock("/logo.png", () => ({ default: "/logo.png" }));
 // jsdom has no ResizeObserver, which the toasts use.

@@ -218,7 +218,7 @@ function launchCelebration() {
   margin: 0 0.3em 0.3em 0;
   box-sizing: border-box;
   text-decoration: none;
-  font-family: "Poppins", sans-serif;
+  font-family: var(--font-heading);
   font-weight: 500;
   color: var(--text-on-dark);
   background-color: var(--brand-navy);
@@ -394,7 +394,7 @@ function launchCelebration() {
   color: var(--text-on-dark);
   padding: 0.9rem 2rem;
   border-radius: 999px;
-  font-family: "Poppins", sans-serif;
+  font-family: var(--font-heading);
   font-weight: 600;
   font-size: 1.1rem;
   box-shadow: var(--popup-shadow);

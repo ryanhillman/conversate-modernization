@@ -177,7 +177,7 @@ function login() {
 /* Styled like a small heading, though the user's name isn't one. */
 .nav-user-name {
   margin-bottom: 0.5rem;
-  font-family: "Poppins", sans-serif;
+  font-family: var(--font-heading);
   font-size: 1rem;
   font-weight: 600;
   line-height: 1.2;

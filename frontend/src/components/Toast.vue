@@ -95,7 +95,7 @@ async function dismiss(id, event) {
   padding: 0.85rem 1.2rem;
   border-radius: 10px;
   color: var(--text-on-dark);
-  font-family: "Poppins", sans-serif;
+  font-family: var(--font-heading);
   font-weight: 500;
   box-shadow: var(--popup-shadow);
 }

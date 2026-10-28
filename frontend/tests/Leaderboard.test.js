@@ -1,15 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
 import { flushPromises, mount } from "@vue/test-utils";
 
-// The real API modules load auth.js, which needs Auth0 settings that CI
-// doesn't have.
 vi.mock("../src/api/leaderboard", () => ({
   getLeaderboard: vi.fn().mockResolvedValue([
     { username: "carla", score: 45, time_seconds: 200 },
     { username: "ryan_h", score: 40, time_seconds: 60 },
   ]),
 }));
-vi.mock("../src/api/users", () => ({ getMe: vi.fn() }));
 vi.mock("../src/stores/announceStore", () => ({ announce: vi.fn() }));
 
 import { getLeaderboard } from "../src/api/leaderboard";
@@ -17,13 +14,7 @@ import { announce } from "../src/stores/announceStore";
 import { setProfile } from "../src/stores/profileStore";
 import { toastState } from "../src/stores/toastStore";
 import Leaderboard from "../src/views/Leaderboard.vue";
-
-// Renders the page without loading a profile.
-const RequireProfile = {
-  setup(_, { slots }) {
-    return () => slots.default();
-  },
-};
+import { RequireProfile } from "./helpers";
 
 describe("Leaderboard", () => {
   it("titles the page with its one h1", () => {

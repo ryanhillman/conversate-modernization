@@ -1,19 +1,9 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { mount } from "@vue/test-utils";
-
-// The profile store imports this; the real one loads auth.js, which needs
-// Auth0 settings that CI doesn't have.
-vi.mock("../src/api/users", () => ({ getMe: vi.fn() }));
 
 import { setProfile } from "../src/stores/profileStore";
 import Mastery from "../src/views/Mastery.vue";
-
-// Renders the page without loading a profile.
-const RequireProfile = {
-  setup(_, { slots }) {
-    return () => slots.default();
-  },
-};
+import { RequireProfile } from "./helpers";
 
 describe("Mastery", () => {
   it("has one h1, then steps down to h2", () => {

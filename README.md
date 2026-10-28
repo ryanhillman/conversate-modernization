@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/badge/Frontend-Vue.js-42B883?logo=vue.js&logoColor=white" alt="Frontend: Vue.js" />
 </p>
 
-Conversate is a full-stack web application for learning Italian. 
+Conversate is a full-stack web application for learning Italian.
 
 [Visit original version of Conversate here.](https://github.com/ryanhillman/conversate-original)
 
@@ -109,7 +109,7 @@ In a second terminal:
 
 ```bash
 cd frontend
-npm install
+npm ci
 npm run dev  # http://localhost:3000
 ```
 

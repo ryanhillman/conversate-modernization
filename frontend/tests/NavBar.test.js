@@ -11,7 +11,6 @@ vi.mock("@auth0/auth0-vue", () => ({
   }),
 }));
 vi.mock("vue-router", () => ({ useRoute: () => ({ fullPath: "/" }) }));
-// auth.js needs Auth0 settings that CI doesn't have.
 vi.mock("../src/auth", () => ({ logout: vi.fn() }));
 // On Windows, Vitest can't resolve the template's /logo.png, a public/ file.
 vi.mock("/logo.png", () => ({ default: "/logo.png" }));

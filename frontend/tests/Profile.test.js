@@ -2,23 +2,14 @@ import { describe, expect, it, vi } from "vitest";
 import { mount } from "@vue/test-utils";
 import { ref } from "vue";
 
-vi.mock("@auth0/auth0-vue", () => ({
+vi.mock("@auth0/auth0-vue", async (importOriginal) => ({
+  ...(await importOriginal()),
   useAuth0: () => ({ user: ref({ name: "Ryan Hillman", picture: "/me.png" }) }),
 }));
-// The real modules load auth.js, which needs Auth0 settings that CI doesn't
-// have.
-vi.mock("../src/api/users", () => ({ getMe: vi.fn() }));
-vi.mock("../src/auth", () => ({ logout: vi.fn() }));
 
 import { setProfile } from "../src/stores/profileStore";
 import Profile from "../src/views/Profile.vue";
-
-// Renders the page without loading a profile.
-const RequireProfile = {
-  setup(_, { slots }) {
-    return () => slots.default();
-  },
-};
+import { RequireProfile } from "./helpers";
 
 describe("Profile", () => {
   it("has an h1 for screen readers, without changing the layout", () => {

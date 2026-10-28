@@ -107,10 +107,12 @@ def stub_jwks(monkeypatch, signing_key):
 
 
 @pytest.fixture
-def app(tmp_path):
+def app(request, tmp_path):
     # SQLite does not enforce VARCHAR limits, so set TEST_DATABASE_URL to run the
     # suite against the real database engine.
     config = _TestConfig()
+    # Rate limiting is off in tests unless a test is marked rate_limited.
+    config.RATELIMIT_ENABLED = request.node.get_closest_marker('rate_limited') is not None
     config.SQLALCHEMY_DATABASE_URI = os.environ.get(
         'TEST_DATABASE_URL', f'sqlite:///{(tmp_path / "test.db").as_posix()}'
     )
@@ -214,24 +216,3 @@ class GoogleApiStub:
 @pytest.fixture
 def google_stub(monkeypatch):
     return GoogleApiStub(monkeypatch)
-
-
-@pytest.fixture
-def rate_limited_client(tmp_path):
-    # A dedicated app/client (own db, own user) with rate limiting on, for the
-    # one test that needs it. Separate from `create_user`, which is wired to
-    # `app`.
-    config = _TestConfig()
-    config.RATELIMIT_ENABLED = True
-    config.SQLALCHEMY_DATABASE_URI = os.environ.get(
-        'TEST_DATABASE_URL', f'sqlite:///{(tmp_path / "ratelimit.db").as_posix()}'
-    )
-    application = create_app(config=config)
-    with application.app_context():
-        db.drop_all()
-        db.create_all()
-        db.session.add(User('auth0|ratelimit', 'ratelimited'))
-        db.session.commit()
-        yield application.test_client()
-        db.session.remove()
-        db.drop_all()

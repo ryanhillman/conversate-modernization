@@ -2,21 +2,13 @@ import { describe, expect, it, vi } from "vitest";
 import { flushPromises, mount } from "@vue/test-utils";
 import { computeAccessibleName } from "dom-accessibility-api";
 
-// The real API modules load auth.js, which needs Auth0 settings that CI
-// doesn't have.
 vi.mock("../src/api/users", () => ({ getMe: vi.fn(), completeLesson: vi.fn() }));
 vi.mock("../src/api/tts", () => ({ synthesizeSpeech: vi.fn() }));
 
 import { completeLesson } from "../src/api/users";
 import { LESSONS } from "../src/data/lessons";
 import Lesson from "../src/views/Lesson.vue";
-
-// Renders the page without loading a profile.
-const RequireProfile = {
-  setup(_, { slots }) {
-    return () => slots.default();
-  },
-};
+import { RequireProfile } from "./helpers";
 
 describe("Lesson", () => {
   it("titles the page with a heading", () => {

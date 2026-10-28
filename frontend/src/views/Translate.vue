@@ -127,7 +127,7 @@ const MAX_TEXT_LENGTH = 5000;
 function blobToBase64(blob) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result.split(",")[1]);
+    reader.onload = () => resolve(reader.result.split(",")[1]);
     reader.onerror = reject;
     reader.readAsDataURL(blob);
   });
@@ -353,7 +353,7 @@ async function startTextToSpeech() {
   border-radius: 8px;
   background-color: var(--card-bg);
   color: var(--text-color);
-  font-family: "Poppins", sans-serif;
+  font-family: var(--font-heading);
   font-weight: 500;
   cursor: pointer;
   background-image: none;

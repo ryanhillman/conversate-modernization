@@ -32,10 +32,6 @@ def test_every_api_route_requires_a_token(app, client):
     assert unprotected == []
 
 
-def test_missing_authorization_header_is_401(client):
-    assert client.get(URL).status_code == 401
-
-
 def test_malformed_token_is_401(client):
     headers = {'Authorization': 'Bearer not.a.real.token'}
     assert client.get(URL, headers=headers).status_code == 401

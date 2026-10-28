@@ -1,9 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 
-// Every route is treated as signed in; auth.js needs Auth0 settings that CI
-// doesn't have.
-vi.mock("@auth0/auth0-vue", () => ({ authGuard: () => true }));
-vi.mock("../src/auth", () => ({ auth0: {} }));
+// Every route is treated as signed in.
+vi.mock("@auth0/auth0-vue", async (importOriginal) => ({
+  ...(await importOriginal()),
+  authGuard: () => true,
+}));
 
 import router from "../src/router";
 import { showToast, toastState } from "../src/stores/toastStore";

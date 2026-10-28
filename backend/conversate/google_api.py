@@ -24,11 +24,11 @@ class GoogleServiceError(Exception):
     pass
 
 
-def post(base_url, payload, timeout=httpx.USE_CLIENT_DEFAULT):
+def post(url, payload, timeout=httpx.USE_CLIENT_DEFAULT):
     try:
         # In a header, not ?key=, so the key stays out of URL logs.
         response = _client.post(
-            base_url,
+            url,
             json=payload,
             headers={'X-goog-api-key': current_app.config['GOOGLE_CLOUD_API_KEY']},
             timeout=timeout,

@@ -8,22 +8,13 @@ vi.mock("../src/api/quiz", () => ({
   resumeQuiz: vi.fn(),
   submitQuiz: vi.fn(),
 }));
-// The profile store imports this; the real one loads auth.js, which needs
-// Auth0 settings that CI doesn't have.
-vi.mock("../src/api/users", () => ({ getMe: vi.fn() }));
 vi.mock("../src/stores/announceStore", () => ({ announce: vi.fn() }));
 
 import { answerQuiz, pauseQuiz, resumeQuiz, startQuiz, submitQuiz } from "../src/api/quiz";
 import { announce } from "../src/stores/announceStore";
 import { toastState } from "../src/stores/toastStore";
 import Quiz from "../src/views/Quiz.vue";
-
-// Renders the page without loading a profile.
-const RequireProfile = {
-  setup(_, { slots }) {
-    return () => slots.default();
-  },
-};
+import { RequireProfile } from "./helpers";
 
 const QUESTION = { it: "pane", choices: ["bread", "cheese", "wine", "milk"] };
 

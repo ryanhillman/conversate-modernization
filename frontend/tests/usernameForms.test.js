@@ -2,8 +2,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { flushPromises, mount } from "@vue/test-utils";
 import { computeAccessibleName } from "dom-accessibility-api";
 
-// The real modules load auth.js, which needs Auth0 settings that CI doesn't
-// have.
 vi.mock("../src/api/users", () => ({
   getMe: vi.fn(),
   checkUsername: vi.fn(),
@@ -12,7 +10,6 @@ vi.mock("../src/api/users", () => ({
   resetProgress: vi.fn(),
   deleteMe: vi.fn(),
 }));
-vi.mock("../src/auth", () => ({ logout: vi.fn() }));
 vi.mock("vue-router", () => ({ useRouter: () => ({ push: vi.fn() }) }));
 
 import { checkUsername, createMe, resetProgress, updateUsername } from "../src/api/users";

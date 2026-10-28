@@ -1,8 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { flushPromises, mount } from "@vue/test-utils";
 
-// The real module loads auth.js, which needs Auth0 settings that CI doesn't
-// have.
 vi.mock("../src/api/users", () => ({ getMe: vi.fn() }));
 vi.mock("../src/stores/announceStore", () => ({ announce: vi.fn() }));
 vi.mock("vue-router", () => ({ useRoute: () => ({ meta: { title: "Mastery" } }) }));
