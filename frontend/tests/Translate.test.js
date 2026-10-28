@@ -66,6 +66,11 @@ function expectBusy(button) {
 }
 
 describe("Translate", () => {
+  it("titles the page with its one h1", () => {
+    const wrapper = mount(Translate, { global: { stubs: { RequireProfile } } });
+    expect(wrapper.findAll("h1").map((h) => h.text())).toEqual(["Translate"]);
+  });
+
   it("announces when both languages are the same", async () => {
     const wrapper = mount(Translate, { global: { stubs: { RequireProfile } } });
 

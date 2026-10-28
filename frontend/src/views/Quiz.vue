@@ -2,7 +2,7 @@
   <RequireProfile>
     <div class="text-center">
       <div class="card-style">
-        <h2>Quiz</h2>
+        <h1 class="h2">Quiz</h1>
       </div>
 
       <div v-if="phase === 'ready'" class="card-style quiz-results">
@@ -55,9 +55,9 @@
         </div>
         <transition v-else name="card-flip" mode="out-in" @after-enter="focusQuestion">
           <div class="quiz-card" :key="currentIndex">
-            <h3 ref="questionWord" class="quiz-word" lang="it" tabindex="-1">
+            <h2 ref="questionWord" class="h3 quiz-word" lang="it" tabindex="-1">
               {{ currentQuestion.it }}
-            </h3>
+            </h2>
             <div class="quiz-choices">
               <button
                 v-for="choice in currentQuestion.choices"
@@ -83,7 +83,7 @@
         class="card-style quiz-results"
         tabindex="-1"
       >
-        <h3 v-if="result.is_new_best">New best!</h3>
+        <h2 v-if="result.is_new_best" class="h3">New best!</h2>
         <p v-if="result.practice">Practice result, not saved to the leaderboard.</p>
         <p>Score: {{ result.score }} / {{ questions.length }}</p>
         <p>Time: {{ formatTime(result.time_seconds) }}</p>

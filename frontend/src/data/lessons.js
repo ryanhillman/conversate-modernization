@@ -6,12 +6,12 @@ export const LESSONS = [
     menuTitle: "<it>Avere</it> and <it>Essere</it>",
     title: "<i><it>Avere</it></i> and <i><it>Essere</it></i>",
     sections: [
-      { t: "h", lvl: 3, html: "To have and to be" },
+      { t: "h", level: 1, size: 3, html: "To have and to be" },
       {
         t: "p",
         html: "Two of the most important verbs in the Italian language are <strong><it>avere</it></strong> (to have) and <strong><it>essere</it></strong> (to be). Both are extremely common in everyday use, and they also support many other verbs and tenses throughout the language.",
       },
-      { t: "h", lvl: 4, html: "<it>Avere</it>" },
+      { t: "h", level: 2, size: 4, html: "<it>Avere</it>" },
       {
         t: "conj",
         rows: [
@@ -23,7 +23,7 @@ export const LESSONS = [
           ["loro", "hanno", "they have"],
         ],
       },
-      { t: "h", lvl: 5, html: "Example uses" },
+      { t: "h", level: 3, size: 5, html: "Example uses" },
       {
         t: "ul",
         items: [
@@ -39,7 +39,7 @@ export const LESSONS = [
         t: "p",
         html: "It's worth becoming familiar with <it>avere</it>, because it not only shows possession or ownership but also acts as an auxiliary verb for many other verbs and tenses — so learning it early is a fundamental step toward mastering the language.",
       },
-      { t: "h", lvl: 4, html: "<it>Essere</it>" },
+      { t: "h", level: 2, size: 4, html: "<it>Essere</it>" },
       {
         t: "conj",
         rows: [
@@ -51,7 +51,7 @@ export const LESSONS = [
           ["loro", "sono", "they are"],
         ],
       },
-      { t: "h", lvl: 5, html: "Example uses" },
+      { t: "h", level: 3, size: 5, html: "Example uses" },
       {
         t: "ul",
         items: [
@@ -84,7 +84,7 @@ export const LESSONS = [
     menuTitle: "Basic Greetings",
     title: "Basic Greetings",
     sections: [
-      { t: "h", lvl: 3, html: "<it>Ciao!</it>" },
+      { t: "h", level: 1, size: 3, html: "<it>Ciao!</it>" },
       {
         t: "p",
         html: 'One of the most important phrases — and one you may already use — is "<it>ciao</it>". In Italian, <it>ciao</it> can mean both hello and goodbye, and it\'s typically used in informal settings.',
@@ -101,7 +101,7 @@ export const LESSONS = [
         t: "p",
         html: "In order to avoid being repetitive, it's important to learn more than just one way to say hello.",
       },
-      { t: "h", lvl: 4, html: "Common Greetings" },
+      { t: "h", level: 2, size: 4, html: "Common Greetings" },
       {
         t: "ul",
         items: [
@@ -111,7 +111,7 @@ export const LESSONS = [
           "<it>Salve!</it> → Similar to <it>ciao</it>, but <it>salve</it> is the formal use.",
         ],
       },
-      { t: "h", lvl: 5, html: "Greeting examples" },
+      { t: "h", level: 3, size: 5, html: "Greeting examples" },
       {
         t: "ul",
         items: [
@@ -156,14 +156,15 @@ export const LESSONS = [
     menuTitle: "<it>Essere</it> versus <it>Stare</it>",
     title: "<i><it>Essere</it> vs. <it>Stare</it></i>",
     sections: [
-      { t: "h", lvl: 3, html: "<it>Stare</it> (to be)" },
+      { t: "h", level: 1, size: 3, html: "<it>Stare</it> (to be)" },
       {
         t: "p",
         html: "<it>Stare</it> is close to <it>essere</it> in literal meaning, but the two are used quite differently depending on the situation.",
       },
       {
         t: "h",
-        lvl: 5,
+        level: 2,
+        size: 5,
         html: "Let's begin by talking about the differences between the two verbs.",
       },
       {
@@ -219,7 +220,12 @@ export const LESSONS = [
           "<it>Stare a cuore</it> → to matter to someone.",
         ],
       },
-      { t: "h", lvl: 5, html: "Let's see if you can recognize which verb to use where." },
+      {
+        t: "h",
+        level: 2,
+        size: 5,
+        html: "Let's see if you can recognize which verb to use where.",
+      },
       { t: "p", html: "Choose the correct verb, <i><it>stare</it></i> or <i><it>essere</it></i>." },
     ],
     questions: [
@@ -283,7 +289,8 @@ export const LESSONS = [
       },
       {
         t: "h",
-        lvl: 5,
+        level: 1,
+        size: 5,
         html: "Let's begin by looking at the verb <i><it>parlare</it></i> which means to speak",
       },
       {
@@ -312,7 +319,7 @@ export const LESSONS = [
           ["loro", "mangiano", "They eat"],
         ],
       },
-      { t: "h", lvl: 6, html: "Fill in the correct form of the verb" },
+      { t: "h", level: 1, size: 6, html: "Fill in the correct form of the verb" },
     ],
     questions: [
       {
@@ -398,7 +405,7 @@ export const LESSONS = [
           ["loro", "credono", "They believe"],
         ],
       },
-      { t: "h", lvl: 6, html: "Fill in the correct form of the verb" },
+      { t: "h", level: 1, size: 6, html: "Fill in the correct form of the verb" },
     ],
     questions: [
       {
@@ -460,7 +467,7 @@ export const LESSONS = [
           ["loro", "dormono", "They sleep"],
         ],
       },
-      { t: "h", lvl: 6, html: "Fill in the correct form of the verb" },
+      { t: "h", level: 1, size: 6, html: "Fill in the correct form of the verb" },
     ],
     questions: [
       {
@@ -515,7 +522,7 @@ export const LESSONS = [
         t: "p",
         html: "Now let's look at two verbs almost as common as <i><it>essere</it></i> and <i><it>stare</it></i>: <i><it>fare</it></i>, meaning to do or make, and <i><it>andare</it></i>, meaning to go. Both are irregular, with their own conjugation rules, so they take some memorization to master.",
       },
-      { t: "h", lvl: 5, html: "Let's begin by taking a look at <i><it>andare</it></i>" },
+      { t: "h", level: 1, size: 5, html: "Let's begin by taking a look at <i><it>andare</it></i>" },
       {
         t: "conj",
         rows: [
@@ -527,7 +534,7 @@ export const LESSONS = [
           ["loro", "vanno", "They go"],
         ],
       },
-      { t: "h", lvl: 5, html: "Now let's take a look at <i><it>fare</it></i>" },
+      { t: "h", level: 1, size: 5, html: "Now let's take a look at <i><it>fare</it></i>" },
       {
         t: "conj",
         rows: [
@@ -543,7 +550,7 @@ export const LESSONS = [
         t: "p",
         html: "As these two common irregular verbs show, there isn't a simple pattern to fall back on, so for verbs like these it's best to memorize their forms.",
       },
-      { t: "h", lvl: 6, html: "Fill in the correct form of the verb" },
+      { t: "h", level: 1, size: 6, html: "Fill in the correct form of the verb" },
     ],
     questions: [
       {
@@ -621,7 +628,8 @@ export const LESSONS = [
       },
       {
         t: "h",
-        lvl: 5,
+        level: 1,
+        size: 5,
         html: "Let's begin by taking a look at the Italian direct object pronouns",
       },
       {
@@ -643,7 +651,8 @@ export const LESSONS = [
       },
       {
         t: "h",
-        lvl: 5,
+        level: 1,
+        size: 5,
         html: "Now let's look at a couple examples of direct object pronouns in action, so we can see how they work!",
       },
       {
@@ -656,7 +665,8 @@ export const LESSONS = [
       },
       {
         t: "h",
-        lvl: 6,
+        level: 1,
+        size: 6,
         html: "Select the correct direct object pronoun that replaces the object noun in the sentence.",
       },
     ],
@@ -692,7 +702,8 @@ export const LESSONS = [
       },
       {
         t: "h",
-        lvl: 5,
+        level: 1,
+        size: 5,
         html: "Let's begin by taking a look at the Italian indirect object pronouns",
       },
       {
@@ -713,7 +724,8 @@ export const LESSONS = [
       },
       {
         t: "h",
-        lvl: 5,
+        level: 1,
+        size: 5,
         html: "Now let's look at a couple examples of indirect object pronouns in action, so we can see how they work!",
       },
       {
@@ -726,7 +738,8 @@ export const LESSONS = [
       },
       {
         t: "h",
-        lvl: 6,
+        level: 1,
+        size: 6,
         html: 'Select the correct indirect object pronoun that replaces the indirect object (the "to whom") in the sentence.',
       },
     ],

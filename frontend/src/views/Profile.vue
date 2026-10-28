@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <RequireProfile>
+      <h1 class="visually-hidden">Profile</h1>
       <div class="row align-items-center profile-header">
         <div class="col-md-2 mb-3">
           <img

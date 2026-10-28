@@ -2,16 +2,16 @@
   <RequireProfile>
     <div class="card-style">
       <h1>Mastery</h1>
-      <h3>
+      <p class="h3">
         You have a mastery of {{ masteryPercent }}% ({{ completedLessons.length }} out of
         {{ LESSONS.length }})
-      </h3>
+      </p>
       <div class="mastery-bar">
         <div class="mastery-bar-fill" :style="{ width: masteryPercent + '%' }"></div>
       </div>
     </div>
     <div class="card-style">
-      <h3>Completed Lessons</h3>
+      <h2 class="h3">Completed Lessons</h2>
       <ul v-if="completedLessons.length" class="completed-list">
         <li v-for="lesson in completedLessons" :key="lesson.id">
           <span class="completed-check">✓</span> Lesson {{ lesson.id }}:
