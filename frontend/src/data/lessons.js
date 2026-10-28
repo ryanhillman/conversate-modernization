@@ -476,7 +476,7 @@ export const LESSONS = [
       },
       {
         t: "p",
-        html: "As you can see, in the <it>io</it> form we drop the ending and add '<it>isco</it>'; in the <it>tu</it> form we drop the ending and add '<it>isci</it>'; while in the third person singular form we drop the ending and add '<it>isce</it>'. The <it>noi</it>/<it>voi</it> forms follow the old regular pattern, and in the third person plural form we again drop the ending and add a new ending of '<it>iscono</it>'.",
+        html: "As you can see, in the <it>io</it> form we drop the ending and add '<it>isco</it>'; in the <it>tu</it> form we drop the ending and add '<it>isci</it>'; while in the third person singular form we drop the ending and add '<it>isce</it>'. The <it>noi</it>/<it>voi</it> forms follow the usual pattern, and in the third person plural form we again drop the ending and add a new ending of '<it>iscono</it>'.",
       },
     ],
     practiceInstructions: "Fill in the correct form of the verb.",
