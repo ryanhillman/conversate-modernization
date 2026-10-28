@@ -57,7 +57,7 @@ def test_create_losing_a_same_account_race_reports_the_account(
     monkeypatch.setattr(accounts_module, 'find_user', lambda sub: None)
     response = client.post(ME, json={'username': 'other'}, headers=auth_headers(sub='auth0|me'))
     assert response.status_code == 409
-    assert response.get_json() == {'error': 'User already exists'}
+    assert response.get_json() == {'error': 'Profile already exists'}
 
 
 def test_get_without_profile_is_404(client, auth_headers):

@@ -66,6 +66,16 @@ describe("Lesson", () => {
     wrapper.unmount();
   });
 
+  it("shows practice instructions right after the practice heading", async () => {
+    const wrapper = mount(Lesson, { global: { stubs: { RequireProfile } } });
+    await wrapper.get("#regular-are-verbs").trigger("click");
+
+    const heading = wrapper
+      .findAll("h4")
+      .find((h) => h.text() === "Now let's practice some on your own!").element;
+    expect(heading.nextElementSibling.textContent).toBe("Fill in the correct form of the verb.");
+  });
+
   it("gives each Toggle button the accessible name Toggle lesson plus its title", () => {
     const wrapper = mount(Lesson, {
       attachTo: document.body,

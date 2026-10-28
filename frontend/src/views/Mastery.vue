@@ -14,7 +14,7 @@
       <h2 class="h3">Completed Lessons</h2>
       <ul v-if="completedLessons.length" class="completed-list">
         <li v-for="lesson in completedLessons" :key="lesson.id">
-          <span class="completed-check">✓</span> Lesson {{ lesson.id }}:
+          <span class="completed-check" aria-hidden="true">✓</span> Lesson {{ lesson.id }}:
           <RichText :text="lesson.menuTitle" />
         </li>
       </ul>

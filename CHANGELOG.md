@@ -17,6 +17,7 @@
 - Added hover effects: a navy underline on nav links, and a gold glow on the home cards, Translate mic and speaker, Log in button, and profile picture.
 - Added red shading and an X icon to wrong lesson answers.
 - Made animations finish instantly when the system asks for reduced motion.
+- Added the MIT license.
 
 ### Changed
 - Made pages reuse the loaded profile instead of fetching it on every visit.
@@ -96,6 +97,11 @@
 - Stopped a double-clicked microphone from staying on.
 - Showed migration command errors instead of exiting silently.
 - Corrected Lesson 2's "ciao ciao" examples, which said hello instead of goodbye.
+- Returned a clear error, not a server error, when Google sends speech-to-text an unexpected response.
+- Rejected translation requests whose source and target languages match.
+- Stopped screen readers reading the check mark before each lesson on Mastery.
+- Replaced two quiz words whose answer was the word itself.
+- Moved practice instructions below the practice heading.
 
 ## [1.0.0] - 2026-10-22
 

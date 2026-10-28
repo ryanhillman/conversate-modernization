@@ -56,6 +56,12 @@ describe("lesson data", () => {
     }
   });
 
+  it("never ends a lesson's content with a heading, which would leave it empty", () => {
+    for (const lesson of LESSONS) {
+      expect(lesson.sections.at(-1).t, lesson.slug).not.toBe("h");
+    }
+  });
+
   it("says which language each lesson's answers are typed in", () => {
     for (const lesson of LESSONS.filter((l) => l.questions.length)) {
       expect(["it", "en"], lesson.slug).toContain(lesson.answerLang);

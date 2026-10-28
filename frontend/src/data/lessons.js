@@ -316,8 +316,8 @@ export const LESSONS = [
           ["loro", "mangiano", "They eat"],
         ],
       },
-      { t: "h", level: 1, size: 6, html: "Fill in the correct form of the verb" },
     ],
+    practiceInstructions: "Fill in the correct form of the verb.",
     questions: [
       {
         id: "lesson-4-question-1",
@@ -402,8 +402,8 @@ export const LESSONS = [
           ["loro", "credono", "They believe"],
         ],
       },
-      { t: "h", level: 1, size: 6, html: "Fill in the correct form of the verb" },
     ],
+    practiceInstructions: "Fill in the correct form of the verb.",
     questions: [
       {
         id: "lesson-5-question-1",
@@ -464,8 +464,8 @@ export const LESSONS = [
           ["loro", "dormono", "They sleep"],
         ],
       },
-      { t: "h", level: 1, size: 6, html: "Fill in the correct form of the verb" },
     ],
+    practiceInstructions: "Fill in the correct form of the verb.",
     questions: [
       {
         id: "lesson-6-question-1",
@@ -547,8 +547,8 @@ export const LESSONS = [
         t: "p",
         html: "As these two common irregular verbs show, there isn't a simple pattern to fall back on, so for verbs like these it's best to memorize their forms.",
       },
-      { t: "h", level: 1, size: 6, html: "Fill in the correct form of the verb" },
     ],
+    practiceInstructions: "Fill in the correct form of the verb.",
     questions: [
       {
         id: "lesson-7-question-1",
@@ -660,13 +660,9 @@ export const LESSONS = [
           "<it>Paolo mangia il pane. → Paolo lo mangia.</it> <i>(Paolo eats the bread. → Paolo eats it.)</i>",
         ],
       },
-      {
-        t: "h",
-        level: 1,
-        size: 6,
-        html: "Select the correct direct object pronoun that replaces the object noun in the sentence.",
-      },
     ],
+    practiceInstructions:
+      "Select the correct direct object pronoun that replaces the object noun in the sentence.",
     questions: [
       {
         id: "lesson-9-question-1",
@@ -733,13 +729,9 @@ export const LESSONS = [
           "<it>Noi diamo il libro a loro. → Noi gli diamo il libro.</it> <i>(We give the book to them. → We give them the book.)</i>",
         ],
       },
-      {
-        t: "h",
-        level: 1,
-        size: 6,
-        html: 'Select the correct indirect object pronoun that replaces the indirect object (the "to whom") in the sentence.',
-      },
     ],
+    practiceInstructions:
+      'Select the correct indirect object pronoun that replaces the indirect object (the "to whom") in the sentence.',
     questions: [
       {
         id: "lesson-10-question-1",

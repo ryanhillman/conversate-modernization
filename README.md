@@ -1,9 +1,9 @@
 # Conversate - Modernization 2026
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Security-Auth0-EB5424" />
-  <img src="https://img.shields.io/badge/Backend-Flask-000000?logo=flask&logoColor=white" />
-  <img src="https://img.shields.io/badge/Frontend-Vue.js-42B883?logo=vue.js&logoColor=white" />
+  <img src="https://img.shields.io/badge/Security-Auth0-EB5424" alt="Security: Auth0" />
+  <img src="https://img.shields.io/badge/Backend-Flask-000000?logo=flask&logoColor=white" alt="Backend: Flask" />
+  <img src="https://img.shields.io/badge/Frontend-Vue.js-42B883?logo=vue.js&logoColor=white" alt="Frontend: Vue.js" />
 </p>
 
 Conversate is a full-stack web application for learning Italian. 
@@ -197,3 +197,9 @@ Translation and speech endpoints are limited to 30 requests per minute per user.
 ## Credits
 
 Icons by [Icons8](https://icons8.com).
+
+---
+
+## License
+
+Released under the [MIT License](LICENSE). Icons8 icons are used under [Icons8's license](https://icons8.com/license), and Font Awesome icons under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).

@@ -57,7 +57,7 @@ def create_me():
     body = json_body()
     username = str_field(body, 'username')
     if find_user(sub) is not None:
-        return jsonify(error='User already exists'), 409
+        return jsonify(error='Profile already exists'), 409
     error = _validate_username(username)
     if error:
         return error
@@ -71,7 +71,7 @@ def create_me():
         db.session.rollback()
         if _username_taken(username):
             return jsonify(error='username already exists'), 409
-        return jsonify(error='User already exists'), 409
+        return jsonify(error='Profile already exists'), 409
     return jsonify(new_user.serialize()), 201
 
 
@@ -116,7 +116,7 @@ def complete_my_lesson(lesson_id):
     # Lock the row so concurrent completions can't overwrite each other.
     record = _lock_user_for_update(g.current_user_sub)
     if record is None:
-        return jsonify(error='Unknown resource'), 404
+        return jsonify(error='Profile not found'), 404
     completed = list(record.lessons_completed)
     if lesson_id not in completed:
         completed.append(lesson_id)

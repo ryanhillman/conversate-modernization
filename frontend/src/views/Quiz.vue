@@ -34,7 +34,8 @@
             <button
               v-if="phase === 'active' && pausesRemaining > 0"
               class="btn btn-sm btn-outline-primary"
-              :disabled="advancing"
+              :class="{ disabled: advancing }"
+              :aria-disabled="advancing"
               @click="pause"
             >
               Pause
@@ -198,7 +199,7 @@ async function start(isPractice) {
 }
 
 async function pause() {
-  if (phase.value !== "active") return;
+  if (phase.value !== "active" || advancing.value) return;
   try {
     const data = await pauseQuiz();
     clearInterval(tickTimer);

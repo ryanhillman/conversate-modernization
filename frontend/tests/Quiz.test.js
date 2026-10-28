@@ -188,6 +188,20 @@ describe("Quiz answers", () => {
     }
     expect(answerQuiz).toHaveBeenCalledTimes(1);
   });
+
+  it("keep Pause focusable while an answer is checked, ignoring clicks on it", async () => {
+    quizStarting(2);
+    answerQuiz.mockReturnValue(new Promise(() => {}));
+    wrapper = await startQuizPage();
+
+    await wrapper.get(".quiz-choice").trigger("click");
+    const pause = wrapper.get(".quiz-meta button");
+    await pause.trigger("click");
+
+    expect(pause.attributes("disabled")).toBeUndefined();
+    expect(pause.attributes("aria-disabled")).toBe("true");
+    expect(pauseQuiz).not.toHaveBeenCalled();
+  });
 });
 
 describe("Quiz language", () => {

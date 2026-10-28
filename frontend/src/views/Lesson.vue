@@ -7,7 +7,7 @@
     <h1 class="lesson-header">Select any lesson to begin!</h1>
 
     <div
-      v-for="lesson in lessons"
+      v-for="lesson in LESSONS"
       :key="lesson.id"
       class="individual-lesson"
       :class="{ 'is-complete': isComplete(lesson.id) }"
@@ -67,6 +67,7 @@
 
         <template v-if="lesson.questions.length">
           <h4 class="h5">Now let's practice some on your own!</h4>
+          <p v-if="lesson.practiceInstructions">{{ lesson.practiceInstructions }}</p>
           <div v-for="question in lesson.questions" :key="question.id">
             <label :for="question.id" class="question-label"
               ><RichText :text="question.prompt"
@@ -79,7 +80,7 @@
                 type="text"
                 :lang="lesson.answerLang"
                 class="answer-input"
-                :aria-invalid="answerState(question) === 'wrong' ? 'true' : 'false'"
+                :aria-invalid="answerState(question) === 'wrong' ? 'true' : undefined"
                 @input="submitted[question.id] = false"
                 @keydown.enter="submitAnswer(question)"
                 @blur="submitAnswer(question)"
@@ -114,8 +115,6 @@ import { completedLessonIds, setProfile } from "../stores/profileStore";
 import { announce } from "../stores/announceStore";
 import { showToast } from "../stores/toastStore";
 
-const lessons = LESSONS;
-
 const answers = reactive({});
 // Answers are marked right or wrong once submitted (Enter or leaving the box),
 // not while typing.
@@ -133,7 +132,7 @@ const confetti = ref([]);
 const completing = ref(false);
 
 const currentLesson = computed(
-  () => lessons.find((lesson) => lesson.id === currentLessonId.value) || null,
+  () => LESSONS.find((lesson) => lesson.id === currentLessonId.value) || null,
 );
 
 function selectLesson(lessonId) {

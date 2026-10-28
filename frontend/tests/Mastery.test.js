@@ -33,4 +33,11 @@ describe("Mastery", () => {
     expect(item.text()).toContain("Lesson 1: Avere and Essere");
     expect(item.findAll('[lang="it"]').map((span) => span.text())).toEqual(["Avere", "Essere"]);
   });
+
+  it("hides each check mark from screen readers, as the heading says they're completed", () => {
+    setProfile({ username: "ryan_h", lessons_completed: [1] });
+    const wrapper = mount(Mastery, { global: { stubs: { RequireProfile } } });
+
+    expect(wrapper.get(".completed-check").attributes("aria-hidden")).toBe("true");
+  });
 });

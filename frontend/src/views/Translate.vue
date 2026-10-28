@@ -6,13 +6,11 @@
       </div>
       <div class="back-card">
         <div class="m-3">
-          <label for="selectInputLanguage">Select Input Language</label>
-          <br />
+          <label class="d-block" for="selectInputLanguage">Select Input Language</label>
           <span class="lang-select-wrap">
             <select
               id="selectInputLanguage"
               v-model="inputLanguage"
-              name="selectInputLanguage"
               class="form-select lang-select"
             >
               <option v-for="language in languages" :key="language.code" :value="language.code">
@@ -22,13 +20,11 @@
           </span>
         </div>
         <div class="m-3">
-          <label for="selectOutputLanguage">Select Output Language</label>
-          <br />
+          <label class="d-block" for="selectOutputLanguage">Select Output Language</label>
           <span class="lang-select-wrap">
             <select
               id="selectOutputLanguage"
               v-model="outputLanguage"
-              name="selectOutputLanguage"
               class="form-select lang-select"
             >
               <option v-for="language in languages" :key="language.code" :value="language.code">
@@ -40,9 +36,8 @@
         <p v-if="sameLanguageOnBothSides" class="form-error small m-2">
           Input and output language must be different.
         </p>
-        <div>
-          <label for="textToTranslate">Text to translate</label>
-          <br />
+        <div class="mb-4">
+          <label class="d-block" for="textToTranslate">Text to translate</label>
           <textarea
             id="textToTranslate"
             v-model="textToTranslate"
@@ -91,18 +86,16 @@
               Recordings stop after {{ MAX_RECORDING_SECONDS }} seconds and are added to the text.
             </p>
           </div>
-          <label for="translation">Translation</label>
-          <br />
+          <label class="d-block" for="translation">Translation</label>
           <textarea
             id="translation"
-            v-model="translatedText"
+            :value="translatedText"
             class="m-2 translate-textarea"
             :lang="translatedTextLanguage"
             readonly
             rows="10"
           ></textarea>
         </div>
-        <br />
         <button
           :disabled="!textToTranslate.trim() || sameLanguageOnBothSides"
           :aria-disabled="busy"
@@ -161,13 +154,10 @@ let micStream = null;
 let recordingTimeout = null;
 let leavingPage = false;
 
-const micSupported = computed(
-  () =>
-    !!(
-      navigator.mediaDevices &&
-      window.MediaRecorder &&
-      MediaRecorder.isTypeSupported(MIC_MIME_TYPE)
-    ),
+const micSupported = !!(
+  navigator.mediaDevices &&
+  window.MediaRecorder &&
+  MediaRecorder.isTypeSupported(MIC_MIME_TYPE)
 );
 const translatedTextTooLong = computed(() => {
   if (!translatedText.value) return false;

@@ -1,3 +1,5 @@
+import math
+
 from flask import Blueprint, current_app, jsonify
 
 from .. import google_api
@@ -38,6 +40,8 @@ def translate_text():
         return jsonify(
             error=f'source and target must be one of: {", ".join(sorted(TRANSLATE_LANGUAGES))}'
         ), 400
+    if source == target:
+        return jsonify(error='source and target must be different'), 400
 
     try:
         data = google_api.post(
@@ -98,7 +102,8 @@ def transcribe_speech():
     language_code = STT_LANGUAGES.get(str_field(body, 'language'))
     if not audio_b64 or encoding is None or language_code is None:
         return jsonify(error='audio, a supported mime_type, and language are required'), 400
-    if len(audio_b64) > MAX_STT_AUDIO_BYTES * 4 // 3:
+    # Base64 encodes every 3 bytes, or part of 3, as 4 characters.
+    if len(audio_b64) > 4 * math.ceil(MAX_STT_AUDIO_BYTES / 3):
         return jsonify(error='audio is too large'), 400
 
     try:
@@ -114,12 +119,12 @@ def transcribe_speech():
         current_app.logger.warning('Transcription request failed: %s', e)
         return jsonify(error='Speech recognition service unavailable'), 502
 
-    results = data.get('results') or []
-    if not results:
-        return jsonify(error='No speech detected'), 422
     try:
+        results = data.get('results') or []
+        if not results:
+            return jsonify(error='No speech detected'), 422
         transcript = results[0]['alternatives'][0]['transcript']
-    except (KeyError, IndexError, TypeError) as e:
+    except (AttributeError, KeyError, IndexError, TypeError) as e:
         current_app.logger.warning('Unexpected transcription response shape: %s', e)
         return jsonify(error='Speech recognition service unavailable'), 502
 

@@ -32,7 +32,7 @@ def resolve_me(f):
     def decorated(*args, **kwargs):
         record = find_user(g.current_user_sub)
         if record is None:
-            return jsonify(error='Unknown resource'), 404
+            return jsonify(error='Profile not found'), 404
         return f(record, *args, **kwargs)
 
     return decorated

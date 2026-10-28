@@ -8,6 +8,7 @@ from conversate.api.common import utcnow
 from conversate.api.quiz import _build_quiz
 from conversate.extensions import db
 from conversate.models import QuizAttempt
+from conversate.quiz_data import QUIZ_WORDS
 
 START = '/api/me/quiz/start'
 ANSWER = '/api/me/quiz/answer'
@@ -28,6 +29,10 @@ def test_build_quiz_choices_are_unique_and_include_the_correct_answer():
         assert len(q['choices']) == 4
         assert len(set(q['choices'])) == 4
         assert q['correct'] in q['choices']
+
+
+def test_no_quiz_word_is_its_own_answer():
+    assert [w for w in QUIZ_WORDS if w['it'] == w['en']] == []
 
 
 def test_start_issues_fifty_questions_without_answers(client, auth_headers, create_user):

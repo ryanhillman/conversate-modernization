@@ -20,6 +20,14 @@ def test_rejects_a_list_source(client, auth_headers):
     assert client.post(TRANSLATE, json=body, headers=auth_headers()).status_code == 400
 
 
+def test_rejects_the_same_source_and_target(client, auth_headers, google_stub):
+    body = dict(VALID, target='it')
+    response = client.post(TRANSLATE, json=body, headers=auth_headers())
+    assert response.status_code == 400
+    assert response.get_json() == {'error': 'source and target must be different'}
+    assert google_stub.calls == []
+
+
 def test_translates_successfully(client, auth_headers, google_stub):
     google_stub.respond({'data': {'translations': [{'translatedText': 'hello'}]}})
     response = client.post(TRANSLATE, json=VALID, headers=auth_headers())

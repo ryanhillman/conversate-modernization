@@ -1,4 +1,8 @@
+import base64
+
 import httpx
+
+from conversate.api.speech import MAX_STT_AUDIO_BYTES
 
 STT = '/api/stt'
 
@@ -39,3 +43,17 @@ def test_gives_google_longer_to_transcribe(client, auth_headers, google_stub):
 def test_upstream_failure_is_502(client, auth_headers, google_stub):
     google_stub.fail(httpx.ConnectError('boom'))
     assert client.post(STT, json=VALID, headers=auth_headers()).status_code == 502
+
+
+def test_unexpected_response_shape_is_502(client, auth_headers, google_stub):
+    google_stub.respond(['not', 'an', 'object'])
+    assert client.post(STT, json=VALID, headers=auth_headers()).status_code == 502
+
+
+def test_accepts_a_clip_of_exactly_the_size_limit(client, auth_headers, google_stub):
+    google_stub.respond({'results': [{'alternatives': [{'transcript': 'ciao'}]}]})
+    audio = base64.b64encode(bytes(MAX_STT_AUDIO_BYTES)).decode()
+    body = dict(VALID, audio=audio)
+    assert client.post(STT, json=body, headers=auth_headers()).status_code == 200
+    body = dict(VALID, audio=audio + 'AAAA')
+    assert client.post(STT, json=body, headers=auth_headers()).status_code == 400
