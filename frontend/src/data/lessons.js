@@ -89,7 +89,7 @@ export const LESSONS = [
         t: "p",
         html: 'One of the most important phrases — and one you may already use — is "<it>ciao</it>". In Italian, <it>ciao</it> can mean both hello and goodbye, and it\'s typically used in informal settings.',
       },
-      { t: "p", html: "Some different ways to use <it>ciao</it>" },
+      { t: "p", html: "Some different ways to use <it>ciao</it>:" },
       {
         t: "ul",
         items: ['"<it>Ciao bella</it>" → Hello beautiful', '"<it>Ciao ciao!</it>" → Bye-bye!'],
@@ -113,8 +113,8 @@ export const LESSONS = [
         t: "ul",
         items: [
           '"<it>Buongiorno, come stai oggi?</it>" → Good morning! How are you today?',
-          '"<it>Buon pomeriggio ragazzi!</it>" → Good afternoon kids!',
-          '"<it>Buonasera signor Valentino!</it>" → Good evening Mr. Valentino.',
+          '"<it>Buon pomeriggio, ragazzi!</it>" → Good afternoon, kids!',
+          '"<it>Buonasera, signor Valentino!</it>" → Good evening, Mr. Valentino.',
           '"<it>Ciao, come va?</it>" → Hi, how\'s it going?',
         ],
       },
@@ -162,7 +162,7 @@ export const LESSONS = [
         t: "h",
         level: 2,
         size: 5,
-        html: "Let's begin by talking about the differences between the two verbs.",
+        html: "Let's begin by talking about the differences between the two verbs",
       },
       {
         t: "p",
@@ -214,7 +214,7 @@ export const LESSONS = [
           "<it>Stare in piedi</it> → to be standing",
           "<it>Stare attento</it> → to pay attention",
           "<it>Stare con...</it> → to be in a relationship with...",
-          "<it>Stare a cuore</it> → to matter to someone.",
+          "<it>Stare a cuore</it> → to matter to someone",
         ],
       },
     ],
@@ -283,7 +283,7 @@ export const LESSONS = [
         t: "h",
         level: 1,
         size: 5,
-        html: "Let's begin by looking at the verb <i><it>parlare</it></i> which means to speak",
+        html: "Let's begin by looking at the verb <i><it>parlare</it></i>, which means to speak",
       },
       {
         t: "conj",
@@ -645,7 +645,7 @@ export const LESSONS = [
         t: "h",
         level: 1,
         size: 5,
-        html: "Now let's look at a couple examples of direct object pronouns in action, so we can see how they work!",
+        html: "Now let's look at a couple of examples of direct object pronouns in action, so we can see how they work!",
       },
       {
         t: "ul",
@@ -714,7 +714,7 @@ export const LESSONS = [
         t: "h",
         level: 1,
         size: 5,
-        html: "Now let's look at a couple examples of indirect object pronouns in action, so we can see how they work!",
+        html: "Now let's look at a couple of examples of indirect object pronouns in action, so we can see how they work!",
       },
       {
         t: "ul",
