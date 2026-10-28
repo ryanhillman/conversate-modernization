@@ -3,6 +3,7 @@ import { authGuard } from "@auth0/auth0-vue";
 import { clearErrorToasts } from "../stores/toastStore";
 import { pageTitle } from "../utils/pageTitle";
 import Home from "../views/Home.vue";
+import { pages } from "./pages";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,42 +14,14 @@ const router = createRouter({
       component: Home,
       meta: { public: true },
     },
-    {
-      path: "/mastery",
-      name: "mastery",
-      meta: { title: "Mastery" },
-      component: () => import("../views/Mastery.vue"),
-    },
-    {
-      path: "/profile",
-      name: "profile",
-      meta: { title: "Profile" },
-      component: () => import("../views/Profile.vue"),
-    },
-    {
-      path: "/translate",
-      name: "translate",
-      meta: { title: "Translate" },
-      component: () => import("../views/Translate.vue"),
-    },
-    {
-      path: "/lesson",
-      name: "lesson",
-      meta: { title: "Lessons" },
-      component: () => import("../views/Lesson.vue"),
-    },
-    {
-      path: "/quiz",
-      name: "quiz",
-      meta: { title: "Quiz" },
-      component: () => import("../views/Quiz.vue"),
-    },
-    {
-      path: "/leaderboard",
-      name: "leaderboard",
-      meta: { title: "Leaderboard" },
-      component: () => import("../views/Leaderboard.vue"),
-    },
+    ...pages
+      .filter((page) => page.view)
+      .map((page) => ({
+        path: page.path,
+        name: page.path.slice(1),
+        meta: { title: page.label },
+        component: page.view,
+      })),
     {
       path: "/:pathMatch(.*)*",
       name: "not-found",

@@ -16,6 +16,7 @@
 - Added an untimed practice quiz that isn't saved to the leaderboard.
 - Added hover effects: a navy underline on nav links, and a gold glow on the home cards, Translate mic and speaker, Log in button, and profile picture.
 - Added red shading and an X icon to wrong lesson answers.
+- Made animations finish instantly when the system asks for reduced motion.
 
 ### Changed
 - Made pages reuse the loaded profile instead of fetching it on every visit.
@@ -82,6 +83,9 @@
 - Gave each page its own title, a main landmark, and a skip link.
 - Gave every page one h1 and headings that don't skip levels, with a heading per lesson.
 - Gave the username and Translate text boxes visible labels.
+- Named the conjugation buttons "Play" plus the word.
+- Linked the username boxes to their error, and marked them invalid, only while an error shows.
+- Hid repeated images from screen readers: the home card images, the footer logo, and the phone menu's profile picture.
 - Kept error messages on screen until dismissed.
 - Stopped long error messages from running off the left edge on narrow screens.
 - Kept error messages from covering the control with keyboard focus, and enlarged their Dismiss button.

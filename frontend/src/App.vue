@@ -15,7 +15,7 @@
       </div>
     </main>
     <footer class="bg-light text-center p-3">
-      <img src="/logo.png" alt="Conversate logo" width="80" height="80" />
+      <img src="/logo.png" alt="" width="80" height="80" />
     </footer>
   </div>
 </template>

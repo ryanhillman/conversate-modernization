@@ -103,3 +103,24 @@ describe("AccountActions", () => {
     wrapper.unmount();
   });
 });
+
+describe.each([
+  ["SetUsername", SetUsername],
+  ["AccountActions", AccountActions],
+])("%s", (_, form) => {
+  it("marks the box invalid and points it at the error only while one shows", async () => {
+    const wrapper = mount(form);
+    const input = wrapper.get("input");
+    expect(input.attributes("aria-describedby")).toBeUndefined();
+    expect(input.attributes("aria-invalid")).toBeUndefined();
+
+    checkUsername.mockResolvedValue({ available: false });
+    await input.setValue("taken_name");
+    await vi.advanceTimersByTimeAsync(400);
+    await flushPromises();
+
+    const error = wrapper.get(`#${input.attributes("aria-describedby")}`);
+    expect(error.text()).toBe("That username is taken");
+    expect(input.attributes("aria-invalid")).toBe("true");
+  });
+});

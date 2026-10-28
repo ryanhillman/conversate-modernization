@@ -57,16 +57,9 @@
             <li v-for="(r, ri) in s.rows" :key="ri">
               <span lang="it">{{ r[0] }}</span
               >:
-              <span
-                class="speakable"
-                lang="it"
-                role="button"
-                tabindex="0"
-                @click="speak(r[1])"
-                @keydown.enter="speak(r[1])"
-                @keydown.space.prevent="speak(r[1])"
-                >{{ r[1] }}</span
-              >
+              <button type="button" class="speakable" lang="it" @click="speak(r[1])">
+                <span class="visually-hidden" lang="en">Play</span> {{ r[1] }}
+              </button>
               — {{ r[2] }}
             </li>
           </ul>
@@ -296,7 +289,7 @@ function launchCelebration() {
   border-radius: 12px;
   box-shadow: var(--card-shadow);
   padding: 1rem;
-  max-width: 40rem;
+  max-width: 100%;
 }
 .complete-lesson {
   text-align: center;
@@ -352,6 +345,8 @@ function launchCelebration() {
 }
 .speakable {
   display: inline-block;
+  border: 0;
+  font: inherit;
   color: var(--brand-navy);
   font-weight: 700;
   background-color: color-mix(in srgb, var(--brand-accent) 18%, transparent);
