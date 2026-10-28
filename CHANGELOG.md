@@ -15,6 +15,7 @@
 - Added reduced-motion support: animations finish instantly when the system asks for less motion.
 - Added a username_taken code to the API's taken-username errors.
 - Added a robots.txt, so crawlers get a valid one instead of the home page.
+- Added a light sweep across the home page's welcome, once per visit.
 
 ### Changed
 - **Breaking:** The API's user_name field is now username.

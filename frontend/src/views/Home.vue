@@ -1,6 +1,6 @@
 <template>
   <div class="text-center">
-    <div class="card-style welcome-card">
+    <div class="card-style welcome-card" :class="{ 'welcome-shine': shine }">
       <h1>Welcome to Conversate!</h1>
     </div>
     <div class="cards">
@@ -19,6 +19,16 @@
 import { pages } from "../router/pages";
 
 const cards = pages.filter((page) => page.img);
+
+// The welcome's light sweep plays the first time Home appears in a browser
+// session. Without session storage (some private modes), it plays every time.
+let shine = true;
+try {
+  shine = !sessionStorage.getItem("welcomeShinePlayed");
+  sessionStorage.setItem("welcomeShinePlayed", "1");
+} catch {
+  // Keep shine on.
+}
 </script>
 
 <style scoped>
@@ -28,6 +38,27 @@ const cards = pages.filter((page) => page.img);
 }
 .welcome-card h1 {
   margin: 0;
+}
+/* A light band sweeps across the welcome once as the page loads, through the
+   background so nothing is clipped. Instant for reduced motion (app.css). */
+.welcome-shine {
+  background-image: linear-gradient(
+    105deg,
+    transparent 35%,
+    color-mix(in srgb, var(--text-on-dark) 22%, transparent) 50%,
+    transparent 65%
+  );
+  background-size: 300% 100%;
+  background-repeat: no-repeat;
+  animation: welcome-shine 1.4s ease-in-out 0.2s both;
+}
+@keyframes welcome-shine {
+  from {
+    background-position: 105% 0;
+  }
+  to {
+    background-position: -5% 0;
+  }
 }
 .cards {
   display: grid;
