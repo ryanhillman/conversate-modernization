@@ -85,6 +85,7 @@
             <p v-if="micSupported" id="mic-hint" class="text-muted small m-2">
               Recordings stop after {{ MAX_RECORDING_SECONDS }} seconds and are added to the text.
             </p>
+            <p v-else class="text-muted small m-2">Voice input isn't available in this browser.</p>
           </div>
           <label class="d-block" for="translation">Translation</label>
           <textarea

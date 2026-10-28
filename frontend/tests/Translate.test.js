@@ -147,6 +147,16 @@ describe("Translate", () => {
     wrapper.unmount();
   });
 
+  it("says when voice input isn't available, instead of just hiding the microphone", () => {
+    const unsupported = mount(Translate, { global: { stubs: { RequireProfile } } });
+    expect(unsupported.find('[aria-label="Start recording"]').exists()).toBe(false);
+    expect(unsupported.text()).toContain("Voice input isn't available in this browser.");
+
+    fakeMicrophone();
+    const supported = mount(Translate, { global: { stubs: { RequireProfile } } });
+    expect(supported.text()).not.toContain("Voice input isn't available");
+  });
+
   it("states the recording limit before recording starts", () => {
     fakeMicrophone();
     const wrapper = mount(Translate, {

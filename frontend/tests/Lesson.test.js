@@ -8,6 +8,7 @@ vi.mock("../src/api/tts", () => ({ synthesizeSpeech: vi.fn() }));
 import { synthesizeSpeech } from "../src/api/tts";
 import { completeLesson } from "../src/api/users";
 import { LESSONS } from "../src/data/lessons";
+import { setProfile } from "../src/stores/profileStore";
 import { toastState } from "../src/stores/toastStore";
 import Lesson from "../src/views/Lesson.vue";
 import { RequireProfile } from "./helpers";
@@ -21,7 +22,7 @@ describe("Lesson", () => {
   it("gives each lesson a heading, and never skips a heading level in any lesson", async () => {
     const wrapper = mount(Lesson, { global: { stubs: { RequireProfile } } });
     expect(wrapper.findAll("h2").map((h) => h.text())).toEqual(
-      LESSONS.map((lesson) => wrapper.get(`#${lesson.slug}-title`).text() + ":"),
+      LESSONS.map((lesson) => wrapper.get(`#${lesson.slug}-title`).text()),
     );
 
     for (const lesson of LESSONS) {
@@ -83,6 +84,17 @@ describe("Lesson", () => {
     await flushPromises();
 
     expect(toastState.toasts.at(-1).message).toBe("Too many requests. Try again in a minute.");
+  });
+
+  it("says in the heading, not just the check mark, that a lesson is completed", () => {
+    setProfile({ username: "ryan_h", lessons_completed: [1] });
+    const wrapper = mount(Lesson, { global: { stubs: { RequireProfile } } });
+    const [done, notDone] = wrapper.findAll("h2");
+
+    expect(done.text()).toBe("Avere and Essere (completed)");
+    expect(notDone.text()).toBe("Basic Greetings");
+    expect(wrapper.get(".completed-check").attributes("aria-hidden")).toBe("true");
+    setProfile({ username: "ryan_h", lessons_completed: [] });
   });
 
   it("gives each Toggle button the accessible name Toggle lesson plus its title", () => {

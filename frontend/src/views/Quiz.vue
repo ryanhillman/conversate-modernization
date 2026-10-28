@@ -29,7 +29,9 @@
           <span>Question {{ currentIndex + 1 }} / {{ questions.length }}</span>
           <span v-if="practice">Practice: no timer</span>
           <template v-else>
-            <span class="quiz-timer">{{ formattedRemaining }}</span>
+            <span class="quiz-timer"
+              ><span class="visually-hidden">Time left: </span>{{ formattedRemaining }}</span
+            >
             <span class="quiz-pauses">Pauses left: {{ pausesRemaining }}</span>
             <button
               v-if="phase === 'active' && pausesRemaining > 0"

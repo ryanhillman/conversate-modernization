@@ -112,6 +112,9 @@
 - Kept a local virtual environment out of the backend's Docker image.
 - Said to wait a minute when translation or speech hits the rate limit, instead of a generic error.
 - Kept keyboard focus visible in Windows High Contrast mode.
+- Labeled the quiz timer for screen readers.
+- Said in each lesson's heading when it's completed, for screen readers.
+- Explained why the microphone is missing when the browser can't record.
 
 ### Security
 - Made the backend's code read-only to the user it runs as.

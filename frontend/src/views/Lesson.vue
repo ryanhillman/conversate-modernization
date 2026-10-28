@@ -12,15 +12,14 @@
       class="individual-lesson"
       :class="{ 'is-complete': isComplete(lesson.id) }"
     >
-      <span v-if="isComplete(lesson.id)" class="completed-check">
-        <span aria-hidden="true">✓</span><span class="visually-hidden">Completed</span>
-      </span>
+      <span v-if="isComplete(lesson.id)" class="completed-check" aria-hidden="true">✓</span>
       <div class="lesson-row">
         <!-- A heading per lesson, so screen readers can jump between them. -->
         <h2 class="lesson-name">
           <label :for="lesson.slug" class="lesson-label"
-            ><span :id="`${lesson.slug}-title`"><RichText :text="lesson.menuTitle" /></span>:
-          </label>
+            ><span :id="`${lesson.slug}-title`"><RichText :text="lesson.menuTitle" /></span
+          ></label>
+          <span v-if="isComplete(lesson.id)" class="visually-hidden"> (completed)</span>
         </h2>
         <!-- Named from its own text plus the title, so the title's Italian keeps
              its lang marking (an aria-label string can't carry it). -->

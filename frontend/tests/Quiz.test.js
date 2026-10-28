@@ -195,6 +195,15 @@ describe("Quiz answers", () => {
   });
 });
 
+describe("Quiz timer", () => {
+  it("labels the time left for screen readers", async () => {
+    quizStarting(2);
+    wrapper = await startQuizPage();
+    expect(wrapper.get(".quiz-timer").text()).toBe("Time left: 4:10");
+    expect(wrapper.get(".quiz-timer .visually-hidden").text()).toBe("Time left:");
+  });
+});
+
 describe("Quiz language", () => {
   it("marks the question word as Italian", async () => {
     wrapper = await startQuizPage();
