@@ -115,9 +115,11 @@
 - Labeled the quiz timer for screen readers.
 - Said in each lesson's heading when it's completed, for screen readers.
 - Explained why the microphone is missing when the browser can't record.
+- Returned a 400, not a server error, for deeply nested JSON.
 
 ### Security
 - Made the backend's code read-only to the user it runs as.
+- Rejected access tokens missing an expiry, issue time, or subject.
 
 ## [1.0.0] - 2026-10-22
 

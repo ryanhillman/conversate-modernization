@@ -71,6 +71,8 @@ def _verify_token():
         issuer=f'https://{domain}/',
         # Allow a minute of clock difference with Auth0.
         leeway=60,
+        # PyJWT checks exp only when it's present; Auth0 always sends these.
+        options={'require': ['exp', 'iat', 'sub']},
     )
 
 

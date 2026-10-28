@@ -15,6 +15,7 @@ from sqlalchemy.engine import make_url
 from conversate import auth as auth_module
 from conversate import google_api
 from conversate.app import create_app
+from conversate.config import MAX_REQUEST_BYTES
 from conversate.extensions import db
 from conversate.models import User
 
@@ -38,6 +39,7 @@ class _TestConfig:
     GOOGLE_CLOUD_API_KEY = 'test-google-api-key'
     TESTING = True
     DEBUG = False
+    MAX_CONTENT_LENGTH = MAX_REQUEST_BYTES
 
 
 def _generate_pem():
@@ -134,7 +136,9 @@ def client(app):
 def make_token(signing_key):
     pem, _ = signing_key
 
-    def _make(sub='auth0|test', audience=TEST_AUDIENCE, issuer=ISSUER, iat_offset=0, kid=KID):
+    def _make(
+        sub='auth0|test', audience=TEST_AUDIENCE, issuer=ISSUER, iat_offset=0, kid=KID, omit=()
+    ):
         # An Auth0 API access token identifies the user by `sub`; it does not
         # carry email.
         now = int(time.time()) + iat_offset
@@ -145,6 +149,8 @@ def make_token(signing_key):
             'iat': now,
             'exp': now + 3600,
         }
+        for claim in omit:
+            del claims[claim]
         return jwt.encode(claims, pem, algorithm='RS256', headers={'kid': kid})
 
     return _make

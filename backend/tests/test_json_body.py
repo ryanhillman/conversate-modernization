@@ -1,5 +1,7 @@
 import pytest
 
+from conversate.config import MAX_REQUEST_BYTES
+
 ROUTES = [
     ('post', '/api/me'),
     ('put', '/api/me'),
@@ -20,3 +22,22 @@ def test_a_body_that_isnt_a_json_object_is_400(
     response = getattr(client, method)(url, headers=auth_headers(), **body)
     assert response.status_code == 400
     assert response.get_json() == {'error': 'Request body must be a JSON object'}
+
+
+def test_deeply_nested_json_is_400_not_a_server_error(client, auth_headers, create_user):
+    create_user()
+    body = '[' * 100_000 + ']' * 100_000
+    response = client.put(
+        '/api/me', data=body, content_type='application/json', headers=auth_headers()
+    )
+    assert response.status_code == 400
+    assert response.get_json() == {'error': 'Request body must be a JSON object'}
+
+
+def test_a_body_over_the_size_limit_is_413(client, auth_headers, create_user):
+    create_user()
+    body = '{"username": "' + 'x' * MAX_REQUEST_BYTES + '"}'
+    response = client.put(
+        '/api/me', data=body, content_type='application/json', headers=auth_headers()
+    )
+    assert response.status_code == 413

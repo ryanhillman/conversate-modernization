@@ -32,6 +32,13 @@ def test_every_api_route_requires_a_token(app, client):
     assert unprotected == []
 
 
+@pytest.mark.parametrize('claim', ['exp', 'iat', 'sub'])
+def test_a_token_missing_a_required_claim_is_401(client, make_token, create_user, claim):
+    create_user()
+    headers = {'Authorization': f'Bearer {make_token(omit=[claim])}'}
+    assert client.get(URL, headers=headers).status_code == 401
+
+
 def test_malformed_token_is_401(client):
     headers = {'Authorization': 'Bearer not.a.real.token'}
     assert client.get(URL, headers=headers).status_code == 401

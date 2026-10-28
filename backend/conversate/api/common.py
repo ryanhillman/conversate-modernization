@@ -10,7 +10,11 @@ from ..models import User
 
 def json_body():
     """The request's JSON object; anything else is rejected with a 400."""
-    body = request.get_json(silent=True)
+    try:
+        body = request.get_json(silent=True)
+    except RecursionError:
+        # Nested too deeply for the JSON parser, which silent=True doesn't cover.
+        body = None
     if not isinstance(body, dict):
         abort(400, description='Request body must be a JSON object')
     return body

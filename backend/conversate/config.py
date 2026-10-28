@@ -1,5 +1,9 @@
 from decouple import UndefinedValueError, config
 
+# The largest valid body is a speech-to-text upload, about 1.33MB of base64 for
+# a 1MB clip; 2MB leaves headroom.
+MAX_REQUEST_BYTES = 2 * 1024 * 1024
+
 
 class ConfigError(RuntimeError):
     pass
@@ -28,6 +32,4 @@ class Config:
         self.SQLALCHEMY_ENGINE_OPTIONS = {'pool_pre_ping': True}
         self.ALLOWED_ORIGIN = config('ALLOWED_ORIGIN', default='http://localhost:3000')
         self.DEBUG = config('DEBUG', cast=bool, default=False)
-        # The largest valid body is a speech-to-text upload, about 1.33MB of
-        # base64 for a 1MB clip; 2MB leaves headroom.
-        self.MAX_CONTENT_LENGTH = 2 * 1024 * 1024
+        self.MAX_CONTENT_LENGTH = MAX_REQUEST_BYTES
