@@ -105,7 +105,7 @@
 - Stopped screen readers reading the check mark before each lesson on Mastery.
 - Replaced two quiz words whose answer was the word itself.
 - Moved practice instructions below the practice heading.
-- Corrected Lesson 7, which called *capire* irregular.
+- Moved *capire* to Lesson 6 as a regular *-ire* pattern; Lesson 7 had called it irregular.
 - Told learners to type pronoun answers, not select them.
 - Said when a username was taken while saving, instead of a generic error.
 - Warned that resetting progress and deleting an account can't be undone.

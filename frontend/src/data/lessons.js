@@ -459,6 +459,25 @@ export const LESSONS = [
           ["loro", "dormono", "They sleep"],
         ],
       },
+      {
+        t: "p",
+        html: "Many other <it>-ire</it> verbs, like <i><it>capire</it></i> (to understand), follow a second regular pattern: they add <it>-isc-</it> before the ending in every form but <it>noi</it> and <it>voi</it>.",
+      },
+      {
+        t: "conj",
+        rows: [
+          ["io", "capisco", "I understand"],
+          ["tu", "capisci", "You understand"],
+          ["lui/lei", "capisce", "He or she understands"],
+          ["noi", "capiamo", "We understand"],
+          ["voi", "capite", "You all understand"],
+          ["loro", "capiscono", "They understand"],
+        ],
+      },
+      {
+        t: "p",
+        html: "As you can see, in the <it>io</it> form we drop the ending and add '<it>isco</it>'; in the <it>tu</it> form we drop the ending and add '<it>isci</it>'; while in the third person singular form we drop the ending and add '<it>isce</it>'. The <it>noi</it>/<it>voi</it> forms follow the old regular pattern, and in the third person plural form we again drop the ending and add a new ending of '<it>iscono</it>'.",
+      },
     ],
     practiceInstructions: "Fill in the correct form of the verb.",
     questions: [
@@ -478,6 +497,16 @@ export const LESSONS = [
         correctAnswers: ["dormono"],
       },
       { id: "lesson-6-question-4", prompt: "I hear (<it>sentire</it>)", correctAnswers: ["sento"] },
+      {
+        id: "lesson-6-question-5",
+        prompt: "I understand (<it>capire</it>)",
+        correctAnswers: ["capisco"],
+      },
+      {
+        id: "lesson-6-question-6",
+        prompt: "She understands (<it>capire</it>)",
+        correctAnswers: ["capisce"],
+      },
     ],
   },
   {
@@ -490,25 +519,6 @@ export const LESSONS = [
       {
         t: "p",
         html: "Beyond the verb groups covered so far lies another group whose patterns differ from the rest — these are known as irregular verbs. There are often noticeable patterns to help you, but most simply require memorization.",
-      },
-      {
-        t: "p",
-        html: "First, one more regular pattern: many <it>-ire</it> verbs, like <i><it>capire</it></i> (to understand), add <it>-isc-</it> before the ending in every form but <it>noi</it> and <it>voi</it>. They aren't irregular; they follow a second <it>-ire</it> pattern.",
-      },
-      {
-        t: "conj",
-        rows: [
-          ["io", "capisco", "I understand"],
-          ["tu", "capisci", "You understand"],
-          ["lui/lei", "capisce", "He or she understands"],
-          ["noi", "capiamo", "We understand"],
-          ["voi", "capite", "You all understand"],
-          ["loro", "capiscono", "They understand"],
-        ],
-      },
-      {
-        t: "p",
-        html: "As you can see, in the <it>io</it> form we drop the ending and add '<it>isco</it>'; in the <it>tu</it> form we drop the ending and add '<it>isci</it>'; while in the third person singular form we drop the ending and add '<it>isce</it>'. The <it>noi</it>/<it>voi</it> forms follow the old regular pattern, and in the third person plural form we again drop the ending and add a new ending of '<it>iscono</it>'.",
       },
       {
         t: "p",
@@ -547,22 +557,12 @@ export const LESSONS = [
     questions: [
       {
         id: "lesson-7-question-1",
-        prompt: "I understand (<it>capire</it>)",
-        correctAnswers: ["capisco"],
-      },
-      {
-        id: "lesson-7-question-2",
         prompt: "We do/make (<it>fare</it>)",
         correctAnswers: ["facciamo"],
       },
-      { id: "lesson-7-question-3", prompt: "They go (<it>andare</it>)", correctAnswers: ["vanno"] },
-      {
-        id: "lesson-7-question-4",
-        prompt: "She understands (<it>capire</it>)",
-        correctAnswers: ["capisce"],
-      },
-      { id: "lesson-7-question-5", prompt: "We go (<it>andare</it>)", correctAnswers: ["andiamo"] },
-      { id: "lesson-7-question-6", prompt: "I make (<it>fare</it>)", correctAnswers: ["faccio"] },
+      { id: "lesson-7-question-2", prompt: "They go (<it>andare</it>)", correctAnswers: ["vanno"] },
+      { id: "lesson-7-question-3", prompt: "We go (<it>andare</it>)", correctAnswers: ["andiamo"] },
+      { id: "lesson-7-question-4", prompt: "I make (<it>fare</it>)", correctAnswers: ["faccio"] },
     ],
   },
   {
