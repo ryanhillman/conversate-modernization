@@ -16,9 +16,12 @@
         <span aria-hidden="true">✓</span><span class="visually-hidden">Completed</span>
       </span>
       <div class="lesson-row">
-        <label :for="lesson.slug" class="lesson-label"
-          ><span :id="`${lesson.slug}-title`"><RichText :text="lesson.menuTitle" /></span>:
-        </label>
+        <!-- A heading per lesson, so screen readers can jump between them. -->
+        <h2 class="lesson-name">
+          <label :for="lesson.slug" class="lesson-label"
+            ><span :id="`${lesson.slug}-title`"><RichText :text="lesson.menuTitle" /></span>:
+          </label>
+        </h2>
         <!-- Named from its own text plus the title, so the title's Italian keeps
              its lang marking (an aria-label string can't carry it). -->
         <button
@@ -33,10 +36,17 @@
       </div>
 
       <div v-if="currentLessonId === lesson.id" class="lesson-content">
-        <h1>Lesson {{ lesson.id }}: <RichText :text="lesson.title" /></h1>
+        <h3 class="h1">Lesson {{ lesson.id }}: <RichText :text="lesson.title" /></h3>
 
         <template v-for="(s, si) in lesson.sections">
-          <component v-if="s.t === 'h'" :is="'h' + s.lvl" :key="'s' + si">
+          <!-- level places it in the outline under the lesson title; size is
+               only how big it looks. -->
+          <component
+            v-if="s.t === 'h'"
+            :is="'h' + (s.level + 3)"
+            :class="'h' + s.size"
+            :key="'s' + si"
+          >
             <RichText :text="s.html" />
           </component>
           <p v-else-if="s.t === 'p'" :key="'s' + si"><RichText :text="s.html" /></p>
@@ -63,7 +73,7 @@
         </template>
 
         <template v-if="lesson.questions.length">
-          <h5>Now let's practice some on your own!</h5>
+          <h4 class="h5">Now let's practice some on your own!</h4>
           <div v-for="question in lesson.questions" :key="question.id">
             <label :for="question.id" class="question-label"
               ><RichText :text="question.prompt"
@@ -443,6 +453,12 @@ function launchCelebration() {
   gap: 1rem;
 }
 .lesson-row .lesson-label {
+  display: block;
+  margin: 0;
+}
+/* A heading for structure only; the label inside it keeps its look. */
+.lesson-name {
+  font: inherit;
   margin: 0;
 }
 .toggle-lesson-btn {

@@ -27,6 +27,11 @@ const RequireProfile = {
 };
 
 describe("Leaderboard", () => {
+  it("titles the page with its one h1", () => {
+    const wrapper = mount(Leaderboard, { global: { stubs: { RequireProfile } } });
+    expect(wrapper.findAll("h1").map((h) => h.text())).toEqual(["Leaderboard"]);
+  });
+
   it("tells screen readers which row is yours", async () => {
     setProfile({ username: "ryan_h" });
     const wrapper = mount(Leaderboard, { global: { stubs: { RequireProfile } } });

@@ -25,6 +25,26 @@ describe("Lesson", () => {
     expect(wrapper.get("h1").text()).toBe("Select any lesson to begin!");
   });
 
+  it("gives each lesson a heading, and never skips a heading level in any lesson", async () => {
+    const wrapper = mount(Lesson, { global: { stubs: { RequireProfile } } });
+    expect(wrapper.findAll("h2").map((h) => h.text())).toEqual(
+      LESSONS.map((lesson) => wrapper.get(`#${lesson.slug}-title`).text() + ":"),
+    );
+
+    for (const lesson of LESSONS) {
+      await wrapper.get(`#${lesson.slug}`).trigger("click");
+      const levels = wrapper
+        .findAll("h1, h2, h3, h4, h5, h6")
+        .map((h) => Number(h.element.tagName[1]));
+      expect(levels.filter((level) => level === 1)).toHaveLength(1);
+      levels.forEach((level, i) => {
+        if (i > 0)
+          expect(level, `${lesson.slug} heading ${i}`).toBeLessThanOrEqual(levels[i - 1] + 1);
+      });
+      await wrapper.get(`#${lesson.slug}`).trigger("click");
+    }
+  });
+
   it("names each Toggle button from its own text and the marked-up title", () => {
     const wrapper = mount(Lesson, { global: { stubs: { RequireProfile } } });
     const button = wrapper.get("#avere-essere");

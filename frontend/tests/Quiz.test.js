@@ -198,6 +198,19 @@ describe("Quiz language", () => {
   });
 });
 
+describe("Quiz headings", () => {
+  it("has one h1, with the question word and New best! as h2s under it", async () => {
+    submitQuiz.mockResolvedValue({ score: 1, time_seconds: 10, is_new_best: true });
+    wrapper = await startQuizPage();
+    expect(wrapper.findAll("h1").map((h) => h.text())).toEqual(["Quiz"]);
+    expect(wrapper.get(".quiz-word").element.tagName).toBe("H2");
+
+    await answer(wrapper);
+    await vi.advanceTimersByTimeAsync(500);
+    expect(wrapper.findAll("h2").map((h) => h.text())).toEqual(["New best!"]);
+  });
+});
+
 describe("Quiz focus", () => {
   it("moves focus to each new question, Resume, and the results", async () => {
     quizStarting(2);

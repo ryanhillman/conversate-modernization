@@ -2,7 +2,7 @@
   <div class="text-center">
     <RequireProfile>
       <div class="card-style">
-        <h2>Translate</h2>
+        <h1 class="h2">Translate</h1>
       </div>
       <div class="back-card">
         <div class="m-3">

@@ -22,6 +22,17 @@ const RequireProfile = {
 };
 
 describe("Profile", () => {
+  it("has an h1 for screen readers, without changing the layout", () => {
+    setProfile({ username: "ryan_h", lessons_completed: [] });
+    const wrapper = mount(Profile, {
+      global: { stubs: { RequireProfile, AccountActions: true } },
+    });
+
+    const h1 = wrapper.findAll("h1");
+    expect(h1.map((h) => h.text())).toEqual(["Profile"]);
+    expect(h1[0].classes()).toContain("visually-hidden");
+  });
+
   it("loads the profile picture without a referrer, which Google requires", () => {
     setProfile({ username: "ryan_h", lessons_completed: [] });
     const wrapper = mount(Profile, {

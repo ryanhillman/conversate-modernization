@@ -2,7 +2,7 @@
   <RequireProfile>
     <div class="text-center">
       <div class="card-style">
-        <h2>Leaderboard</h2>
+        <h1 class="h2">Leaderboard</h1>
       </div>
 
       <div v-if="loading" class="loading-state">

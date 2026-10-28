@@ -17,6 +17,15 @@ const RequireProfile = {
 };
 
 describe("Mastery", () => {
+  it("has one h1, then steps down to h2", () => {
+    setProfile({ username: "ryan_h", lessons_completed: [1] });
+    const wrapper = mount(Mastery, { global: { stubs: { RequireProfile } } });
+
+    expect(wrapper.findAll("h1").map((h) => h.text())).toEqual(["Mastery"]);
+    expect(wrapper.findAll("h2").map((h) => h.text())).toEqual(["Completed Lessons"]);
+    expect(wrapper.find("h3").exists()).toBe(false);
+  });
+
   it("marks the Italian in completed lesson titles", () => {
     setProfile({ username: "ryan_h", lessons_completed: [1] });
     const wrapper = mount(Mastery, { global: { stubs: { RequireProfile } } });
