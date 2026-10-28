@@ -45,6 +45,7 @@
 - Stored quiz times as timezone-aware UTC.
 - Updated README's How to Run: Docker database address, .env.example files, and Google Cloud billing.
 - Upgraded Vue Router to 5 and Auth0's Vue SDK to 2.11.
+- Upgraded jsdom, which the frontend tests run in, to 30.
 - Upgraded SQLAlchemy to 2.1, Alembic to 1.20, and Gunicorn to 26.2, and switched the Postgres driver to psycopg 3.
 - Upgraded the GitHub Actions used in CI.
 - Raised the Node requirement to 22.22.2 (or 24.15), which the frontend's tools need.
