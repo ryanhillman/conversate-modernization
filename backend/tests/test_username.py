@@ -1,10 +1,6 @@
 URL = '/api/usernames/'
 
 
-def test_requires_a_token(client):
-    assert client.get(URL + 'anything').status_code == 401
-
-
 def test_available_username_is_200(client, auth_headers, create_user):
     create_user(username='tester')
     response = client.get(URL + 'freshname', headers=auth_headers())

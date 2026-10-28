@@ -4,7 +4,7 @@
       <h1>Welcome to Conversate!</h1>
     </div>
     <div class="cards">
-      <div class="card" v-for="card in cards" :key="card.to">
+      <div v-for="card in cards" :key="card.to" class="card">
         <img class="card-img-top" :src="card.img" :alt="card.alt" />
         <div class="card-body">
           <router-link :to="card.to" class="btn btn-primary">{{ card.label }}</router-link>

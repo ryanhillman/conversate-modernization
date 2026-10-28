@@ -9,11 +9,13 @@
 ### Added
 - Added GitHub Actions CI.
 - Added frontend unit and component tests with Vitest.
-- Added tests for lesson answer grading.
 - Added a Delete account option to the profile page.
 - Added an API endpoint reference to the README.
 - Added Dependabot to keep backend, frontend, and GitHub Actions dependencies up to date.
+- Added accessibility linting and Vue's recommended ESLint rules.
 - Added an untimed practice quiz that isn't saved to the leaderboard.
+- Added hover effects: a navy underline on nav links, and a gold glow on the home cards, Translate mic and speaker, Log in button, and profile picture.
+- Added red shading and an X icon to wrong lesson answers.
 
 ### Changed
 - Made pages reuse the loaded profile instead of fetching it on every visit.
@@ -23,39 +25,41 @@
 - Reused connections to Google's APIs instead of opening a new one for every request.
 - Kept idle connections to Google open for 60 seconds instead of 5.
 - Shrank the home page images by about 75% by resizing and converting them to WebP.
-- Added a database index for the leaderboard query and fetched only the columns it shows.
+- Indexed the leaderboard query and fetched only the columns it shows.
 - Made lesson completion load and lock the user in one query instead of two.
 - Stopped re-reading the user from the database after saving changes.
-- Shortened the maximum speech-to-text recording from 60 to 30 seconds.
-- Added each recording's transcript to the Translate text instead of replacing it, and stated the 30-second limit.
+- Shortened Translate recordings from 60 to 30 seconds, stated the limit, and added each transcript to the text instead of replacing it.
 - Extended the speech-to-text timeout from 10 to 40 seconds.
-- Added an expanding navy underline to nav bar links while hovering.
-- Added a gold glow to the home cards, Translate mic and speaker, Log in button, and profile picture while hovering.
 - Colored the checkmarks on Mastery's completed lessons green.
 - Restyled completed lessons with a green check on the card's corner and a green title and Toggle button.
 - Put each lesson's title and Toggle button on one row.
-- Added spacing around opened lessons and practice answers.
-- Added red shading and an X icon on wrong answers in lesson text boxes.
-- Lesson answers are now checked when pressing Enter or leaving the text box, rather than while typing.
+- Spaced out opened lessons and practice answers.
+- Checked lesson answers on Enter or leaving the box, not while typing.
 - Stated the quiz's length, time limit, and pause rules before it starts.
 - Consistently used color tokens instead of hard-coded colors.
 - Moved all global CSS into app.css.
 - Styled lesson buttons by class instead of element.
-- Removed the $auth compatibility layer left from the old Auth0 wrapper.
 - Fetched Auth0's signing keys with PyJWT's built-in client instead of custom code.
 - Switched database queries to SQLAlchemy 2.0's select() style.
 - Declared database columns with typed annotations.
 - Stored quiz times as timezone-aware UTC.
 - Updated README's How to Run: Docker database address, .env.example files, and Google Cloud billing.
-- Upgraded Vue Router to 5, Vitest to 5, and Auth0's Vue SDK to 2.11.
+- Upgraded Vue Router to 5 and Auth0's Vue SDK to 2.11.
 - Upgraded SQLAlchemy to 2.1, Alembic to 1.20, and Gunicorn to 26.2, and switched the Postgres driver to psycopg 3.
 - Upgraded the GitHub Actions used in CI.
+- Raised the Node requirement to 22.13, which the frontend's tools need.
+
+### Removed
+- Removed the old Auth0 wrapper's $auth compatibility layer.
+- Removed unused and repeated code.
 
 ### Fixed
 - Made the "View leaderboard" button on the quiz results screen visible by switching from navy-on-navy to amber.
 - Removed the duplicate active-page marker from the phone menu.
 - Added .env.local files to .gitignore.
 - Showed the home page images in full instead of cropping.
+- Removed the profile page's extra container, so it lines up with the other pages.
+- Matched the username setup field to the profile page's.
 - Removed the gray box behind the Translate image.
 - Raised text, icon, border, and focus ring contrast to meet WCAG minimums.
 - Prevented double-clicking a quiz answer from highlighting the footer logo.

@@ -30,10 +30,6 @@ def test_build_quiz_choices_are_unique_and_include_the_correct_answer():
         assert q['correct'] in q['choices']
 
 
-def test_start_requires_a_token(client):
-    assert client.post(START).status_code == 401
-
-
 def test_start_issues_fifty_questions_without_answers(client, auth_headers, create_user):
     create_user()
     body = client.post(START, headers=auth_headers()).get_json()

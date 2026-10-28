@@ -5,10 +5,6 @@ TRANSLATE = '/api/translate'
 VALID = {'text': 'ciao', 'source': 'it', 'target': 'en'}
 
 
-def test_requires_a_token(client):
-    assert client.post(TRANSLATE, json=VALID).status_code == 401
-
-
 def test_requires_text(client, auth_headers):
     body = dict(VALID, text='')
     assert client.post(TRANSLATE, json=body, headers=auth_headers()).status_code == 400

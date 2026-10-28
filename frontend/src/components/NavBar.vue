@@ -53,13 +53,13 @@
             </li>
           </ul>
 
-          <ul class="navbar-nav d-xl-none" v-if="!isAuthenticated && !isLoading">
+          <ul v-if="!isAuthenticated && !isLoading" class="navbar-nav d-xl-none">
             <li class="nav-item">
               <button class="btn btn-primary w-100" @click="login">Log in</button>
             </li>
           </ul>
 
-          <ul id="mobileAuthNavBar" class="navbar-nav d-xl-none d-flex" v-if="isAuthenticated">
+          <ul v-if="isAuthenticated" id="mobileAuthNavBar" class="navbar-nav d-xl-none d-flex">
             <li class="nav-item">
               <span class="user-info">
                 <img
@@ -95,10 +95,10 @@
             <!-- A disclosure: a button that shows and hides the menu below it,
                  not an ARIA menu with arrow-key navigation. -->
             <button
-              type="button"
-              class="nav-link dropdown-toggle"
               id="profileDropDown"
               ref="dropdownToggle"
+              type="button"
+              class="nav-link dropdown-toggle"
               aria-controls="profileMenu"
               :aria-expanded="dropdownOpen ? 'true' : 'false'"
               @click="dropdownOpen = !dropdownOpen"

@@ -42,10 +42,10 @@
           <!-- level places it in the outline under the lesson title; size is
                only how big it looks. -->
           <component
-            v-if="s.t === 'h'"
             :is="'h' + (s.level + 3)"
-            :class="'h' + s.size"
+            v-if="s.t === 'h'"
             :key="'s' + si"
+            :class="'h' + s.size"
           >
             <RichText :text="s.html" />
           </component>
@@ -81,11 +81,11 @@
             <span class="answer-field" :class="answerState(question)">
               <input
                 :id="question.id"
+                v-model.trim="answers[question.id]"
                 :name="question.id"
                 type="text"
                 :lang="lesson.answerLang"
                 class="answer-input"
-                v-model.trim="answers[question.id]"
                 :aria-invalid="answerState(question) === 'wrong' ? 'true' : 'false'"
                 @input="submitted[question.id] = false"
                 @keydown.enter="submitAnswer(question)"

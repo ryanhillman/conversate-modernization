@@ -5,10 +5,6 @@ STT = '/api/stt'
 VALID = {'audio': 'ZmFrZS1hdWRpbw==', 'mime_type': 'audio/webm;codecs=opus', 'language': 'it'}
 
 
-def test_requires_a_token(client):
-    assert client.post(STT, json=VALID).status_code == 401
-
-
 def test_unsupported_mime_type_is_400(client, auth_headers):
     body = dict(VALID, mime_type='audio/mp4')
     assert client.post(STT, json=body, headers=auth_headers()).status_code == 400

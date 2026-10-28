@@ -17,25 +17,25 @@
     <button
       class="btn btn-success mb-2 account-actions-field"
       :class="{ disabled: saving }"
-      @click.prevent="updateUsername(username)"
       :disabled="!!validationError || checking || takenUsername"
       :aria-disabled="saving"
+      @click.prevent="updateUsername(username)"
     >
       Update username
     </button>
     <button
       class="btn btn-warning mb-2 account-actions-field"
       :class="{ disabled: saving }"
-      @click.prevent="resetProgress()"
       :aria-disabled="saving"
+      @click.prevent="resetProgress()"
     >
       Reset progress
     </button>
     <button
       class="btn btn-danger account-actions-field"
       :class="{ disabled: saving }"
-      @click.prevent="deleteAccount()"
       :aria-disabled="saving"
+      @click.prevent="deleteAccount()"
     >
       Delete account
     </button>
@@ -75,7 +75,6 @@ async function updateUsername(name) {
     const data = await apiUpdateUsername(name.trim());
     showToast("Username updated", "success");
     username.value = "";
-    takenUsername.value = false;
     setProfile(data);
     // Clearing the box disables Update, which would drop focus to the page.
     await nextTick();

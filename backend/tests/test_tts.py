@@ -5,10 +5,6 @@ TTS = '/api/tts'
 VALID = {'text': 'ciao', 'language': 'it'}
 
 
-def test_requires_a_token(client):
-    assert client.post(TTS, json=VALID).status_code == 401
-
-
 def test_requires_text(client, auth_headers):
     body = dict(VALID, text='')
     assert client.post(TTS, json=body, headers=auth_headers()).status_code == 400

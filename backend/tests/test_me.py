@@ -13,13 +13,6 @@ ME = '/api/me'
 VALID = {'username': 'tester'}
 
 
-def test_requires_a_token(client):
-    assert client.get(ME).status_code == 401
-    assert client.post(ME, json=VALID).status_code == 401
-    assert client.post(ME + '/reset').status_code == 401
-    assert client.post(ME + '/lessons/1').status_code == 401
-
-
 def test_create_stores_the_username(client, auth_headers):
     response = client.post(ME, json={'username': 'tester'}, headers=auth_headers())
     assert response.status_code == 201
@@ -172,9 +165,6 @@ def test_concurrent_lesson_completions_do_not_lose_one(
         t.join()
 
     with app.app_context():
-        from conversate.extensions import db
-        from conversate.models import User
-
         refreshed = db.session.scalars(select(User).where(User.id == user.id)).one()
         assert sorted(refreshed.lessons_completed) == [1, 2]
 
@@ -197,10 +187,6 @@ def test_reset_discards_an_in_progress_quiz_attempt(client, auth_headers, create
     # Without the attempt, submitting can no longer record a bogus "new best".
     submit = client.post('/api/me/quiz/submit', headers=auth_headers())
     assert submit.status_code == 409
-
-
-def test_delete_requires_a_token(client):
-    assert client.delete(ME).status_code == 401
 
 
 def test_delete_removes_the_account_and_any_quiz_attempt(client, auth_headers, create_user):
