@@ -61,6 +61,7 @@
 - Prevented double-clicking a quiz answer from highlighting the footer logo.
 - Made every control usable by keyboard and screen readers, announced results and errors, and marked Italian text for correct pronunciation.
 - Made Escape close the profile menu.
+- Turned the profile menu and Log out links into buttons; the menu closes when focus leaves.
 - Made the Log out menu item's hover highlight visible.
 - Made the current page's text on the nav bar navy to match its underline.
 - Made the frontend fail with a clear message when its Auth0 settings are missing.
