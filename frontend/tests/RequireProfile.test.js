@@ -5,6 +5,7 @@ import { flushPromises, mount } from "@vue/test-utils";
 // have.
 vi.mock("../src/api/users", () => ({ getMe: vi.fn() }));
 vi.mock("../src/stores/announceStore", () => ({ announce: vi.fn() }));
+vi.mock("vue-router", () => ({ useRoute: () => ({ meta: { title: "Mastery" } }) }));
 
 import { getMe } from "../src/api/users";
 import { announce } from "../src/stores/announceStore";
@@ -25,6 +26,23 @@ describe("RequireProfile", () => {
     expect(wrapper.text()).toContain("Could not load your profile.");
     expect(toastState.toasts).toEqual([]);
     expect(announce).toHaveBeenCalledWith("Could not load your profile.");
+  });
+
+  it("gives the loading and error screens an h1 with the page's title", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    const error = new Error("Request failed: 500");
+    error.status = 500;
+    let fail;
+    getMe.mockReset().mockReturnValue(new Promise((_, reject) => (fail = reject)));
+
+    const wrapper = mount(RequireProfile);
+    expect(wrapper.text()).toContain("Loading…");
+    expect(wrapper.get("h1").text()).toBe("Mastery");
+
+    fail(error);
+    await flushPromises();
+    expect(wrapper.text()).toContain("Could not load your profile.");
+    expect(wrapper.get("h1").text()).toBe("Mastery");
   });
 
   it("titles the page for the username form when there's no profile yet", async () => {

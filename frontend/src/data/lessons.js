@@ -498,7 +498,7 @@ export const LESSONS = [
       },
       {
         t: "p",
-        html: "Let's begin by looking at one of the more common irregular patterns that we see with the verb <i><it>capire</it></i>, meaning to understand something.",
+        html: "First, one more regular pattern: many <it>-ire</it> verbs, like <i><it>capire</it></i> (to understand), add <it>-isc-</it> before the ending in every form but <it>noi</it> and <it>voi</it>. They aren't irregular; they follow a second <it>-ire</it> pattern.",
       },
       {
         t: "conj",
@@ -662,7 +662,7 @@ export const LESSONS = [
       },
     ],
     practiceInstructions:
-      "Select the correct direct object pronoun that replaces the object noun in the sentence.",
+      "Type the correct direct object pronoun that replaces the object noun in the sentence.",
     questions: [
       {
         id: "lesson-9-question-1",
@@ -731,7 +731,7 @@ export const LESSONS = [
       },
     ],
     practiceInstructions:
-      'Select the correct indirect object pronoun that replaces the indirect object (the "to whom") in the sentence.',
+      'Type the correct indirect object pronoun that replaces the indirect object (the "to whom") in the sentence.',
     questions: [
       {
         id: "lesson-10-question-1",

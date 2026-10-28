@@ -100,6 +100,10 @@
 - Stopped screen readers reading the check mark before each lesson on Mastery.
 - Replaced two quiz words whose answer was the word itself.
 - Moved practice instructions below the practice heading.
+- Corrected Lesson 7, which called *capire* irregular.
+- Told learners to type pronoun answers, not select them.
+- Said when a username was taken while saving, instead of a generic error.
+- Warned that resetting progress and deleting an account can't be undone.
 
 ## [1.0.0] - 2026-10-22
 
@@ -187,6 +191,7 @@
 - Added a global route guard that requires authentication by default.
 - Added server-side validation for API request bodies.
 - Capped the maximum request body size.
+- Rate-limited the paid translation and speech endpoints per user.
 
 [Unreleased]: https://github.com/ryanhillman/conversate-modernization/compare/v1.0.0...HEAD
 [1.0.0]: https://github.com/ryanhillman/conversate-modernization/releases/tag/v1.0.0

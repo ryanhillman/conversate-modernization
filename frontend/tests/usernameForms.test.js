@@ -18,6 +18,7 @@ vi.mock("vue-router", () => ({ useRouter: () => ({ push: vi.fn() }) }));
 import { checkUsername, createMe, resetStats, updateUsername } from "../src/api/users";
 import AccountActions from "../src/components/account/AccountActions.vue";
 import SetUsername from "../src/components/account/SetUsername.vue";
+import { toastState } from "../src/stores/toastStore";
 
 // A busy button stays focusable (aria-disabled, not disabled), and a second
 // click does nothing.
@@ -108,6 +109,22 @@ describe.each([
   ["SetUsername", SetUsername],
   ["AccountActions", AccountActions],
 ])("%s", (_, form) => {
+  it("says the name is taken when someone takes it before Save, not a generic error", async () => {
+    const taken = new Error("username already exists");
+    taken.status = 409;
+    createMe.mockRejectedValue(taken);
+    updateUsername.mockRejectedValue(taken);
+    toastState.toasts = [];
+    const wrapper = mount(form);
+    await typeAvailableName(wrapper);
+
+    await wrapper.get("button").trigger("click");
+    await flushPromises();
+
+    expect(wrapper.get(".form-error").text()).toBe("That username is taken");
+    expect(toastState.toasts).toEqual([]);
+  });
+
   it("marks the box invalid and points it at the error only while one shows", async () => {
     const wrapper = mount(form);
     const input = wrapper.get("input");

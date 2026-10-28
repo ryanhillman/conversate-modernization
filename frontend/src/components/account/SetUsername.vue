@@ -38,7 +38,7 @@ import { showToast } from "../../stores/toastStore";
 const router = useRouter();
 
 const username = ref("");
-const { checking, takenUsername, validationError, errorMessage } =
+const { checking, takenUsername, validationError, errorMessage, takenOnSave } =
   useUsernameAvailability(username);
 const saving = ref(false);
 
@@ -49,9 +49,9 @@ async function saveUsername(name) {
     setProfile(await createMe(name.trim()));
     showToast("Welcome to Conversate!", "success");
     router.push("/");
-  } catch {
+  } catch (err) {
     saving.value = false;
-    showToast("Could not save username.", "error");
+    if (!takenOnSave(err)) showToast("Could not save username.", "error");
   }
 }
 </script>

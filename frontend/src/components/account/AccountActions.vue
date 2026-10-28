@@ -60,13 +60,11 @@ const router = useRouter();
 
 const username = ref("");
 const usernameInput = ref(null);
-const { checking, takenUsername, validationError, errorMessage } = useUsernameAvailability(
-  username,
-  {
+const { checking, takenUsername, validationError, errorMessage, takenOnSave } =
+  useUsernameAvailability(username, {
     skipAvailabilityCheck: (candidate) =>
       candidate.toLowerCase() === (profile.value?.username ?? "").toLowerCase(),
-  },
-);
+  });
 const saving = ref(false);
 
 async function updateUsername(name) {
@@ -80,8 +78,8 @@ async function updateUsername(name) {
     // Clearing the box disables Update, which would drop focus to the page.
     await nextTick();
     usernameInput.value?.focus();
-  } catch {
-    showToast("Could not update username.", "error");
+  } catch (err) {
+    if (!takenOnSave(err)) showToast("Could not update username.", "error");
   } finally {
     saving.value = false;
   }
@@ -89,7 +87,7 @@ async function updateUsername(name) {
 
 async function resetProgress() {
   if (saving.value) return;
-  if (confirm("Reset your progress?")) {
+  if (confirm("Reset your progress? This can't be undone.")) {
     saving.value = true;
     try {
       setProfile(await apiResetStats());
@@ -105,7 +103,7 @@ async function resetProgress() {
 
 async function deleteAccount() {
   if (saving.value) return;
-  if (confirm("Delete your account?")) {
+  if (confirm("Delete your account? This can't be undone.")) {
     saving.value = true;
     try {
       await apiDeleteMe();

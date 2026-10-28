@@ -1,8 +1,11 @@
 <template>
+  <!-- The page's own h1 comes with it, so title these states for it. -->
   <div v-if="loading" class="loading-state">
+    <h1 class="visually-hidden">{{ route.meta.title }}</h1>
     <p>Loading…</p>
   </div>
   <div v-else-if="loadFailed" class="card-style text-center">
+    <h1 class="visually-hidden">{{ route.meta.title }}</h1>
     <p>Could not load your profile.</p>
     <button ref="retryButton" class="btn btn-accent" @click="retry">Try again</button>
   </div>
@@ -16,10 +19,13 @@
 
 <script setup>
 import { ref, computed, watch, nextTick, onMounted } from "vue";
+import { useRoute } from "vue-router";
 import { announce } from "../stores/announceStore";
 import { profile, loadProfile } from "../stores/profileStore";
 import { pageTitle } from "../utils/pageTitle";
 import SetUsername from "./account/SetUsername.vue";
+
+const route = useRoute();
 
 // Only the first view after sign-in waits; later ones find the profile in the
 // store.
