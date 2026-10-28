@@ -12,7 +12,7 @@
 - Added an untimed practice quiz that isn't saved to the leaderboard.
 - Added hover effects: a navy underline on nav links, and a gold glow on the home cards, Translate mic and speaker, Log in button, and profile picture.
 - Added red shading and an X icon to wrong lesson answers.
-- Made animations finish instantly when the system asks for reduced motion.
+- Added reduced-motion support: animations finish instantly when the system asks for less motion.
 
 ### Changed
 - **Breaking:** The API's user_name field is now username.
@@ -49,6 +49,8 @@
 - Upgraded SQLAlchemy to 2.1, Alembic to 1.20, and Gunicorn to 26.2, and switched the Postgres driver to psycopg 3.
 - Upgraded the GitHub Actions used in CI.
 - Raised the Node requirement to 22.22.2 (or 24.15), which the frontend's tools need.
+- Ran the backend as one Gunicorn worker with 16 threads, so rate limits are counted in one place.
+- Reworded two API errors: Profile not found and Profile already exists.
 
 ### Removed
 - Removed the old Auth0 wrapper's $auth compatibility layer.
@@ -57,7 +59,7 @@
 ### Fixed
 - Made the "View leaderboard" button on the quiz results screen visible by switching from navy-on-navy to amber.
 - Stopped the phone menu showing two active-page markers.
-- Ignored .env.local files in Git.
+- Ignored all local .env files in Git, such as .env.local and .env.development.
 - Showed the home page images in full instead of cropping.
 - Lined up the profile page with the other pages.
 - Matched the username setup field to the profile page's.
@@ -107,6 +109,10 @@
 - Said when a username was taken while saving, instead of a generic error.
 - Warned that resetting progress and deleting an account can't be undone.
 - Made lesson prompts and translations consistent in quotes, punctuation, and capitalization.
+- Kept a local virtual environment out of the backend's Docker image.
+
+### Security
+- Made the backend's code read-only to the user it runs as.
 
 ## [1.0.0] - 2026-10-22
 
