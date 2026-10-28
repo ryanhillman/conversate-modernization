@@ -5,7 +5,7 @@
       <div class="col-md-2 mb-3">
         <img
           :src="authUser.picture"
-          alt="User's profile picture"
+          alt=""
           referrerpolicy="no-referrer"
           class="rounded-circle img-fluid profile-picture"
         />
@@ -19,7 +19,7 @@
           {{ user.quiz_best_score ?? "—" }}
         </p>
         <p class="mb-2">
-          <strong>Time:</strong>
+          <strong>Best quiz time:</strong>
           {{ user.quiz_best_score != null ? formatTime(user.quiz_best_time_seconds) : "—" }}
         </p>
       </div>

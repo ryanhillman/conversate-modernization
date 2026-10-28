@@ -16,11 +16,11 @@ export const LESSONS = [
         t: "conj",
         rows: [
           ["io", "ho", "I have"],
-          ["tu", "hai", "you have"],
-          ["lui/lei", "ha", "he or she has"],
-          ["noi", "abbiamo", "we have"],
-          ["voi", "avete", "you all have"],
-          ["loro", "hanno", "they have"],
+          ["tu", "hai", "You have"],
+          ["lui/lei", "ha", "He or she has"],
+          ["noi", "abbiamo", "We have"],
+          ["voi", "avete", "You all have"],
+          ["loro", "hanno", "They have"],
         ],
       },
       { t: "h", level: 3, size: 5, html: "Example uses" },
@@ -44,11 +44,11 @@ export const LESSONS = [
         t: "conj",
         rows: [
           ["io", "sono", "I am"],
-          ["tu", "sei", "you are"],
-          ["lui/lei", "è", "he or she is"],
-          ["noi", "siamo", "we are"],
-          ["voi", "siete", "you all are"],
-          ["loro", "sono", "they are"],
+          ["tu", "sei", "You are"],
+          ["lui/lei", "è", "He or she is"],
+          ["noi", "siamo", "We are"],
+          ["voi", "siete", "You all are"],
+          ["loro", "sono", "They are"],
         ],
       },
       { t: "h", level: 3, size: 5, html: "Example uses" },
@@ -69,12 +69,12 @@ export const LESSONS = [
       },
     ],
     questions: [
-      { id: "lesson-1-question-1", prompt: "We have:", correctAnswers: ["abbiamo"] },
-      { id: "lesson-1-question-2", prompt: "They are:", correctAnswers: ["sono"] },
-      { id: "lesson-1-question-3", prompt: "I have:", correctAnswers: ["ho"] },
-      { id: "lesson-1-question-4", prompt: "You are:", correctAnswers: ["sei"] },
-      { id: "lesson-1-question-5", prompt: "You all have:", correctAnswers: ["avete"] },
-      { id: "lesson-1-question-6", prompt: "They have:", correctAnswers: ["hanno"] },
+      { id: "lesson-1-question-1", prompt: "We have", correctAnswers: ["abbiamo"] },
+      { id: "lesson-1-question-2", prompt: "They are", correctAnswers: ["sono"] },
+      { id: "lesson-1-question-3", prompt: "I have", correctAnswers: ["ho"] },
+      { id: "lesson-1-question-4", prompt: "You are", correctAnswers: ["sei"] },
+      { id: "lesson-1-question-5", prompt: "You all have", correctAnswers: ["avete"] },
+      { id: "lesson-1-question-6", prompt: "They have", correctAnswers: ["hanno"] },
     ],
   },
   {
@@ -126,22 +126,22 @@ export const LESSONS = [
     questions: [
       {
         id: "lesson-2-question-1",
-        prompt: "<it>Ciao</it>:",
+        prompt: "<it>Ciao</it>",
         correctAnswers: ["hi", "hello", "hey", "goodbye", "bye"],
       },
       {
         id: "lesson-2-question-2",
-        prompt: "<it>Buona sera</it>:",
+        prompt: "<it>Buona sera</it>",
         correctAnswers: ["good evening"],
       },
       {
         id: "lesson-2-question-3",
-        prompt: "<it>Buon pomeriggio</it>:",
+        prompt: "<it>Buon pomeriggio</it>",
         correctAnswers: ["good afternoon"],
       },
       {
         id: "lesson-2-question-4",
-        prompt: "<it>Buongiorno</it>:",
+        prompt: "<it>Buongiorno</it>",
         correctAnswers: ["good morning"],
       },
     ],
@@ -217,18 +217,13 @@ export const LESSONS = [
           "<it>Stare a cuore</it> → to matter to someone.",
         ],
       },
-      {
-        t: "h",
-        level: 2,
-        size: 5,
-        html: "Let's see if you can recognize which verb to use where.",
-      },
-      { t: "p", html: "Choose the correct verb, <i><it>stare</it></i> or <i><it>essere</it></i>." },
     ],
+    practiceInstructions:
+      "Let's see if you can recognize which verb to use where: choose <i><it>stare</it></i> or <i><it>essere</it></i>.",
     questions: [
       {
         id: "lesson-3-question-1",
-        prompt: '"<it>Oggi, (sto/sono) bene!</it>"',
+        prompt: "<it>Oggi, (sto/sono) bene!</it>",
         correctAnswers: ["sto"],
       },
       {
@@ -238,22 +233,22 @@ export const LESSONS = [
       },
       {
         id: "lesson-3-question-3",
-        prompt: '"<it>Quanto (sei/stai) alto?</it>"',
+        prompt: "<it>Quanto (sei/stai) alto?</it>",
         correctAnswers: ["sei"],
       },
       {
         id: "lesson-3-question-4",
-        prompt: '"<it>Come (sei/stai)?</it>"',
+        prompt: "<it>Come (sei/stai)?</it>",
         correctAnswers: ["stai"],
       },
       {
         id: "lesson-3-question-5",
-        prompt: '"<it>(Sto/Sono) attento in classe.</it>"',
+        prompt: "<it>(Sto/Sono) attento in classe.</it>",
         correctAnswers: ["sto"],
       },
       {
         id: "lesson-3-question-6",
-        prompt: '"<it>Dove (siamo/stiamo) adesso?</it>"',
+        prompt: "<it>Dove (siamo/stiamo) adesso?</it>",
         correctAnswers: ["siamo"],
       },
     ],
@@ -321,42 +316,42 @@ export const LESSONS = [
     questions: [
       {
         id: "lesson-4-question-1",
-        prompt: '"I buy" (<it>comprare</it>)',
+        prompt: "I buy (<it>comprare</it>)",
         correctAnswers: ["compro"],
       },
       {
         id: "lesson-4-question-2",
-        prompt: '"We buy" (<it>comprare</it>)',
+        prompt: "We buy (<it>comprare</it>)",
         correctAnswers: ["compriamo"],
       },
       {
         id: "lesson-4-question-3",
-        prompt: '"You walk" (<it>camminare</it>)',
+        prompt: "You walk (<it>camminare</it>)",
         correctAnswers: ["cammini"],
       },
       {
         id: "lesson-4-question-4",
-        prompt: '"They walk" (<it>camminare</it>)',
+        prompt: "They walk (<it>camminare</it>)",
         correctAnswers: ["camminano"],
       },
       {
         id: "lesson-4-question-5",
-        prompt: '"You all eat" (<it>mangiare</it>)',
+        prompt: "You all eat (<it>mangiare</it>)",
         correctAnswers: ["mangiate"],
       },
       {
         id: "lesson-4-question-6",
-        prompt: '"I speak" (<it>parlare</it>)',
+        prompt: "I speak (<it>parlare</it>)",
         correctAnswers: ["parlo"],
       },
       {
         id: "lesson-4-question-7",
-        prompt: '"You swim" (<it>nuotare</it>)',
+        prompt: "You swim (<it>nuotare</it>)",
         correctAnswers: ["nuoti"],
       },
       {
         id: "lesson-4-question-8",
-        prompt: '"She swims" (<it>nuotare</it>)',
+        prompt: "She swims (<it>nuotare</it>)",
         correctAnswers: ["nuota"],
       },
     ],
@@ -407,12 +402,12 @@ export const LESSONS = [
     questions: [
       {
         id: "lesson-5-question-1",
-        prompt: '"I believe" (<it>credere</it>)',
+        prompt: "I believe (<it>credere</it>)",
         correctAnswers: ["credo"],
       },
       {
         id: "lesson-5-question-2",
-        prompt: '"We believe" (<it>credere</it>)',
+        prompt: "We believe (<it>credere</it>)",
         correctAnswers: ["crediamo"],
       },
       {
@@ -469,12 +464,12 @@ export const LESSONS = [
     questions: [
       {
         id: "lesson-6-question-1",
-        prompt: '"I sleep" (<it>dormire</it>)',
+        prompt: "I sleep (<it>dormire</it>)",
         correctAnswers: ["dormo"],
       },
       {
         id: "lesson-6-question-2",
-        prompt: '"We feel" (<it>sentire</it>)',
+        prompt: "We feel (<it>sentire</it>)",
         correctAnswers: ["sentiamo"],
       },
       {
@@ -504,11 +499,11 @@ export const LESSONS = [
         t: "conj",
         rows: [
           ["io", "capisco", "I understand"],
-          ["tu", "capisci", "you understand"],
-          ["lui/lei", "capisce", "he or she understands"],
-          ["noi", "capiamo", "we understand"],
-          ["voi", "capite", "you all understand"],
-          ["loro", "capiscono", "they understand"],
+          ["tu", "capisci", "You understand"],
+          ["lui/lei", "capisce", "He or she understands"],
+          ["noi", "capiamo", "We understand"],
+          ["voi", "capite", "You all understand"],
+          ["loro", "capiscono", "They understand"],
         ],
       },
       {
@@ -552,12 +547,12 @@ export const LESSONS = [
     questions: [
       {
         id: "lesson-7-question-1",
-        prompt: '"I understand" (<it>capire</it>)',
+        prompt: "I understand (<it>capire</it>)",
         correctAnswers: ["capisco"],
       },
       {
         id: "lesson-7-question-2",
-        prompt: '"We do/make" (<it>fare</it>)',
+        prompt: "We do/make (<it>fare</it>)",
         correctAnswers: ["facciamo"],
       },
       { id: "lesson-7-question-3", prompt: "They go (<it>andare</it>)", correctAnswers: ["vanno"] },
@@ -666,12 +661,12 @@ export const LESSONS = [
     questions: [
       {
         id: "lesson-9-question-1",
-        prompt: "<it>Io mangio la pizza → io __ mangio.</it>",
+        prompt: "<it>Io mangio la pizza. → Io __ mangio.</it>",
         correctAnswers: ["la"],
       },
       {
         id: "lesson-9-question-2",
-        prompt: "<it>Tu leggi il libro. → tu __ leggi.</it>",
+        prompt: "<it>Tu leggi il libro. → Tu __ leggi.</it>",
         correctAnswers: ["lo"],
       },
       {

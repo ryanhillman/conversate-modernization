@@ -9,6 +9,7 @@ function richTextStrings(lesson) {
     if (section.html) strings.push(section.html);
     if (section.items) strings.push(...section.items);
   }
+  if (lesson.practiceInstructions) strings.push(lesson.practiceInstructions);
   strings.push(...lesson.questions.map((q) => q.prompt));
   return strings;
 }

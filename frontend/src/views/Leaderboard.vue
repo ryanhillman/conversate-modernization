@@ -16,6 +16,9 @@
         <p v-if="!rows.length" class="text-muted">No quiz results yet — be the first!</p>
         <div v-else class="leaderboard-wrap">
           <table class="leaderboard-table">
+            <caption class="visually-hidden">
+              Top quiz scores
+            </caption>
             <thead>
               <tr>
                 <th>Rank</th>

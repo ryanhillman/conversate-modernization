@@ -67,7 +67,7 @@
 
         <template v-if="lesson.questions.length">
           <h4 class="h5">Now let's practice some on your own!</h4>
-          <p v-if="lesson.practiceInstructions">{{ lesson.practiceInstructions }}</p>
+          <p v-if="lesson.practiceInstructions"><RichText :text="lesson.practiceInstructions" /></p>
           <div v-for="question in lesson.questions" :key="question.id">
             <label :for="question.id" class="question-label"
               ><RichText :text="question.prompt"

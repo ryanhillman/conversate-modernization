@@ -30,6 +30,7 @@
 - Shortened Translate recordings from 60 to 30 seconds, stated the limit, and added each transcript to the text instead of replacing it.
 - Extended the speech-to-text timeout from 10 to 40 seconds.
 - Colored the checkmarks on Mastery's completed lessons green.
+- Colored the quiz answer buttons navy to match the site.
 - Restyled completed lessons with a green check on the card's corner and a green title and Toggle button.
 - Put each lesson's title and Toggle button on one row.
 - Spaced out opened lessons and practice answers.
@@ -104,6 +105,7 @@
 - Told learners to type pronoun answers, not select them.
 - Said when a username was taken while saving, instead of a generic error.
 - Warned that resetting progress and deleting an account can't be undone.
+- Made lesson prompts and translations consistent in quotes, punctuation, and capitalization.
 
 ## [1.0.0] - 2026-10-22
 

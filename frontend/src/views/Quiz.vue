@@ -305,8 +305,8 @@ async function finish() {
   color: var(--text-muted);
   margin-bottom: 1rem;
 }
-/* Bootstrap's blue outline is too light on the gray page; use the site's navy. */
-.quiz-meta .btn-outline-primary {
+/* The site's navy, not Bootstrap's blue, for Pause and the answers. */
+.btn-outline-primary {
   --bs-btn-color: var(--brand-navy);
   --bs-btn-border-color: var(--brand-navy);
   --bs-btn-hover-color: var(--text-on-dark);

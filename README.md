@@ -197,3 +197,4 @@ Translation and speech endpoints share a limit of 30 requests per minute per use
 ## Credits
 
 Icons by [Icons8](https://icons8.com).
+Microphone, speaker, and log-out icons by [Font Awesome](https://fontawesome.com), [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
