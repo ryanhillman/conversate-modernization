@@ -75,7 +75,7 @@
 
             <li>
               <Icon name="power-off" class="me-3" />
-              <a href="#" @click.prevent="logout">Log out</a>
+              <button type="button" class="nav-logout" @click="logout">Log out</button>
             </li>
           </ul>
         </div>
@@ -90,15 +90,18 @@
             ref="dropdown"
             class="nav-item dropdown"
             :class="{ show: dropdownOpen }"
+            @focusout="onDropdownFocusOut"
           >
-            <a
+            <!-- A disclosure: a button that shows and hides the menu below it,
+                 not an ARIA menu with arrow-key navigation. -->
+            <button
+              type="button"
               class="nav-link dropdown-toggle"
-              href="#"
               id="profileDropDown"
               ref="dropdownToggle"
-              aria-haspopup="true"
+              aria-controls="profileMenu"
               :aria-expanded="dropdownOpen ? 'true' : 'false'"
-              @click.prevent="dropdownOpen = !dropdownOpen"
+              @click="dropdownOpen = !dropdownOpen"
             >
               <img
                 :src="user.picture"
@@ -107,16 +110,16 @@
                 class="nav-user-profile rounded-circle"
                 width="50"
               />
-            </a>
+            </button>
             <div
+              id="profileMenu"
               class="dropdown-menu dropdown-menu-end"
               :class="{ show: dropdownOpen }"
-              aria-labelledby="profileDropDown"
             >
               <div class="dropdown-header">{{ user.name }}</div>
-              <a href="#" class="dropdown-item" @click.prevent="logout">
+              <button type="button" class="dropdown-item" @click="logout">
                 <Icon name="power-off" class="me-3" />Log out
-              </a>
+              </button>
             </div>
           </li>
         </ul>
@@ -155,6 +158,15 @@ function onDocumentClick(event) {
   }
 }
 
+// Tabbing out of the menu closes it. When focus goes nowhere (a click on the
+// page, or Safari not focusing a clicked button), the click handler decides,
+// so a click on Log out isn't lost.
+function onDropdownFocusOut(event) {
+  if (event.relatedTarget && !dropdown.value.contains(event.relatedTarget)) {
+    dropdownOpen.value = false;
+  }
+}
+
 // Escape closes the menu and returns focus to its toggle.
 function onDocumentKeydown(event) {
   if (event.key === "Escape" && dropdownOpen.value) {
@@ -178,6 +190,15 @@ function login() {
 </script>
 
 <style scoped>
+/* A button, since it acts rather than links; it keeps the underlined look. */
+.nav-logout {
+  display: inline;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-decoration: underline;
+}
 /* Styled like a small heading, though the user's name isn't one. */
 .nav-user-name {
   margin-bottom: 0.5rem;

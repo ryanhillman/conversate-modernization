@@ -17,6 +17,7 @@ vi.mock("../src/auth", () => ({ logout: vi.fn() }));
 // The logo is served from public/, which tests can't import.
 vi.mock("/logo.png", () => ({ default: "/logo.png" }));
 
+import { logout } from "../src/auth";
 import NavBar from "../src/components/NavBar.vue";
 
 describe("NavBar", () => {
@@ -35,6 +36,50 @@ describe("NavBar", () => {
     for (const picture of pictures) {
       expect(picture.attributes("referrerpolicy")).toBe("no-referrer");
     }
+  });
+
+  it("makes the menu toggle a button that controls the menu, not an ARIA menu", async () => {
+    const wrapper = mount(NavBar, { global: { stubs: { RouterLink: true } } });
+    const toggle = wrapper.get("#profileDropDown");
+
+    expect(toggle.element.tagName).toBe("BUTTON");
+    expect(toggle.attributes("type")).toBe("button");
+    expect(toggle.attributes("aria-haspopup")).toBeUndefined();
+    expect(wrapper.find(`#${toggle.attributes("aria-controls")}`).classes()).toContain(
+      "dropdown-menu",
+    );
+
+    await toggle.trigger("click");
+    expect(toggle.attributes("aria-expanded")).toBe("true");
+  });
+
+  it("logs out with buttons, not links", async () => {
+    logout.mockClear();
+    const wrapper = mount(NavBar, { global: { stubs: { RouterLink: true } } });
+    const buttons = wrapper.findAll("button").filter((b) => b.text() === "Log out");
+
+    expect(buttons).toHaveLength(2);
+    expect(wrapper.findAll("a").filter((a) => a.text() === "Log out")).toHaveLength(0);
+    for (const button of buttons) {
+      expect(button.attributes("type")).toBe("button");
+      await button.trigger("click");
+    }
+    expect(logout).toHaveBeenCalledTimes(2);
+  });
+
+  it("closes the menu when focus moves past it, but not when focus goes nowhere", async () => {
+    const wrapper = mount(NavBar, { global: { stubs: { RouterLink: true } } });
+    const toggle = wrapper.get("#profileDropDown");
+    const menuItem = wrapper.get(".dropdown-item");
+    await toggle.trigger("click");
+
+    // A click that leaves focus nowhere (as Safari does on buttons).
+    await menuItem.trigger("focusout", { relatedTarget: null });
+    expect(toggle.attributes("aria-expanded")).toBe("true");
+
+    // Tab from the menu to something after it.
+    await menuItem.trigger("focusout", { relatedTarget: document.body });
+    expect(toggle.attributes("aria-expanded")).toBe("false");
   });
 
   it("names the profile picture toggle for the menu it opens", () => {

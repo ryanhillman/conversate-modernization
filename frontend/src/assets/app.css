@@ -144,7 +144,7 @@
   .navbar-nav:last-child li {
     margin-bottom: 1em;
   }
-  .navbar-nav:last-child li a {
+  .navbar-nav:last-child li .nav-logout {
     vertical-align: middle;
     color: var(--text-color);
   }
