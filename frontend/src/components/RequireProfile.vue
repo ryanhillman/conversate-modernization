@@ -19,7 +19,7 @@ import { ref, computed, watch, nextTick, onMounted } from "vue";
 import { announce } from "../stores/announceStore";
 import { profile, loadProfile } from "../stores/profileStore";
 import { pageTitle } from "../utils/pageTitle";
-import SetUsername from "./username/SetUsername.vue";
+import SetUsername from "./account/SetUsername.vue";
 
 // Only the first view after sign-in waits; later ones find the profile in the
 // store.

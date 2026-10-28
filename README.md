@@ -70,7 +70,7 @@ Vocabulary quiz with user scores and times ranked on a leaderboard.
 
 ## How to Run
 
-Requires Python 3.14, Node 22, Docker, Auth0, and Google Cloud.
+Requires Python 3.14, Node 22.13+, Docker, Auth0, and Google Cloud.
 
 ### Auth0
 

@@ -1,4 +1,5 @@
 import logging
+import re
 from urllib.error import URLError
 
 import pytest
@@ -10,6 +11,25 @@ URL = '/api/me'
 
 def test_health_needs_no_token(client):
     assert client.get('/health').status_code == 200
+
+
+def test_every_api_route_requires_a_token(app, client):
+    # Read from the app itself, so a new endpoint is covered automatically.
+    routes = [
+        (method, rule.rule)
+        for rule in app.url_map.iter_rules()
+        if rule.rule.startswith('/api/')
+        for method in sorted(rule.methods - {'HEAD', 'OPTIONS'})
+    ]
+    assert len(routes) >= 16
+    unprotected = []
+    for method, path in routes:
+        url = re.sub(r'<int:[^>]+>', '1', path)
+        url = re.sub(r'<[^>]+>', 'x', url)
+        status = client.open(url, method=method).status_code
+        if status != 401:
+            unprotected.append(f'{method} {path} -> {status}')
+    assert unprotected == []
 
 
 def test_missing_authorization_header_is_401(client):

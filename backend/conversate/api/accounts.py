@@ -40,13 +40,13 @@ def _username_taken(name, exclude_id=None):
     return db.session.scalar(query.limit(1)) is not None
 
 
-def _validate_username(name, conflict_message, exclude_id=None):
+def _validate_username(name, exclude_id=None):
     """Shared by create and rename: returns an error response, or None."""
     name_error = _username_error(name)
     if name_error:
         return jsonify(error=name_error), 400
     if _username_taken(name, exclude_id=exclude_id):
-        return jsonify(error=conflict_message), 409
+        return jsonify(error='username already exists'), 409
     return None
 
 
@@ -58,7 +58,7 @@ def create_me():
     username = str_field(body, 'username')
     if find_user(sub) is not None:
         return jsonify(error='User already exists'), 409
-    error = _validate_username(username, 'username already exists')
+    error = _validate_username(username)
     if error:
         return error
     new_user = User(sub, username)
@@ -88,7 +88,7 @@ def get_me(record):
 def update_me(record):
     body = json_body()
     new_name = str_field(body, 'username')
-    error = _validate_username(new_name, 'username already exists', exclude_id=record.id)
+    error = _validate_username(new_name, exclude_id=record.id)
     if error:
         return error
     record.username = new_name
@@ -117,7 +117,7 @@ def complete_my_lesson(lesson_id):
     record = _lock_user_for_update(g.current_user_sub)
     if record is None:
         return jsonify(error='Unknown resource'), 404
-    completed = list(record.lessons_completed or [])
+    completed = list(record.lessons_completed)
     if lesson_id not in completed:
         completed.append(lesson_id)
         record.lessons_completed = completed

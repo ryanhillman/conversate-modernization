@@ -1,4 +1,3 @@
-// @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { flushPromises, mount } from "@vue/test-utils";
 import { computeAccessibleName } from "dom-accessibility-api";
@@ -17,8 +16,8 @@ vi.mock("../src/auth", () => ({ logout: vi.fn() }));
 vi.mock("vue-router", () => ({ useRouter: () => ({ push: vi.fn() }) }));
 
 import { checkUsername, createMe, resetStats, updateUsername } from "../src/api/users";
-import AccountActions from "../src/components/username/AccountActions.vue";
-import SetUsername from "../src/components/username/SetUsername.vue";
+import AccountActions from "../src/components/account/AccountActions.vue";
+import SetUsername from "../src/components/account/SetUsername.vue";
 
 // A busy button stays focusable (aria-disabled, not disabled), and a second
 // click does nothing.

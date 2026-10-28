@@ -61,7 +61,7 @@ class User(db.Model):
         return {
             'id': self.id,
             'username': self.username,
-            'lessons_completed': self.lessons_completed or [],
+            'lessons_completed': self.lessons_completed,
             'quiz_best_score': self.quiz_best_score,
             'quiz_best_time_seconds': self.quiz_best_time_seconds,
         }

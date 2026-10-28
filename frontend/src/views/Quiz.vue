@@ -24,11 +24,7 @@
         <p>Loading…</p>
       </div>
 
-      <div
-        v-else-if="phase === 'active' || phase === 'paused'"
-        class="quiz-card-wrap"
-        @mousedown="preventDoubleClickSelection"
-      >
+      <div v-else-if="phase === 'active' || phase === 'paused'" class="quiz-card-wrap">
         <div class="quiz-meta">
           <span>Question {{ currentIndex + 1 }} / {{ questions.length }}</span>
           <span v-if="practice">Practice: no timer</span>
@@ -54,7 +50,7 @@
           <button ref="resumeButton" class="btn btn-accent" @click="resume">Resume</button>
         </div>
         <transition v-else name="card-flip" mode="out-in" @after-enter="focusQuestion">
-          <div class="quiz-card" :key="currentIndex">
+          <div :key="currentIndex" class="quiz-card">
             <h2 ref="questionWord" class="h3 quiz-word" lang="it" tabindex="-1">
               {{ currentQuestion.it }}
             </h2>
@@ -263,13 +259,6 @@ async function selectAnswer(choice) {
   }, FEEDBACK_DISPLAY_MS);
 }
 
-// While an answer is checked, Bootstrap's .disabled gives the buttons
-// pointer-events: none, so a double-click's second click selects text behind
-// them. Single clicks and drag-selecting are unaffected.
-function preventDoubleClickSelection(event) {
-  if (event.detail > 1) event.preventDefault();
-}
-
 async function finish() {
   if (!["active", "paused", "saveError"].includes(phase.value)) return;
   clearInterval(tickTimer);
@@ -361,21 +350,32 @@ async function finish() {
     color 0.15s ease,
     border-color 0.15s ease;
 }
+/* Bootstrap's .disabled lets clicks fall through to the page, where a
+   double-click's second click selected text. Busy choices keep the click and
+   ignore it (selectAnswer returns early), and don't look pressed. */
+.quiz-choice.disabled {
+  pointer-events: auto;
+  cursor: default;
+  --bs-btn-active-color: var(--bs-btn-disabled-color);
+  --bs-btn-active-bg: var(--bs-btn-disabled-bg);
+  --bs-btn-active-border-color: var(--bs-btn-disabled-border-color);
+}
 /* The other choices dim while the answer is checked; the feedback stays at
    full contrast. */
 .quiz-choice-correct,
 .quiz-choice-wrong {
   opacity: 1;
 }
+/* Feedback only shows on a busy choice, so it sets the disabled colors. */
 .quiz-choice-correct {
-  background-color: var(--success);
-  border-color: var(--success);
-  color: var(--text-on-dark);
+  --bs-btn-disabled-color: var(--text-on-dark);
+  --bs-btn-disabled-bg: var(--success);
+  --bs-btn-disabled-border-color: var(--success);
 }
 .quiz-choice-wrong {
-  background-color: var(--bs-danger);
-  border-color: var(--bs-danger);
-  color: var(--text-on-dark);
+  --bs-btn-disabled-color: var(--text-on-dark);
+  --bs-btn-disabled-bg: var(--bs-danger);
+  --bs-btn-disabled-border-color: var(--bs-danger);
 }
 .card-flip-enter-active,
 .card-flip-leave-active {

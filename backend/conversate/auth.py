@@ -7,7 +7,7 @@ from jwt import PyJWKClient, PyJWKClientConnectionError
 
 JWKS_TIMEOUT_SECONDS = 5
 # Waits between attempts when a key download fails fast. After a backend
-# restart the first download is sometimes reset (WinError 10054), and an
+# restart the first download sometimes hits a connection reset, and an
 # attempt a moment later gets through, so the request succeeds instead of
 # returning 503. Timeouts aren't retried; each has already waited
 # JWKS_TIMEOUT_SECONDS.
@@ -87,7 +87,6 @@ def require_auth(f):
             return jsonify(error='Unauthorized'), 401
         if claims is None or not claims.get('sub'):
             return jsonify(error='Unauthorized'), 401
-        g.jwt_claims = claims
         g.current_user_sub = claims['sub']
         return f(*args, **kwargs)
 

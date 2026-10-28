@@ -17,8 +17,8 @@ class Base(DeclarativeBase):
     )
 
 
-# Each request has its own session, so values kept after commit can't go
-# stale, and serializing a saved row needs no re-read.
+# Keep values after commit, so a row can be serialized right after commit
+# without a re-read.
 db = SQLAlchemy(model_class=Base, session_options={'expire_on_commit': False})
 migrate = Migrate()
 

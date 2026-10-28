@@ -1,4 +1,3 @@
-// @vitest-environment jsdom
 import { describe, expect, it, vi } from "vitest";
 import { flushPromises, mount } from "@vue/test-utils";
 import { computeAccessibleName } from "dom-accessibility-api";
@@ -43,18 +42,6 @@ describe("Lesson", () => {
       });
       await wrapper.get(`#${lesson.slug}`).trigger("click");
     }
-  });
-
-  it("names each Toggle button from its own text and the marked-up title", () => {
-    const wrapper = mount(Lesson, { global: { stubs: { RequireProfile } } });
-    const button = wrapper.get("#avere-essere");
-
-    expect(button.text()).toBe("Toggle lesson");
-    expect(button.attributes("aria-label")).toBeUndefined();
-    expect(button.attributes("aria-labelledby")).toBe("avere-essere-toggle avere-essere-title");
-    const title = wrapper.get("#avere-essere-title");
-    expect(title.text()).toBe("Avere and Essere");
-    expect(title.findAll('[lang="it"]').map((span) => span.text())).toEqual(["Avere", "Essere"]);
   });
 
   it("gives each Toggle button the accessible name Toggle lesson plus its title", () => {

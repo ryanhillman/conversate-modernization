@@ -169,24 +169,6 @@ html {
 footer {
   margin-bottom: var(--toast-space, 0px);
 }
-.profile-header {
-  text-align: center;
-  margin-bottom: 3rem;
-}
-.profile-header .profile-picture {
-  aspect-ratio: 1;
-  object-fit: cover;
-  box-shadow: 0 0 4px 0 var(--bs-gray-500);
-  margin-bottom: 1.5rem;
-}
-@media (min-width: 768px) {
-  .profile-header {
-    text-align: left;
-  }
-  .profile-header .profile-picture {
-    margin-bottom: inherit;
-  }
-}
 a {
   color: var(--brand-navy);
 }
@@ -262,9 +244,6 @@ h6,
   --bs-btn-disabled-color: var(--text-color);
   --bs-btn-disabled-bg: var(--brand-accent);
   --bs-btn-disabled-border-color: var(--brand-accent);
-  font-family: "Poppins", sans-serif;
-  font-weight: 500;
-  border-radius: 8px;
 }
 
 /* Bootstrap's focus rings are below WCAG's 3:1; use the two-tone ring, which

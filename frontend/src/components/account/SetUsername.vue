@@ -5,7 +5,7 @@
     <input
       id="setup-username"
       v-model="username"
-      class="username-input"
+      class="form-control mb-2 username-input"
       maxlength="100"
       autocomplete="username"
       aria-describedby="setup-username-error"
@@ -13,14 +13,13 @@
     <p v-if="errorMessage" id="setup-username-error" class="form-error small mb-2">
       {{ errorMessage }}
     </p>
-    <br />
     <!-- Busy buttons use aria-disabled, not disabled: a disabled button loses keyboard focus. -->
     <button
       class="btn btn-success"
       :class="{ disabled: saving }"
-      @click.prevent="saveUsername(username)"
       :disabled="!!validationError || checking || takenUsername"
       :aria-disabled="saving"
+      @click.prevent="saveUsername(username)"
     >
       Save username
     </button>
@@ -70,14 +69,10 @@ async function saveUsername(name) {
   width: 16.25rem;
   max-width: 100%;
   text-align: start;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
 }
 .username-input {
   width: 16.25rem;
   max-width: 100%;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid var(--bs-secondary);
-  border-radius: 8px;
-  margin-bottom: 1rem;
 }
 </style>

@@ -1,4 +1,3 @@
-// @vitest-environment jsdom
 import { describe, expect, it, vi } from "vitest";
 
 // Every route is treated as signed in; auth.js needs Auth0 settings that CI

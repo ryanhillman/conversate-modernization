@@ -47,12 +47,12 @@
           <br />
           <textarea
             id="textToTranslate"
+            v-model="textToTranslate"
             class="m-2 translate-textarea"
             :lang="inputLanguage"
             rows="10"
             :maxlength="MAX_TEXT_LENGTH"
             placeholder="Type here to translate…"
-            v-model="textToTranslate"
           ></textarea>
           <div class="m-3">
             <!-- Busy buttons use aria-disabled, not disabled: a disabled button loses keyboard focus. -->
@@ -97,10 +97,10 @@
           <br />
           <textarea
             id="translation"
+            v-model="translatedText"
             class="m-2 translate-textarea"
             :lang="translatedTextLanguage"
             readonly
-            v-model="translatedText"
             rows="10"
           ></textarea>
         </div>
