@@ -231,6 +231,16 @@ h6,
 .nav-link:focus-visible {
   box-shadow: var(--focus-ring);
 }
+/* High contrast mode drops box shadows, so these rings vanish there. It draws
+   this transparent outline in a visible color instead. */
+.btn:focus-visible,
+.btn-close:focus-visible,
+.nav-link:focus-visible,
+.form-control:focus,
+.form-select:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
 
 .card-style {
   border-radius: var(--radius);
