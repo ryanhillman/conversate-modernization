@@ -39,9 +39,17 @@ const retryButton = ref(null);
 const content = ref(null);
 
 // The setup form replaces the page that was asked for, so title it instead.
+// Once the profile exists the page shows in place: title it again, and start
+// focus at it, since the form's Save button is gone.
 const settingUp = computed(() => !loading.value && !loadFailed.value && !profile.value);
-watch(settingUp, (value) => {
-  if (value) document.title = pageTitle("Set your username");
+watch(settingUp, async (value) => {
+  if (value) {
+    document.title = pageTitle("Set your username");
+    return;
+  }
+  document.title = pageTitle(route.meta.title);
+  await nextTick();
+  content.value?.focus();
 });
 
 async function load() {

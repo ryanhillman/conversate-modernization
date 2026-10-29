@@ -31,13 +31,10 @@
 
 <script setup>
 import { ref, nextTick } from "vue";
-import { useRouter } from "vue-router";
 import { createMe } from "../../api/users";
 import { useUsernameAvailability } from "../../composables/useUsernameAvailability";
 import { setProfile } from "../../stores/profileStore";
 import { showToast } from "../../stores/toastStore";
-
-const router = useRouter();
 
 const username = ref("");
 const usernameInput = ref(null);
@@ -49,9 +46,9 @@ async function saveUsername(name) {
   if (saving.value) return;
   saving.value = true;
   try {
+    // The page that showed this form takes over once the profile exists.
     setProfile(await createMe(name.trim()));
     showToast("Welcome to Conversate!", "success");
-    router.push("/");
   } catch (err) {
     saving.value = false;
     if (takenOnSave(err)) {

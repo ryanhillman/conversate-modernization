@@ -8,6 +8,7 @@ vi.mock("vue-router", () => ({ useRoute: () => ({ meta: { title: "Mastery" } }) 
 import { getMe } from "../src/api/users";
 import { announce } from "../src/stores/announceStore";
 import RequireProfile from "../src/components/RequireProfile.vue";
+import { setProfile } from "../src/stores/profileStore";
 import { toastState } from "../src/stores/toastStore";
 
 describe("RequireProfile", () => {
@@ -43,17 +44,28 @@ describe("RequireProfile", () => {
     expect(wrapper.get("h1").text()).toBe("Mastery");
   });
 
-  it("titles the page for the username form when there's no profile yet", async () => {
+  it("titles the page for the username form, then shows the page in place once it's set", async () => {
     const error = new Error("Request failed: 404");
     error.status = 404;
     getMe.mockReset().mockRejectedValue(error);
     document.title = "Mastery | Conversate";
 
-    const wrapper = mount(RequireProfile, { global: { stubs: { SetUsername: true } } });
+    const wrapper = mount(RequireProfile, {
+      attachTo: document.body,
+      global: { stubs: { SetUsername: true } },
+      slots: { default: "<p>Page content</p>" },
+    });
+    await flushPromises();
+    expect(document.title).toBe("Set your username | Conversate");
+
+    setProfile({ username: "ryan_h" });
     await flushPromises();
 
-    expect(document.title).toBe("Set your username | Conversate");
+    expect(wrapper.text()).toBe("Page content");
+    expect(document.title).toBe("Mastery | Conversate");
+    expect(document.activeElement.textContent).toBe("Page content");
     wrapper.unmount();
+    setProfile(null);
   });
 
   it("keeps focus in place when Try again is used", async () => {
