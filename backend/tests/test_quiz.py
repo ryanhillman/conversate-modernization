@@ -6,7 +6,7 @@ from sqlalchemy import select
 
 from conversate.api import quiz as quiz_module
 from conversate.api.common import utcnow
-from conversate.api.quiz import _build_quiz
+from conversate.api.quiz import QUIZ_TIME_LIMIT_SECONDS, _build_quiz
 from conversate.extensions import db
 from conversate.models import QuizAttempt
 from conversate.quiz_data import QUIZ_WORDS
@@ -190,13 +190,19 @@ def test_pausing_again_after_the_limit_is_409(client, auth_headers, create_user)
     assert response.status_code == 409
 
 
-def test_pause_and_resume_works(client, auth_headers, create_user):
-    create_user()
+def test_a_pause_of_any_length_stops_the_clock(client, auth_headers, create_user):
+    user = create_user()
     client.post(START, headers=auth_headers())
     pause_body = client.post(PAUSE, headers=auth_headers()).get_json()
     assert pause_body['pauses_remaining'] == 0
-    resume_response = client.post(RESUME, headers=auth_headers())
-    assert resume_response.status_code == 200
+    attempt = _attempt_for(user.id)
+    attempt.paused_at -= timedelta(minutes=20)
+    attempt.started_at -= timedelta(minutes=20)
+    db.session.commit()
+
+    resume_body = client.post(RESUME, headers=auth_headers()).get_json()
+
+    assert resume_body['seconds_remaining'] > QUIZ_TIME_LIMIT_SECONDS - 5
 
 
 def test_submit_uses_the_accumulated_correct_count(client, auth_headers, create_user):

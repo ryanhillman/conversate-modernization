@@ -1,5 +1,4 @@
 import random
-from datetime import timedelta
 
 from flask import Blueprint, abort, jsonify, request
 from sqlalchemy import select, update
@@ -18,8 +17,6 @@ MAX_QUIZ_PAUSES = 1
 # The UI shows each answer for 500ms, so faster answering is a script. This
 # only slows one down.
 MIN_SECONDS_PER_ANSWER = 0.5
-# The most pause time kept off the quiz clock; anything longer counts.
-MAX_PAUSE_CREDIT_SECONDS = 120
 
 
 def _build_quiz():
@@ -186,12 +183,9 @@ def resume_quiz(record):
     attempt = _require_attempt(record.id)
     _require_timed(attempt)
     if attempt.paused_at is not None:
-        # Move the start forward by the pause, up to MAX_PAUSE_CREDIT_SECONDS,
-        # so it doesn't count against the clock.
-        paused_duration = min(
-            (utcnow() - attempt.paused_at).total_seconds(), MAX_PAUSE_CREDIT_SECONDS
-        )
-        attempt.started_at += timedelta(seconds=paused_duration)
+        # Move the start forward by the pause, so none of it counts against
+        # the clock.
+        attempt.started_at += utcnow() - attempt.paused_at
         attempt.paused_at = None
         db.session.commit()
     return jsonify(

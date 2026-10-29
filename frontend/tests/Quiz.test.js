@@ -262,7 +262,7 @@ describe("Quiz answers", () => {
 });
 
 describe("Quiz timer", () => {
-  it("ends the quiz on Resume when time ran out during the pause", async () => {
+  it("ends the quiz on Resume when it was paused just as time ran out", async () => {
     pauseQuiz.mockResolvedValue({ seconds_remaining: 5, pauses_remaining: 0 });
     resumeQuiz.mockResolvedValue({ seconds_remaining: 0, pauses_remaining: 0 });
     submitQuiz.mockResolvedValue({ score: 0, time_seconds: 250, is_new_best: false });

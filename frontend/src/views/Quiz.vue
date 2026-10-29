@@ -216,7 +216,7 @@ async function resume() {
   if (phase.value !== "paused") return;
   try {
     const data = await resumeQuiz();
-    // Only two minutes of a pause are credited, so a long one can use up the clock.
+    // Paused just as time ran out: there's nothing left to resume.
     if (data.seconds_remaining <= 0) return finish();
     resetDisplayClock(data.seconds_remaining);
     pausesRemaining.value = data.pauses_remaining;

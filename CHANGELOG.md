@@ -41,6 +41,7 @@
 - Checked lesson answers on Enter or leaving the box, not while typing.
 - Ignored end punctuation and extra spaces in lesson answers.
 - Said the quiz is timed before it starts.
+- Let a quiz pause last as long as needed; only its first two minutes used to stop the clock.
 - Consistently used color tokens instead of hard-coded colors.
 - Moved all global CSS into app.css.
 - Styled lesson buttons by class instead of element.
@@ -89,7 +90,7 @@
 - Stopped an answer given just as the quiz pauses from ending it.
 - Kept the quiz going when an answer's reply is lost and the answer is sent again, instead of ending it early.
 - Stopped a quiz with nothing right counting as a best or reaching the leaderboard as 0.
-- Ended a quiz whose time ran out while paused as soon as it's resumed, instead of showing 0:00 first.
+- Ended a quiz paused just as its time ran out when it's resumed, instead of showing 0:00 first.
 - Logged the reason the server rejects a login.
 - Retried Auth0's key download after a dropped connection.
 - Kept keyboard focus visible and in place.
