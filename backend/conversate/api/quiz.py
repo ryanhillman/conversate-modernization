@@ -220,20 +220,23 @@ def submit_quiz(record):
     )
     db.session.delete(attempt)
 
-    # One conditional update, so concurrent submits can't replace a better
-    # score with a stale one.
-    result = db.session.execute(
-        update(User)
-        .where(
-            User.id == record.id,
-            (User.quiz_best_score.is_(None))
-            | (User.quiz_best_score < score)
-            | ((User.quiz_best_score == score) & (User.quiz_best_time_seconds > time_seconds)),
+    # Nothing right is never a best: an abandoned quiz would otherwise reach
+    # the leaderboard as 0. One conditional update, so concurrent submits
+    # can't replace a better score with a stale one.
+    is_new_best = False
+    if score:
+        result = db.session.execute(
+            update(User)
+            .where(
+                User.id == record.id,
+                (User.quiz_best_score.is_(None))
+                | (User.quiz_best_score < score)
+                | ((User.quiz_best_score == score) & (User.quiz_best_time_seconds > time_seconds)),
+            )
+            .values(quiz_best_score=score, quiz_best_time_seconds=time_seconds)
         )
-        .values(quiz_best_score=score, quiz_best_time_seconds=time_seconds)
-    )
+        is_new_best = result.rowcount > 0
     db.session.commit()
-    is_new_best = result.rowcount > 0
 
     return jsonify(
         score=score, time_seconds=time_seconds, is_new_best=is_new_best, practice=False

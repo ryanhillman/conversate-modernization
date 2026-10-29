@@ -88,6 +88,7 @@
 - Stopped rejecting out-of-order quiz answers as too fast.
 - Stopped an answer given just as the quiz pauses from ending it.
 - Kept the quiz going when an answer's reply is lost and the answer is sent again, instead of ending it early.
+- Stopped a quiz with nothing right counting as a best or reaching the leaderboard as 0.
 - Logged the reason the server rejects a login.
 - Retried Auth0's key download after a dropped connection.
 - Kept keyboard focus visible and in place.

@@ -234,6 +234,21 @@ def test_submit_consumes_the_attempt(client, auth_headers, create_user):
     )
 
 
+def test_nothing_right_is_not_a_best_and_stays_off_the_leaderboard(
+    client, auth_headers, create_user
+):
+    user = create_user()
+    client.post(START, headers=auth_headers())
+
+    body = client.post(SUBMIT, headers=auth_headers()).get_json()
+
+    assert body['score'] == 0
+    assert body['is_new_best'] is False
+    db.session.refresh(user)
+    assert user.quiz_best_score is None
+    assert client.get(LEADERBOARD, headers=auth_headers()).get_json() == []
+
+
 def test_worse_resubmission_does_not_overwrite_a_better_best(client, auth_headers, create_user):
     user = create_user()
     user.quiz_best_score = 45
