@@ -354,7 +354,8 @@ async function startTextToSpeech() {
   -moz-appearance: none;
   display: inline-block;
   width: auto;
-  min-width: 13rem;
+  /* Never wider than the card on phones with larger text. */
+  min-width: min(13rem, 100%);
   padding: 0.55rem 2.2rem 0.55rem 1rem;
   border: 1px solid var(--bs-secondary);
   border-radius: 8px;

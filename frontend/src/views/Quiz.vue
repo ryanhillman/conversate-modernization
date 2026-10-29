@@ -399,11 +399,14 @@ async function finish() {
 .quiz-narrow {
   max-width: 30rem;
 }
-/* Side by side, each as wide as the wider. */
+/* Side by side and the same width, stacking when they don't fit. */
 .quiz-start-buttons {
-  display: inline-grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 1fr;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 1rem;
+}
+.quiz-start-buttons .btn {
+  min-width: min(8rem, 100%);
 }
 </style>

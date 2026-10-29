@@ -100,6 +100,7 @@
 - Titled the username setup screen for what it shows.
 - Switched to the phone menu when a larger default text size leaves no room for the full nav bar, and let the username fields grow with the text.
 - Let the quiz's status row wrap instead of running off narrow screens with wider text spacing.
+- Kept the Translate language pickers and the quiz's Start and Practice buttons inside the screen on phones with larger text.
 - Showed a leaderboard load failure on the page instead of an empty leaderboard.
 - Stopped a double-clicked microphone from staying on.
 - Showed migration command errors instead of exiting silently.
