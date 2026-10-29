@@ -262,6 +262,22 @@ describe("Quiz answers", () => {
 });
 
 describe("Quiz timer", () => {
+  it("ends the quiz on Resume when time ran out during the pause", async () => {
+    pauseQuiz.mockResolvedValue({ seconds_remaining: 5, pauses_remaining: 0 });
+    resumeQuiz.mockResolvedValue({ seconds_remaining: 0, pauses_remaining: 0 });
+    submitQuiz.mockResolvedValue({ score: 0, time_seconds: 250, is_new_best: false });
+    wrapper = await startQuizPage();
+
+    await wrapper.get(".quiz-meta button").trigger("click");
+    await flushPromises();
+    await wrapper.get(".quiz-paused button").trigger("click");
+    await flushPromises();
+
+    expect(submitQuiz).toHaveBeenCalledTimes(1);
+    expect(wrapper.find(".quiz-word").exists()).toBe(false);
+    expect(wrapper.text()).toContain("Score: 0 / 1");
+  });
+
   it("labels the time left for screen readers", async () => {
     wrapper = await startQuizPage();
     expect(wrapper.get(".quiz-timer").text()).toBe("Time left: 4:10");

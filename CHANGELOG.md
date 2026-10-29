@@ -89,6 +89,7 @@
 - Stopped an answer given just as the quiz pauses from ending it.
 - Kept the quiz going when an answer's reply is lost and the answer is sent again, instead of ending it early.
 - Stopped a quiz with nothing right counting as a best or reaching the leaderboard as 0.
+- Ended a quiz whose time ran out while paused as soon as it's resumed, instead of showing 0:00 first.
 - Logged the reason the server rejects a login.
 - Retried Auth0's key download after a dropped connection.
 - Kept keyboard focus visible and in place.
