@@ -12,10 +12,10 @@ JWKS_TIMEOUT_SECONDS = 5
 # returning 503. Timeouts aren't retried; each has already waited
 # JWKS_TIMEOUT_SECONDS.
 JWKS_RETRY_DELAYS_SECONDS = (0.5, 1, 2)
-# Keep keys 10 hours (PyJWT's default is 5 minutes), so fewer downloads can
-# fail a sign-in. A new key is fetched when first used, subject to PyJWT's
-# refresh cooldown; a key Auth0 removes stays trusted until the cache expires.
-JWKS_CACHE_SECONDS = 10 * 60 * 60
+# Keep keys an hour (PyJWT's default is 5 minutes): the retries above cover a
+# failed download, and a key Auth0 revokes stays trusted no longer than this.
+# A new key is fetched when first used, subject to PyJWT's refresh cooldown.
+JWKS_CACHE_SECONDS = 60 * 60
 
 
 # Made once, so its key cache lasts across requests.

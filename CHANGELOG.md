@@ -141,6 +141,7 @@
 ### Security
 - Made the backend's code read-only to the user it runs as.
 - Rejected access tokens missing an expiry or issue time.
+- Trusted a signing key Auth0 revokes for at most an hour, down from ten.
 
 ## [1.0.0] - 2026-10-22
 
