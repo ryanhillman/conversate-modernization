@@ -49,23 +49,29 @@ describe("router", () => {
     button.remove();
   });
 
-  it("reloads once when a page's file is gone after a deploy, not in a loop", async () => {
-    sessionStorage.clear();
-    const reload = vi.fn();
-    const gone = new TypeError("Failed to fetch dynamically imported module: /assets/Quiz-old.js");
-    const to = { fullPath: "/quiz" };
+  it.each([
+    ["script", "/quiz", "Failed to fetch dynamically imported module: /assets/Quiz-old.js"],
+    ["stylesheet", "/lesson", "Unable to preload CSS for /assets/Lesson-old.css"],
+  ])(
+    "reloads once when a page's %s is gone after a deploy, not in a loop",
+    async (_, path, message) => {
+      sessionStorage.clear();
+      const reload = vi.fn();
+      const gone = new TypeError(message);
+      const to = { fullPath: path };
 
-    expect(reloadOnMissingFile(gone, to, reload)).toBe(true);
-    expect(reload).toHaveBeenCalledWith("/quiz");
-    // Still missing after that reload: let the error stand.
-    expect(reloadOnMissingFile(gone, to, reload)).toBe(false);
-    expect(reload).toHaveBeenCalledTimes(1);
+      expect(reloadOnMissingFile(gone, to, reload)).toBe(true);
+      expect(reload).toHaveBeenCalledWith(path);
+      // Still missing after that reload: let the error stand.
+      expect(reloadOnMissingFile(gone, to, reload)).toBe(false);
+      expect(reload).toHaveBeenCalledTimes(1);
 
-    // A page that loads resets the guard, so a later deploy reloads again.
-    await router.push("/leaderboard");
-    expect(reloadOnMissingFile(gone, to, reload)).toBe(true);
-    expect(reload).toHaveBeenCalledTimes(2);
-  });
+      // The page loading resets the guard, so a later deploy reloads again.
+      await router.push(path);
+      expect(reloadOnMissingFile(gone, to, reload)).toBe(true);
+      expect(reload).toHaveBeenCalledTimes(2);
+    },
+  );
 
   it("doesn't reload for other errors", () => {
     sessionStorage.clear();
