@@ -5,8 +5,17 @@ import { pageTitle } from "../utils/pageTitle";
 import Home from "../views/Home.vue";
 import { pages } from "./pages";
 
+// A link opens its page at the top, instantly, as a page load would; Back and
+// Forward return to where the page was; an in-page link goes to its target.
+export function scrollBehavior(to, from, savedPosition) {
+  if (savedPosition) return { ...savedPosition, behavior: "instant" };
+  if (to.hash) return { el: to.hash };
+  return { top: 0, behavior: "instant" };
+}
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+  scrollBehavior,
   routes: [
     {
       path: "/",
@@ -69,8 +78,8 @@ router.afterEach((to, from, failure) => {
     // An error toast is about the page it appeared on.
     clearErrorToasts();
     // The old page, and whatever had focus on it, is gone; start at the new
-    // page's content. Not on the first load.
-    if (from.matched.length) document.getElementById("main")?.focus();
+    // page's content. Not on the first load. Scrolling is scrollBehavior's.
+    if (from.matched.length) document.getElementById("main")?.focus({ preventScroll: true });
   }
   document.title = pageTitle(to.meta.title);
 });

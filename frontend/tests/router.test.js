@@ -6,10 +6,23 @@ vi.mock("@auth0/auth0-vue", async (importOriginal) => ({
   authGuard: () => true,
 }));
 
-import router, { reloadOnMissingFile } from "../src/router";
+import router, { reloadOnMissingFile, scrollBehavior } from "../src/router";
 import { showToast, toastState } from "../src/stores/toastStore";
 
+// jsdom can't scroll, and the router scrolls after each navigation.
+window.scrollTo = vi.fn();
+
 describe("router", () => {
+  it("opens a page at the top, returns to a saved spot, or goes to an in-page target", () => {
+    expect(scrollBehavior({ hash: "" }, {}, null)).toEqual({ top: 0, behavior: "instant" });
+    expect(scrollBehavior({ hash: "" }, {}, { left: 0, top: 480 })).toEqual({
+      left: 0,
+      top: 480,
+      behavior: "instant",
+    });
+    expect(scrollBehavior({ hash: "#main" }, {}, null)).toEqual({ el: "#main" });
+  });
+
   it.each([
     ["/", "Conversate"],
     ["/quiz", "Quiz | Conversate"],
