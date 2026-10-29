@@ -55,6 +55,8 @@ jobs:
           flask --app run.py db downgrade base
           flask --app run.py db upgrade
       - run: pytest
+      - name: The Docker image builds
+        run: docker build -q .
 
   frontend:
     runs-on: ubuntu-latest
