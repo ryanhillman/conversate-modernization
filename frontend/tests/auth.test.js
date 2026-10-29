@@ -1,7 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@auth0/auth0-vue", () => ({ createAuth0: vi.fn(() => ({})) }));
-vi.stubGlobal("window", { location: { origin: "http://localhost:3000" } });
 
 const VALID = {
   VITE_AUTH0_DOMAIN: "example.us.auth0.com",

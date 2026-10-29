@@ -8,6 +8,8 @@ export default defineConfig({
   },
   test: {
     environment: "jsdom",
+    // One jsdom per worker rather than per file; files still run isolated.
+    pool: "vmThreads",
     // Placeholders, so auth.js loads in tests and CI without a .env.
     env: {
       VITE_AUTH0_DOMAIN: "test.auth0.example",
