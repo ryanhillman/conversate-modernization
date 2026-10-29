@@ -32,7 +32,9 @@ Interactive grammar lessons and progress tracking.
 
 Translation tool with text-to-speech and speech-to-text options.
 
-Vocabulary quiz with user scores and times ranked on a leaderboard.
+Timed vocabulary quiz with scores and times ranked on a leaderboard, and an untimed practice mode.
+
+Usable by keyboard and screen reader, to WCAG 2.2 AA.
 
 ---
 
@@ -81,7 +83,7 @@ Create a Single Page Application and an API:
 
 ### Google Cloud
 
-In a project with billing enabled (required even within the free tiers), enable the Translation, Text-to-Speech, and Speech-to-Text APIs, and create an API key (APIs & Services → Credentials).
+In a project with billing enabled (required even within the free tiers), enable the Translation, Text-to-Speech, and Speech-to-Text APIs, and create an API key (APIs & Services → Credentials). Restrict the key to those three APIs (edit the key → API restrictions), so a leaked key can't call anything else.
 
 ### Environment
 

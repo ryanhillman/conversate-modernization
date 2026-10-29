@@ -48,7 +48,7 @@
 - Switched database queries to SQLAlchemy 2.0's select() style.
 - Declared database columns with typed annotations.
 - Stored quiz times as timezone-aware UTC.
-- Updated README's How to Run: Docker database address, .env.example files, and Google Cloud billing.
+- Updated README's How to Run: Docker database address, .env.example files, Google Cloud billing, and restricting the API key.
 - Upgraded Vue Router to 5 and Auth0's Vue SDK to 2.11.
 - Upgraded SQLAlchemy to 2.1, Alembic to 1.20, and Gunicorn to 26.2, and switched the Postgres driver to psycopg 3.
 - Raised the Node requirement to 22.22.2+, 24.15+, or 26+, which the frontend's tools need.
