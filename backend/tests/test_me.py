@@ -50,6 +50,16 @@ def test_create_losing_a_same_account_race_reports_the_account(
     assert response.get_json() == {'error': 'Profile already exists'}
 
 
+def test_get_returns_only_the_profile_fields(client, auth_headers, create_user):
+    create_user(username='tester', lessons=[1])
+    assert client.get(ME, headers=auth_headers()).get_json() == {
+        'username': 'tester',
+        'lessons_completed': [1],
+        'quiz_best_score': None,
+        'quiz_best_time_seconds': None,
+    }
+
+
 def test_get_without_profile_is_404(client, auth_headers):
     assert client.get(ME, headers=auth_headers()).status_code == 404
 

@@ -59,7 +59,6 @@ class User(db.Model):
 
     def serialize(self):
         return {
-            'id': self.id,
             'username': self.username,
             'lessons_completed': self.lessons_completed,
             'quiz_best_score': self.quiz_best_score,

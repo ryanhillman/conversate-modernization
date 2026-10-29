@@ -56,6 +56,7 @@
 
 ### Removed
 - Removed the old Auth0 wrapper's $auth compatibility layer.
+- Removed the unused id from the profile API response.
 
 ### Fixed
 - Made the "View leaderboard" button on the quiz results screen visible by switching from navy-on-navy to amber.
