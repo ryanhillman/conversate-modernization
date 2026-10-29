@@ -199,6 +199,17 @@ describe("Quiz answers", () => {
     expect(answerQuiz).toHaveBeenCalledTimes(1);
   });
 
+  it("are ignored while a pause is in flight, since the server would refuse them", async () => {
+    pauseQuiz.mockReturnValue(new Promise(() => {}));
+    wrapper = await startQuizPage();
+
+    await wrapper.get(".quiz-meta button").trigger("click");
+    await wrapper.get(".quiz-choice").trigger("click");
+
+    expect(wrapper.get(".quiz-choice").attributes("aria-disabled")).toBe("true");
+    expect(answerQuiz).not.toHaveBeenCalled();
+  });
+
   it("keep Pause focusable while an answer is checked, ignoring clicks on it", async () => {
     answerQuiz.mockReturnValue(new Promise(() => {}));
     wrapper = await startQuizPage();

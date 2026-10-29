@@ -83,6 +83,7 @@
 - Kept Save disabled until the username availability check finishes, so a taken name can't be submitted by clicking quickly.
 - Stated the text-to-speech length limit in bytes, which is how it's measured, rather than characters.
 - Stopped rejecting out-of-order quiz answers as too fast.
+- Stopped an answer given just as the quiz pauses from ending it.
 - Logged the reason the server rejects a login.
 - Retried Auth0's key download after a dropped connection.
 - Kept keyboard focus visible and in place.

@@ -195,6 +195,9 @@ async function start(isPractice) {
 
 async function pause() {
   if (phase.value !== "active" || advancing.value) return;
+  // An answer sent meanwhile would reach the server paused and be refused,
+  // which ends the quiz.
+  advancing.value = true;
   try {
     const data = await pauseQuiz();
     clearInterval(tickTimer);
@@ -204,6 +207,8 @@ async function pause() {
   } catch (err) {
     console.error("Failed to pause quiz:", err);
     showToast("Could not pause the quiz.", "error");
+  } finally {
+    advancing.value = false;
   }
 }
 
