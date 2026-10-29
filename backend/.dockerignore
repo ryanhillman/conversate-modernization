@@ -6,8 +6,7 @@ venv/
 .ruff_cache/
 **/*.db
 
-.env
-.env.example
+.env*
 .gitignore
 .dockerignore
 Dockerfile

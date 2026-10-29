@@ -64,7 +64,7 @@ This release makes every page accessible to WCAG 2.2 AA and adds a practice quiz
 - The backend returns a 400, not a server error, for deeply nested JSON.
 - Migration command errors are shown instead of exiting silently.
 - Flask no longer prints a python-dotenv tip on every command.
-- All local .env files are ignored by Git, and a local virtual environment is kept out of the Docker image.
+- All local .env files are ignored by Git and kept out of the Docker image, as is a local virtual environment.
 - The frontend fails with a clear message when its Auth0 settings are missing.
 - The server logs why it rejects a login, and retries Auth0's key download after a dropped connection.
 
