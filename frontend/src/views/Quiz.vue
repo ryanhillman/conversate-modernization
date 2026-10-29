@@ -9,7 +9,7 @@
       <h1 v-else class="visually-hidden">{{ practice ? "Practice" : "Timed Quiz" }}</h1>
 
       <div v-if="phase === 'ready'" class="card-style quiz-narrow">
-        <div class="quiz-start-buttons">
+        <div class="quiz-buttons">
           <button ref="startButton" class="btn btn-accent" @click="start(false)">Start</button>
           <button class="btn btn-practice" @click="start(true)">Practice</button>
         </div>
@@ -78,8 +78,10 @@
         <p v-if="result.practice">Practice result, not saved to the leaderboard.</p>
         <p>Score: {{ result.score }} / {{ questions.length }}</p>
         <p>Time: {{ formatTime(result.time_seconds) }}</p>
-        <button class="btn btn-accent m-2" @click="start(practice)">Play again</button>
-        <router-link to="/leaderboard" class="btn btn-accent m-2"> View leaderboard </router-link>
+        <div class="quiz-buttons quiz-end-buttons">
+          <button class="btn btn-accent" @click="start(practice)">Play again</button>
+          <router-link to="/leaderboard" class="btn btn-accent">View leaderboard</router-link>
+        </div>
       </div>
 
       <div v-else-if="phase === 'error'" class="card-style">
@@ -414,13 +416,17 @@ async function finish() {
   max-width: 30rem;
 }
 /* Side by side and the same width, stacking when they don't fit. */
-.quiz-start-buttons {
+.quiz-buttons {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 1rem;
 }
-.quiz-start-buttons .btn {
-  min-width: min(8rem, 100%);
+.quiz-buttons .btn {
+  min-width: min(var(--quiz-button-width, 8rem), 100%);
+}
+/* Room for View leaderboard. */
+.quiz-end-buttons {
+  --quiz-button-width: 11rem;
 }
 </style>

@@ -43,6 +43,7 @@
 - Said the quiz is timed before it starts.
 - Let a quiz pause last as long as needed; only its first two minutes used to stop the clock.
 - Centered the question count above a practice question, and dropped the "Practice: no timer" note.
+- Made the quiz's Play again and View leaderboard buttons the same size.
 - Consistently used color tokens instead of hard-coded colors.
 - Moved all global CSS into app.css.
 - Styled lesson buttons by class instead of element.
