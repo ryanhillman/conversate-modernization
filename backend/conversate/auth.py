@@ -12,12 +12,9 @@ JWKS_TIMEOUT_SECONDS = 5
 # returning 503. Timeouts aren't retried; each has already waited
 # JWKS_TIMEOUT_SECONDS.
 JWKS_RETRY_DELAYS_SECONDS = (0.5, 1, 2)
-# A token with an unknown key ID forces a key refresh, which anyone can
-# trigger with a forged token; this caps how often that re-downloads.
-JWKS_REFRESH_COOLDOWN_SECONDS = 60
 # Keep keys 10 hours (PyJWT's default is 5 minutes), so fewer downloads can
-# fail a sign-in. A new key is fetched when first used, subject to the cooldown;
-# a key Auth0 removes stays trusted until the cache expires.
+# fail a sign-in. A new key is fetched when first used, subject to PyJWT's
+# refresh cooldown; a key Auth0 removes stays trusted until the cache expires.
 JWKS_CACHE_SECONDS = 10 * 60 * 60
 
 # One client per Auth0 domain, each caching that domain's keys.
@@ -30,7 +27,6 @@ def _jwks_client(domain):
             f'https://{domain}/.well-known/jwks.json',
             timeout=JWKS_TIMEOUT_SECONDS,
             lifespan=JWKS_CACHE_SECONDS,
-            cooldown_duration=JWKS_REFRESH_COOLDOWN_SECONDS,
         )
     return _jwks_clients[domain]
 

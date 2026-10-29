@@ -25,13 +25,12 @@
 - Read completed lessons from the shared profile store in one place.
 - Cached text-to-speech audio, so replaying the same text doesn't call Google again.
 - Reused connections to Google's APIs instead of opening a new one for every request.
-- Kept idle connections to Google open for 60 seconds instead of 5.
 - Shrank the home page images by about 75% by resizing and converting them to WebP.
 - Indexed the leaderboard query and fetched only the columns it shows.
 - Made lesson completion load and lock the user in one query instead of two.
 - Stopped re-reading the user from the database after saving changes.
 - Shortened Translate recordings from 60 to 30 seconds, stated the limit, and added each transcript to the text instead of replacing it.
-- Extended the speech-to-text timeout from 10 to 40 seconds.
+- Let speech-to-text wait up to 20 seconds for Google, instead of 8.
 - Colored the checkmarks on Mastery's completed lessons green.
 - Colored the quiz answer buttons navy to match the site.
 - Restyled completed lessons with a green check on the card's corner and a green title and Toggle button.

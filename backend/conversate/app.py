@@ -23,7 +23,7 @@ def _register_error_handlers(app):
 def create_app(config):
     app = Flask(__name__)
     app.config.from_object(config)
-    CORS(app, resources={'/*': {'origins': config.ALLOWED_ORIGIN}})
+    CORS(app, origins=config.ALLOWED_ORIGIN)
     db.init_app(app)
     migrate.init_app(app, db)
     # Off under TESTING; the rate-limit test turns it back on.

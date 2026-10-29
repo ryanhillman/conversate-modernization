@@ -11,13 +11,8 @@ GOOGLE_API_TIMEOUT_SECONDS = 8
 # seconds), so it gets longer. api/stt.js's timeout must stay above these.
 STT_TIMEOUT = httpx.Timeout(GOOGLE_API_TIMEOUT_SECONDS, read=20)
 
-# One shared client, so calls reuse connections to Google. Keep idle ones 60s
-# rather than httpx's 5. Limits() has no caps by default, so this restates
-# httpx's usual 100 total and 20 idle.
-_client = httpx.Client(
-    timeout=GOOGLE_API_TIMEOUT_SECONDS,
-    limits=httpx.Limits(max_connections=100, max_keepalive_connections=20, keepalive_expiry=60),
-)
+# One shared client, so calls reuse connections to Google.
+_client = httpx.Client(timeout=GOOGLE_API_TIMEOUT_SECONDS)
 
 
 class GoogleServiceError(Exception):

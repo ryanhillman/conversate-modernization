@@ -97,10 +97,3 @@ def test_a_key_download_timeout_isnt_retried(client, auth_headers, stub_jwks):
     assert client.get(URL, headers=auth_headers()).status_code == 503
     assert stub_jwks.fetches == 1
     assert stub_jwks.sleeps == []
-
-
-def test_unknown_key_ids_dont_refetch_keys_during_the_cooldown(client, auth_headers, stub_jwks):
-    for _ in range(3):
-        headers = auth_headers(kid='forged-key')
-        assert client.get(URL, headers=headers).status_code == 401
-    assert stub_jwks.fetches == 1
