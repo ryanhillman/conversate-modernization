@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/2.0.0/),
 
 ## [2.0.0] - 2026-10-29
 
-This release makes every page accessible to WCAG 2.2 AA and adds a practice quiz. The API's user field and the database schema change, so see the Breaking entries before upgrading. From this version the changelog follows Keep a Changelog 2.0.0.
+This release makes every page accessible to WCAG 2.2 AA and adds a practice quiz. The API's user field and the database schema change. Please see the Breaking entries before upgrading.
 
 ### Security
 - The backend's code is read-only to the user it runs as.
@@ -129,7 +129,7 @@ This release makes every page accessible to WCAG 2.2 AA and adds a practice quiz
 
 ## [1.0.0] - 2026-10-22
 
-The original app, modernized: current frameworks and tools throughout, the API secured, and a quiz and leaderboard added.
+This version is the original application in first stage of modernization. It was upgraded to current frameworks and tools, the API was secured, and a quiz/leaderboard were added.
 
 ### Security
 - The API requires Auth0 access tokens, validated as JWTs with Auth0's rotated signing keys picked up automatically. Before, anyone who knew an email could read, rename, or delete the account or change its score.

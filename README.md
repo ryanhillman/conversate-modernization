@@ -147,6 +147,8 @@ docker exec conversate-postgres createdb -U conversate conversate_test
 
 ## API
 
+Releases follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html) for this API and the database schema: only a major version changes or removes anything here.
+
 All `/api` endpoints require an Auth0 access token (`Authorization: Bearer <token>`).
 Translation and speech endpoints share a limit of 30 requests per minute per user.
 Errors return `{"error": "..."}`. Two add a `code` the app checks: `"username_taken"` for a taken username, and `"out_of_sync"` for an answer to a question other than the current one.
