@@ -8,7 +8,7 @@
       v-model="username"
       class="form-control mb-2 username-input"
       maxlength="100"
-      autocomplete="username"
+      autocomplete="nickname"
       :aria-describedby="errorMessage ? 'setup-username-error' : undefined"
       :aria-invalid="errorMessage ? 'true' : undefined"
     />

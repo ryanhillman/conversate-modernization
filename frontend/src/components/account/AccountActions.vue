@@ -7,7 +7,7 @@
       v-model="username"
       class="form-control mb-2 account-actions-field"
       maxlength="100"
-      autocomplete="username"
+      autocomplete="nickname"
       :aria-describedby="errorMessage ? 'edit-username-error' : undefined"
       :aria-invalid="errorMessage ? 'true' : undefined"
     />
