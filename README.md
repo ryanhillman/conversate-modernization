@@ -26,15 +26,11 @@ Thank you to everyone involved.
 
 ## Features
 
-Secure sign-in with Google or email through Auth0.
-
-Interactive grammar lessons and progress tracking.
-
-Translation tool with text-to-speech and speech-to-text options.
-
-Timed vocabulary quiz with scores and times ranked on a leaderboard, and an untimed practice mode.
-
-Usable by keyboard and screen reader, to WCAG 2.2 AA.
+- Secure sign-in with Google or email through Auth0.
+- Interactive grammar lessons and progress tracking.
+- Translation tool with text-to-speech and speech-to-text.
+- Timed vocabulary quiz with scores and times ranked on a leaderboard, and an untimed practice mode.
+- Usable by keyboard and screen reader, to WCAG 2.2 AA.
 
 ---
 
@@ -57,7 +53,6 @@ Usable by keyboard and screen reader, to WCAG 2.2 AA.
 - Vite 8.3
 - Vue Router 5.4
 - Bootstrap 5.3
-- CSS
 
 **Authentication**
 - Auth0
