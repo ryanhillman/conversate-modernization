@@ -1,5 +1,5 @@
 <template>
-  <div class="set-username">
+  <form class="set-username" @submit.prevent="saveUsername(username)">
     <h1>Set your username!</h1>
     <label for="setup-username" class="username-label">Username</label>
     <input
@@ -17,15 +17,15 @@
     </p>
     <!-- Busy buttons use aria-disabled, not disabled: a disabled button loses keyboard focus. -->
     <button
+      type="submit"
       class="btn btn-success"
       :class="{ disabled: saving }"
       :disabled="!!validationError || checking || takenUsername"
       :aria-disabled="saving"
-      @click="saveUsername(username)"
     >
       Save username
     </button>
-  </div>
+  </form>
 </template>
 
 <script setup>

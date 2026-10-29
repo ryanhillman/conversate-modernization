@@ -44,20 +44,23 @@ afterEach(() => {
 });
 
 describe("busy username buttons", () => {
+  // Attached, since jsdom only submits a form that's in the document.
   it("keeps Save username focusable while it saves", async () => {
     createMe.mockReturnValue(new Promise(() => {}));
-    const wrapper = mount(SetUsername);
+    const wrapper = mount(SetUsername, { attachTo: document.body });
     await typeAvailableName(wrapper);
 
     await expectBusyAfterTwoClicks(wrapper.get("button"), createMe);
+    wrapper.unmount();
   });
 
   it("keeps Update username focusable while it saves", async () => {
     updateUsername.mockReturnValue(new Promise(() => {}));
-    const wrapper = mount(AccountActions);
+    const wrapper = mount(AccountActions, { attachTo: document.body });
     await typeAvailableName(wrapper);
 
     await expectBusyAfterTwoClicks(wrapper.findAll("button")[0], updateUsername);
+    wrapper.unmount();
   });
 
   it("moves focus to the box after a rename, since the cleared box disables Update", async () => {
@@ -100,31 +103,47 @@ describe("AccountActions", () => {
     expect(computeAccessibleName(wrapper.get("input").element)).toBe("New username");
     wrapper.unmount();
   });
+
+  it("keeps Reset progress and Delete account from submitting the form", () => {
+    const wrapper = mount(AccountActions);
+    const types = wrapper.findAll("button").map((b) => b.attributes("type"));
+    expect(types).toEqual(["submit", "button", "button"]);
+  });
 });
 
 describe.each([
-  ["SetUsername", SetUsername],
-  ["AccountActions", AccountActions],
-])("%s", (_, form) => {
+  ["SetUsername", SetUsername, createMe],
+  ["AccountActions", AccountActions, updateUsername],
+])("%s", (_, form, save) => {
+  it("saves when the form is submitted, which Enter in the box does", async () => {
+    save.mockResolvedValue({ username: "new_name" });
+    const wrapper = mount(form);
+    await typeAvailableName(wrapper);
+
+    expect(wrapper.get("button").attributes("type")).toBe("submit");
+    await wrapper.get("form").trigger("submit");
+
+    expect(save).toHaveBeenCalledWith("new_name");
+  });
+
   it("says the name is taken when someone takes it before Save, and moves focus to the box", async () => {
     const taken = new Error("username already exists");
     taken.status = 409;
     taken.code = "username_taken";
-    createMe.mockRejectedValue(taken);
-    updateUsername.mockRejectedValue(taken);
+    save.mockRejectedValue(taken);
     toastState.toasts = [];
     const wrapper = mount(form, { attachTo: document.body });
     await typeAvailableName(wrapper);
 
-    const save = wrapper.get("button");
-    save.element.focus();
-    await save.trigger("click");
+    const button = wrapper.get("button");
+    button.element.focus();
+    await button.trigger("click");
     await flushPromises();
 
     expect(wrapper.get(".form-error").text()).toBe("That username is taken");
     expect(toastState.toasts).toEqual([]);
     // Save is now disabled, so focus can't stay on it.
-    expect(save.attributes("disabled")).toBeDefined();
+    expect(button.attributes("disabled")).toBeDefined();
     expect(document.activeElement).toBe(wrapper.get("input").element);
     wrapper.unmount();
   });

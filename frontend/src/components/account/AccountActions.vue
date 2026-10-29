@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-column align-items-center">
+  <form class="d-flex flex-column align-items-center" @submit.prevent="updateUsername(username)">
     <label for="new-username" class="account-actions-field text-start mb-2">New username</label>
     <input
       id="new-username"
@@ -16,15 +16,16 @@
     </p>
     <!-- Busy buttons use aria-disabled, not disabled: a disabled button loses keyboard focus. -->
     <button
+      type="submit"
       class="btn btn-success mb-2 account-actions-field"
       :class="{ disabled: saving }"
       :disabled="!!validationError || checking || takenUsername"
       :aria-disabled="saving"
-      @click="updateUsername(username)"
     >
       Update username
     </button>
     <button
+      type="button"
       class="btn btn-warning mb-2 account-actions-field"
       :class="{ disabled: saving }"
       :aria-disabled="saving"
@@ -33,6 +34,7 @@
       Reset progress
     </button>
     <button
+      type="button"
       class="btn btn-danger account-actions-field"
       :class="{ disabled: saving }"
       :aria-disabled="saving"
@@ -40,7 +42,7 @@
     >
       Delete account
     </button>
-  </div>
+  </form>
 </template>
 
 <script setup>

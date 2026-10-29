@@ -81,6 +81,7 @@
 - Made the frontend fail with a clear message when its Auth0 settings are missing.
 - Reported a taken username, rather than an existing profile, when two people claim the same name at once.
 - Kept Save disabled until the username availability check finishes, so a taken name can't be submitted by clicking quickly.
+- Made Enter save the username, both when setting it up and on the profile page.
 - Stated the text-to-speech length limit in bytes, which is how it's measured, rather than characters.
 - Stopped rejecting out-of-order quiz answers as too fast.
 - Stopped an answer given just as the quiz pauses from ending it.
