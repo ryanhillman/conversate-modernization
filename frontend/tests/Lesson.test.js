@@ -97,7 +97,7 @@ describe("Lesson", () => {
     setProfile({ username: "ryan_h", lessons_completed: [] });
   });
 
-  it("gives each Toggle button the accessible name Toggle lesson plus its title", () => {
+  it("names each lesson's button Open lesson or Close lesson plus its title", async () => {
     const wrapper = mount(Lesson, {
       attachTo: document.body,
       global: { stubs: { RequireProfile } },
@@ -106,8 +106,11 @@ describe("Lesson", () => {
     for (const lesson of LESSONS) {
       const button = wrapper.get(`#${lesson.slug}`).element;
       const title = wrapper.get(`#${lesson.slug}-title`).text();
-      expect(computeAccessibleName(button)).toBe(`Toggle lesson ${title}`);
+      expect(computeAccessibleName(button)).toBe(`Open lesson ${title}`);
     }
+    const first = wrapper.get(`#${LESSONS[0].slug}`);
+    await first.trigger("click");
+    expect(computeAccessibleName(first.element)).toMatch(/^Close lesson /);
     wrapper.unmount();
   });
 
@@ -168,7 +171,7 @@ describe("Lesson", () => {
     expect(completeLesson).toHaveBeenCalledTimes(1);
   });
 
-  it("moves focus to the Toggle button once Mark lesson complete disappears", async () => {
+  it("moves focus to the Open/Close button once Mark lesson complete disappears", async () => {
     const lesson = LESSONS.find((l) => !l.questions.length);
     completeLesson.mockResolvedValue({ username: "ryan_h", lessons_completed: [lesson.id] });
     const wrapper = mount(Lesson, {

@@ -1,5 +1,5 @@
 <template>
-  <div ref="container" class="toast-container" role="status">
+  <div ref="container" class="toast-stack" role="status">
     <transition-group name="toast">
       <div
         v-for="t in toastState.toasts"
@@ -70,21 +70,18 @@ async function dismiss(id, event) {
 </script>
 
 <style scoped>
-.toast-container {
+.toast-stack {
   position: fixed;
   bottom: 1.5rem;
   right: 1.5rem;
-  /* Bootstrap allows the full screen width, which the right offset would push
-     past the left edge. */
+  /* The same 1.5rem gap on the left on narrow screens. */
   max-width: calc(100% - 3rem);
   z-index: 2000;
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
 }
-/* Bootstrap's .toast-container lets clicks pass through; take them back here. */
 .toast-item {
-  pointer-events: auto;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;

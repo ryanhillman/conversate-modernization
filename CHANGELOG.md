@@ -30,11 +30,14 @@
 - Made lesson completion load and lock the user in one query instead of two.
 - Stopped re-reading the user from the database after saving changes.
 - Shortened Translate recordings from 60 to 30 seconds, stated the limit, and added each transcript to the text instead of replacing it.
+- Reordered Translate: labels inside the boxes, the mic and Translate button between them, and Listen below the translation.
+- Renamed each lesson's Toggle lesson button to Open lesson or Close lesson.
+- Colored the 404 page's Back to home button gold to match the site.
 - Let speech-to-text wait up to 20 seconds for Google, instead of 8.
 - Colored the checkmarks on Mastery's completed lessons green.
 - Colored the quiz answer buttons navy to match the site.
-- Restyled completed lessons with a green check on the card's corner and a green title and Toggle button.
-- Put each lesson's title and Toggle button on one row.
+- Restyled completed lessons with a green check on the card's corner and a green title and Open/Close button.
+- Put each lesson's title and Open/Close button on one row.
 - Spaced out opened lessons and practice answers.
 - Checked lesson answers on Enter or leaving the box, not while typing.
 - Said the quiz is timed before it starts.
@@ -56,6 +59,7 @@
 
 ### Removed
 - Removed the old Auth0 wrapper's $auth compatibility layer.
+- Removed the duplicate Resume button from a paused quiz.
 - Removed the unused id from the profile API response.
 
 ### Fixed

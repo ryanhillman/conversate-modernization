@@ -66,7 +66,7 @@ describe("Toast", () => {
   it("keeps room above the toasts, so focus doesn't land behind them", async () => {
     showToast("Could not save.", "error");
     const wrapper = mount(Toast);
-    const container = wrapper.get(".toast-container").element;
+    const container = wrapper.get(".toast-stack").element;
     container.getBoundingClientRect = () => ({ top: window.innerHeight - 100 });
 
     const space = () => document.documentElement.style.getPropertyValue("--toast-space");
@@ -87,7 +87,7 @@ describe("Toast", () => {
     button.scrollIntoView = vi.fn();
     showToast("Could not save.", "error");
     const wrapper = mount(Toast);
-    wrapper.get(".toast-container").element.getBoundingClientRect = () => ({
+    wrapper.get(".toast-stack").element.getBoundingClientRect = () => ({
       top: window.innerHeight - 100,
     });
 

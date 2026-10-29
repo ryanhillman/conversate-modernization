@@ -186,7 +186,7 @@ describe("Translate", () => {
     });
     const [input, output] = wrapper.findAll("textarea");
 
-    expect(computeAccessibleName(input.element)).toBe("Text to translate");
+    expect(computeAccessibleName(input.element)).toBe("Enter here to translate…");
     expect(computeAccessibleName(output.element)).toBe("Translation");
     wrapper.unmount();
   });
@@ -240,7 +240,7 @@ describe("Translate", () => {
     mic.allow();
     await flushPromises();
 
-    expect(wrapper.text()).toContain("Recording…");
+    expect(wrapper.text()).toContain("Recording, up to 30 seconds.");
     wrapper.unmount();
   });
 

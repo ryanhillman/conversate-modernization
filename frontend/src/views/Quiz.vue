@@ -35,9 +35,6 @@
             >
               Pause
             </button>
-            <button v-else-if="phase === 'paused'" class="btn btn-sm btn-accent" @click="resume">
-              Resume
-            </button>
           </template>
         </div>
 

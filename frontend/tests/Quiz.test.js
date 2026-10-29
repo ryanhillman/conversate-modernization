@@ -253,6 +253,7 @@ describe("Quiz focus", () => {
     await wrapper.get(".quiz-meta button").trigger("click");
     await flushPromises();
     expect(document.activeElement.textContent).toBe("Resume");
+    expect(wrapper.findAll("button").filter((b) => b.text() === "Resume")).toHaveLength(1);
     expect(document.activeElement.closest(".quiz-paused")).not.toBeNull();
 
     await wrapper.get(".quiz-paused button").trigger("click");

@@ -30,7 +30,9 @@
           :aria-expanded="currentLessonId === lesson.id ? 'true' : 'false'"
           @click="selectLesson(lesson.id)"
         >
-          <span :id="`${lesson.slug}-toggle`">Toggle lesson</span>
+          <span :id="`${lesson.slug}-toggle`"
+            >{{ currentLessonId === lesson.id ? "Close" : "Open" }} lesson</span
+          >
         </button>
       </div>
 
@@ -166,7 +168,7 @@ function checkCurrentLesson() {
 function isComplete(lessonId) {
   return completedLessonIds.value.includes(lessonId);
 }
-// The button disappears once the lesson is done, so move focus to its Toggle.
+// The button disappears once the lesson is done, so move focus to Open/Close.
 async function completeWithButton(lesson) {
   await markLessonComplete(lesson.id);
   if (isComplete(lesson.id)) {
@@ -409,8 +411,8 @@ function launchCelebration() {
     transform: translateX(-50%) translateY(-20px);
   }
 }
-/* Completed lessons: a corner check, and a green title and Toggle (5.14:1
-   with white text). Toggle keeps its amber hover. */
+/* Completed lessons: a corner check, and a green title and Open/Close button
+   (5.14:1 with white text). The button keeps its amber hover. */
 .completed-check {
   position: absolute;
   top: -0.75rem;
@@ -430,7 +432,7 @@ function launchCelebration() {
 .is-complete .toggle-lesson-btn:not(:hover) {
   background-color: var(--success);
 }
-/* Title and Toggle on one row, wrapping on narrow screens. */
+/* Title and Open/Close button on one row, wrapping on narrow screens. */
 .lesson-row {
   display: flex;
   align-items: center;

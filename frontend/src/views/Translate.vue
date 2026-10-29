@@ -28,76 +28,81 @@
         <p v-if="sameLanguageOnBothSides" class="form-error small m-2">
           Input and output language must be different.
         </p>
-        <div class="mb-4">
-          <label class="d-block" for="textToTranslate">Text to translate</label>
+        <!-- The label sits in the box and moves to its corner when there's
+             text, so it never disappears like a placeholder would. Bootstrap
+             needs the placeholder attribute to tell, and hides its text. -->
+        <div class="form-floating translate-field">
           <textarea
             id="textToTranslate"
             v-model="textToTranslate"
-            class="m-2 translate-textarea"
+            class="form-control translate-textarea"
             :lang="inputLanguage"
-            rows="10"
             :maxlength="MAX_TEXT_LENGTH"
-            placeholder="Type here to translate…"
+            placeholder="Enter here to translate…"
           ></textarea>
-          <div class="m-3">
-            <!-- Busy buttons use aria-disabled, not disabled: a disabled button loses keyboard focus. -->
-            <button
-              v-if="micSupported"
-              type="button"
-              class="icon-button"
-              :aria-disabled="busy || startingMic"
-              :aria-label="recording ? 'Stop recording' : 'Start recording'"
-              aria-describedby="mic-hint"
-              @click="toggleRecording"
-            >
-              <Icon
-                name="microphone"
-                class="icon-3x m-2"
-                :class="recording ? 'text-danger' : 'translate-icon'"
-              />
-            </button>
-            <button
-              v-if="translatedText && !translatedTextTooLong"
-              type="button"
-              class="icon-button"
-              :aria-disabled="busy"
-              aria-label="Listen to translation"
-              @click="startTextToSpeech"
-            >
-              <Icon name="volume-up" class="icon-3x m-2 translate-icon" />
-            </button>
-            <p v-else-if="translatedTextTooLong" class="text-muted small m-2">
-              Translation is too long to read aloud.
-            </p>
-            <p v-if="recording" class="small m-2">
-              Recording… select the microphone again to stop.
-            </p>
-            <!-- Stated up front, not announced while recording, where a screen
-                 reader on speakers would be recorded too. -->
-            <p v-if="micSupported" id="mic-hint" class="text-muted small m-2">
-              Recordings stop after {{ MAX_RECORDING_SECONDS }} seconds and are added to the text.
-            </p>
-            <p v-else class="text-muted small m-2">Voice input isn't available in this browser.</p>
-          </div>
-          <label class="d-block" for="translation">Translation</label>
-          <textarea
-            id="translation"
-            :value="translatedText"
-            class="m-2 translate-textarea"
-            :lang="translatedTextLanguage"
-            readonly
-            rows="10"
-          ></textarea>
+          <label for="textToTranslate">Enter here to translate…</label>
+        </div>
+        <!-- Busy buttons use aria-disabled, not disabled: a disabled button loses keyboard focus. -->
+        <div class="m-3">
+          <button
+            v-if="micSupported"
+            type="button"
+            class="icon-button"
+            :aria-disabled="busy || startingMic"
+            :aria-label="recording ? 'Stop recording' : 'Start recording'"
+            aria-describedby="mic-hint"
+            @click="toggleRecording"
+          >
+            <Icon
+              name="microphone"
+              class="icon-3x m-2"
+              :class="recording ? 'text-danger' : 'translate-icon'"
+            />
+          </button>
+          <p v-if="recording" class="small m-2">
+            <strong>Recording, up to {{ MAX_RECORDING_SECONDS }} seconds.</strong> Select the
+            microphone again to stop.
+          </p>
+          <!-- Screen readers hear the limit on the mic button, before recording:
+               announced during it, speech on speakers would be recorded too. -->
+          <p v-if="micSupported" id="mic-hint" class="visually-hidden">
+            Recordings stop after {{ MAX_RECORDING_SECONDS }} seconds and are added to the text.
+          </p>
+          <p v-else class="text-muted small m-2">Voice input isn't available in this browser.</p>
         </div>
         <button
           :disabled="!textToTranslate.trim() || sameLanguageOnBothSides"
           :aria-disabled="busy"
-          class="btn btn-accent m-3"
+          class="btn btn-accent mb-3"
           :class="{ disabled: busy }"
           @click="translateEnteredText()"
         >
           Translate
         </button>
+        <div class="form-floating translate-field">
+          <textarea
+            id="translation"
+            :value="translatedText"
+            class="form-control translate-textarea"
+            :lang="translatedTextLanguage"
+            readonly
+            placeholder="Translation"
+          ></textarea>
+          <label for="translation">Translation</label>
+        </div>
+        <div v-if="translatedText" class="m-3">
+          <button
+            v-if="!translatedTextTooLong"
+            type="button"
+            class="icon-button"
+            :aria-disabled="busy"
+            aria-label="Listen to translation"
+            @click="startTextToSpeech"
+          >
+            <Icon name="volume-up" class="icon-3x m-2 translate-icon" />
+          </button>
+          <p v-else class="text-muted small m-2">Translation is too long to read aloud.</p>
+        </div>
       </div>
     </RequireProfile>
   </div>
@@ -283,14 +288,25 @@ async function startTextToSpeech() {
 }
 </script>
 <style scoped>
-.translate-textarea {
-  width: 100%;
+.translate-field {
   max-width: 30rem;
+  margin: 0.5rem auto;
+  text-align: start;
+}
+.translate-textarea {
+  height: 15rem;
   resize: none;
 }
+/* Bootstrap keeps a floating label on one line and cuts off what doesn't fit;
+   wrap it instead, so narrow screens and wider text spacing lose nothing. */
+.translate-field > label {
+  white-space: normal;
+}
 /* Read-only rather than disabled, so the translation can be focused and
-   selected; shaded so it doesn't look editable. */
-.translate-textarea[readonly] {
+   selected; shaded so it doesn't look editable. Bootstrap paints a white strip
+   behind a raised label, so it gets the shading too. */
+.translate-textarea[readonly],
+.translate-textarea[readonly] ~ label::after {
   background-color: var(--bs-secondary-bg);
 }
 .icon-button {
