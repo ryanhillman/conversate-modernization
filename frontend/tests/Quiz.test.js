@@ -266,6 +266,6 @@ describe("Quiz focus", () => {
 
     await answer(wrapper);
     await vi.advanceTimersByTimeAsync(1000);
-    expect(document.activeElement.classList).toContain("quiz-results");
+    expect(document.activeElement.textContent).toContain("Score: 2 / 2");
   });
 });

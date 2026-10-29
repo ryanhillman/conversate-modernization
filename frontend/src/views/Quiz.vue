@@ -8,7 +8,7 @@
       </div>
       <h1 v-else class="visually-hidden">{{ practice ? "Practice" : "Timed Quiz" }}</h1>
 
-      <div v-if="phase === 'ready'" class="card-style quiz-results">
+      <div v-if="phase === 'ready'" class="card-style quiz-narrow">
         <div class="quiz-start-buttons">
           <button ref="startButton" class="btn btn-accent" @click="start(false)">Start</button>
           <button class="btn btn-practice" @click="start(true)">Practice</button>
@@ -71,7 +71,7 @@
       <div
         v-else-if="phase === 'results'"
         ref="resultsCard"
-        class="card-style quiz-results"
+        class="card-style quiz-narrow"
         tabindex="-1"
       >
         <h2 v-if="result.is_new_best" class="h3">New best!</h2>
@@ -395,7 +395,8 @@ async function finish() {
   transform: rotateY(-90deg);
   opacity: 0;
 }
-.quiz-results {
+/* The start and results cards. */
+.quiz-narrow {
   max-width: 30rem;
 }
 /* Side by side, each as wide as the wider. */
