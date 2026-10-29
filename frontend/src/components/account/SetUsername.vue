@@ -73,7 +73,6 @@ async function saveUsername(name) {
   max-width: 40rem;
   margin: 2rem auto;
 }
-/* In rem, so they grow with a larger default text size. */
 .username-label {
   width: 16.25rem;
   max-width: 100%;

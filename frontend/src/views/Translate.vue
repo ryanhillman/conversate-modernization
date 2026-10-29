@@ -293,8 +293,6 @@ async function startTextToSpeech() {
 .translate-textarea[readonly] {
   background-color: var(--bs-secondary-bg);
 }
-/* Real buttons drawn as just the icon, so they work with Tab and screen
-   readers. The browser's focus outline is kept. */
 .icon-button {
   background: none;
   border: 0;

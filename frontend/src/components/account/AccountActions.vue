@@ -123,7 +123,6 @@ async function deleteAccount() {
 </script>
 
 <style scoped>
-/* In rem, so it grows with a larger default text size. */
 .account-actions-field {
   width: 16.25rem;
   max-width: 100%;

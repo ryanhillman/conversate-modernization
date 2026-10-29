@@ -210,7 +210,6 @@ function launchCelebration() {
 </script>
 
 <style scoped>
-/* The navy, amber-on-hover buttons used throughout the lessons. */
 .lesson-btn {
   padding: 0.5em 2em;
   border: none;
