@@ -147,6 +147,25 @@ describe("Translate", () => {
     wrapper.unmount();
   });
 
+  it.each([
+    ["NotAllowedError", "Microphone access is required to record."],
+    ["NotFoundError", "No microphone was found."],
+    ["AbortError", "Could not start the microphone."],
+  ])("says why the microphone didn't start on %s", async (name, message) => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    fakeMicrophone();
+    navigator.mediaDevices.getUserMedia = vi
+      .fn()
+      .mockRejectedValue(Object.assign(new Error(name), { name }));
+    toastState.toasts = [];
+    const wrapper = mount(Translate, { global: { stubs: { RequireProfile } } });
+
+    await wrapper.get('[aria-label="Start recording"]').trigger("click");
+    await flushPromises();
+
+    expect(toastState.toasts.at(-1).message).toBe(message);
+  });
+
   it("says when voice input isn't available, instead of just hiding the microphone", () => {
     const unsupported = mount(Translate, { global: { stubs: { RequireProfile } } });
     expect(unsupported.find('[aria-label="Start recording"]').exists()).toBe(false);

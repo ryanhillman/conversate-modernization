@@ -99,7 +99,7 @@ This release makes every page accessible to WCAG 2.2 AA and adds a practice quiz
 - A double-clicked microphone stayed on.
 - Requests with the same source and target language are rejected.
 - An unexpected Google response, or the rate limit, gets a clear message.
-- A missing microphone is explained.
+- A browser without voice input, or a missing microphone, gets its own message.
 - The text-to-speech limit is stated in bytes, as it's measured.
 
 #### Lessons

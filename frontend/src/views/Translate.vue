@@ -124,6 +124,11 @@ const MIC_MIME_TYPE = "audio/webm;codecs=opus";
 const MAX_TTS_LENGTH = 5000;
 const MAX_RECORDING_SECONDS = 30;
 const MAX_TEXT_LENGTH = 5000;
+// getUserMedia's reasons that the user can act on.
+const MIC_ERRORS = {
+  NotAllowedError: "Microphone access is required to record.",
+  NotFoundError: "No microphone was found.",
+};
 
 function blobToBase64(blob) {
   return new Promise((resolve, reject) => {
@@ -222,8 +227,8 @@ async function toggleRecording() {
   try {
     stream = await navigator.mediaDevices.getUserMedia({ audio: true });
   } catch (err) {
-    console.error("Microphone access denied:", err);
-    showToast("Microphone access is required to record.", "error");
+    console.error("Microphone unavailable:", err);
+    showToast(MIC_ERRORS[err.name] ?? "Could not start the microphone.", "error");
     return;
   } finally {
     startingMic.value = false;
