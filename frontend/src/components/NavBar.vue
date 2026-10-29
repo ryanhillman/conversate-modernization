@@ -187,11 +187,9 @@ function login() {
   justify-content: space-between;
 }
 .nav-link {
-  margin: 0;
   padding: 0.85rem 0.9rem;
   text-align: center;
   color: var(--text-color);
-  transition: color 0.15s ease;
 }
 /* The same space either side of every word, so the gaps between words match
    and the words sit on the page's center. */

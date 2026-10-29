@@ -354,10 +354,6 @@ async function finish() {
 }
 .quiz-choice {
   padding: 0.75rem 1rem;
-  transition:
-    background-color 0.15s ease,
-    color 0.15s ease,
-    border-color 0.15s ease;
 }
 /* Bootstrap's .disabled lets clicks fall through to the page, where a
    double-click's second click selected text. Busy choices keep the click and

@@ -99,7 +99,6 @@ onMounted(load);
 }
 .leaderboard-table {
   width: 100%;
-  border-collapse: collapse;
   background-color: var(--card-bg);
   border-radius: var(--radius);
   overflow: hidden;

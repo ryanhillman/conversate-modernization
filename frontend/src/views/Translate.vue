@@ -294,7 +294,6 @@ async function startTextToSpeech() {
 .translate-textarea {
   width: 100%;
   max-width: 30rem;
-  box-sizing: border-box;
   resize: none;
 }
 /* Read-only rather than disabled, so the translation can be focused and
@@ -353,15 +352,11 @@ async function startTextToSpeech() {
   padding: 0.55rem 2.2rem 0.55rem 1rem;
   border: 1px solid var(--bs-secondary);
   border-radius: 8px;
-  background-color: var(--card-bg);
   color: var(--text-color);
   font-family: var(--font-heading);
   font-weight: 500;
   cursor: pointer;
   background-image: none;
-  transition:
-    border-color 0.15s,
-    box-shadow 0.15s;
 }
 /* A select can't have ::after, so the arrow is drawn on this wrapper. The SVG
    supplies only the shape; the color comes from the token. */

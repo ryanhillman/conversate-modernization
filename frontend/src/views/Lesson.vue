@@ -216,13 +216,10 @@ function launchCelebration() {
   border: none;
   border-radius: 8px;
   margin: 0 0.3em 0.3em 0;
-  box-sizing: border-box;
-  text-decoration: none;
   font-family: var(--font-heading);
   font-weight: 500;
   color: var(--text-on-dark);
   background-color: var(--brand-navy);
-  text-align: center;
   transition: all 0.25s;
 }
 .lesson-btn:hover {
@@ -353,14 +350,12 @@ function launchCelebration() {
   border-radius: 6px;
   border-bottom: 2px solid var(--brand-accent-dark);
   padding: 0.05em 0.5em;
-  cursor: pointer;
   transition:
     background-color 0.15s,
     color 0.15s;
 }
 .speakable:hover {
   background-color: color-mix(in srgb, var(--brand-accent) 32%, transparent);
-  color: var(--brand-navy);
 }
 .celebration {
   position: fixed;
@@ -464,8 +459,6 @@ function launchCelebration() {
   border-radius: 12px;
   box-shadow: var(--card-shadow);
   padding: 1rem;
-  margin: 1rem auto;
-  max-width: 40rem;
   color: var(--text-on-dark);
   background-color: var(--brand-navy);
 }
