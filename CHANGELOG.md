@@ -6,9 +6,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/2.0.0/),
 
 ## [Unreleased]
 
-### Fixed
-- Stopped Flask printing a python-dotenv tip on every command.
-
 ## [2.0.0] - 2026-10-29
 
 This release makes every page accessible to WCAG 2.2 AA and adds a practice quiz. The API's user field and the database schema change. Please see the Breaking entries before upgrading.
@@ -66,6 +63,7 @@ This release makes every page accessible to WCAG 2.2 AA and adds a practice quiz
 - The 30-a-minute limit on Google calls applies per user across translation and speech, not per endpoint and server process.
 - The backend returns a 400, not a server error, for deeply nested JSON.
 - Migration command errors are shown instead of exiting silently.
+- Flask no longer prints a python-dotenv tip on every command.
 - All local .env files are ignored by Git, and a local virtual environment is kept out of the Docker image.
 - The frontend fails with a clear message when its Auth0 settings are missing.
 - The server logs why it rejects a login, and retries Auth0's key download after a dropped connection.
