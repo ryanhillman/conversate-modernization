@@ -72,7 +72,7 @@ async function updateUsername(name) {
   saving.value = true;
   try {
     const data = await apiUpdateUsername(name.trim());
-    showToast("Username updated", "success");
+    showToast("Username updated.", "success");
     username.value = "";
     setProfile(data);
     // Clearing the box disables Update, which would drop focus to the page.
@@ -97,7 +97,7 @@ async function resetProgress() {
     saving.value = true;
     try {
       setProfile(await apiResetProgress());
-      showToast("Your progress has been reset", "success");
+      showToast("Your progress has been reset.", "success");
       router.push("/mastery");
     } catch {
       showToast("Could not reset your progress.", "error");
