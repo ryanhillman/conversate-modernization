@@ -78,6 +78,7 @@
 - Made Escape close the profile menu.
 - Turned the profile menu and Log out links into buttons; the menu closes when focus leaves.
 - Made the Log out menu item's hover highlight visible.
+- Kept the Log in button navy when focused or pressed, instead of Bootstrap's blue.
 - Made the current page's text on the nav bar navy to match its underline.
 - Made the frontend fail with a clear message when its Auth0 settings are missing.
 - Reported a taken username, rather than an existing profile, when two people claim the same name at once.
