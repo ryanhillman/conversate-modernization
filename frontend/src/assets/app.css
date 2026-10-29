@@ -63,11 +63,12 @@
 .nav-item.dropdown .dropdown-item:focus-visible {
   background-color: var(--bs-gray-300);
 }
-/* Keeps the layout 1140px wide on screens 1400px and wider too, where
-   Bootstrap would widen it to 1320px. */
+/* Caps the layout at 1140px at the default text size, even on screens 1400px
+   and wider where Bootstrap would allow 1320px. In rem, so it grows with a
+   larger text size and the nav bar still fits beside the logo and picture. */
 @media (min-width: 1200px) {
   .container {
-    max-width: 1140px;
+    max-width: 71.25rem;
   }
 }
 /* Bootstrap's xl breakpoint is in px, so a larger default text size doesn't
