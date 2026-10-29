@@ -130,7 +130,7 @@ This release makes every page accessible to WCAG 2.2 AA and adds a practice quiz
 
 ## [1.0.0] - 2026-10-22
 
-This version is the original application in first stage of modernization. It was upgraded to current frameworks and tools, the API was secured, and a quiz/leaderboard were added.
+This version is the first stage of modernization. It was upgraded to current frameworks/tools, the API was secured, and a quiz/leaderboard were added.
 
 ### Security
 - The API requires Auth0 access tokens, validated as JWTs with Auth0's rotated signing keys picked up automatically. Before, anyone who knew an email could read, rename, or delete the account or change its score.
@@ -163,23 +163,24 @@ This version is the original application in first stage of modernization. It was
 - The backend is containerized instead of the frontend.
 
 ### Fixed
-- Lesson answers are keyed per question.
-- Answer boxes start neutral and only turn red once something wrong is typed.
-- Element IDs are unique across lesson questions.
-- Typing your own current username no longer reads as taken.
-- The username setup form no longer flashes on signed-in pages.
-- Username handling is the same across creation, renaming, and the availability check.
 - Account and username uniqueness is enforced by the database, with a 409 when concurrent requests collide.
 - The nav bar highlights the current page.
 - Images have descriptive alt text.
 - Mastery's lesson counts come from the lesson data.
 - Spelling and grammar are corrected in the English and Italian content.
 
+#### Lessons
+- Answers are keyed per question.
+- Answer boxes start neutral and only turn red once something wrong is typed.
+- Element IDs are unique across questions.
+
+#### Username
+- Typing your own current username no longer reads as taken.
+- The setup form no longer flashes on signed-in pages.
+- Handling is the same across creation, renaming, and the availability check.
+
 ### Added
 - A quiz and a leaderboard, which the original had planned.
-- Italian conjugations in lessons can be played aloud.
-- Correct lesson answers animate, and confetti plays on completing a lesson.
-- Lesson 8 is finished, with a Mark lesson complete button that counts toward mastery.
 - An animated Mastery progress bar, with completed lessons marked "✓ Completed".
 - Username checks while typing, for format and availability.
 - Toast notifications.
@@ -189,6 +190,11 @@ This version is the original application in first stage of modernization. It was
 - .env.example templates for both apps.
 - Backend tests with pytest, covering authentication, the endpoints, and the Google integrations.
 - Prettier and ruff for formatting.
+
+#### Lessons
+- Italian conjugations can be played aloud.
+- Correct answers animate, and confetti plays on completing a lesson.
+- Lesson 8 is finished, with a Mark lesson complete button that counts toward mastery.
 
 [Unreleased]: https://github.com/ryanhillman/conversate-modernization/compare/v2.0.0...HEAD
 [2.0.0]: https://github.com/ryanhillman/conversate-modernization/compare/v1.0.0...v2.0.0
