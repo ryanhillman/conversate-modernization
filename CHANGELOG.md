@@ -121,6 +121,7 @@
 - Spaced the nav bar's links evenly and centered them on the page.
 - Kept the nav links clear of the logo and profile picture with larger text on wide screens.
 - Opened pages after a new version is deployed, instead of doing nothing until a refresh.
+- Centered the Mark lesson complete button on phones.
 - Returned a 400, not a server error, for deeply nested JSON.
 
 ### Security

@@ -292,9 +292,6 @@ function launchCelebration() {
   text-align: center;
   margin-top: 1.5rem;
 }
-.complete-lesson .lesson-btn {
-  margin-left: 0;
-}
 .answer-field.correct .answer-input {
   border: 2px solid var(--success);
   border-radius: 20px;
