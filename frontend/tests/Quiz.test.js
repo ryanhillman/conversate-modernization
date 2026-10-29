@@ -223,6 +223,22 @@ describe("Quiz answers", () => {
     expect(wrapper.text()).toContain("Score: 0 / 2");
   });
 
+  it("are ignored while the next card flips in, so a click can't answer it early", async () => {
+    quizStarting(2);
+    wrapper = await startQuizPage();
+
+    await answer(wrapper);
+    await vi.advanceTimersByTimeAsync(500);
+    // The feedback is over and the cards are mid-flip.
+    await wrapper.get(".quiz-choice").trigger("click");
+    expect(answerQuiz).toHaveBeenCalledTimes(1);
+
+    await vi.advanceTimersByTimeAsync(1000);
+    expect(document.activeElement.textContent).toBe("word 1");
+    await wrapper.get(".quiz-choice").trigger("click");
+    expect(answerQuiz).toHaveBeenCalledTimes(2);
+  });
+
   it("stay focusable while an answer is checked, ignoring more clicks", async () => {
     answerQuiz.mockReturnValue(new Promise(() => {}));
     wrapper = await startQuizPage();

@@ -44,7 +44,7 @@
           <p>Paused</p>
           <button ref="resumeButton" class="btn btn-accent" @click="resume">Resume</button>
         </div>
-        <transition v-else name="card-flip" mode="out-in" @after-enter="focusQuestion">
+        <transition v-else name="card-flip" mode="out-in" @after-enter="cardShown">
           <div :key="currentIndex" class="quiz-card">
             <h2 ref="questionWord" class="h3 quiz-word" lang="it" tabindex="-1">
               {{ currentQuestion.it }}
@@ -146,8 +146,11 @@ const FOCUS_TARGETS = {
 };
 watch(phase, (newPhase) => FOCUS_TARGETS[newPhase]?.value?.focus(), { flush: "post" });
 
-// A new question replaces the card once its flip animation ends.
-function focusQuestion() {
+// A new question's card has flipped in: it can take answers now, and focus.
+// Until then a click would land on the old card, still flipping out, and be
+// sent as an answer to the new question.
+function cardShown() {
+  advancing.value = false;
   questionWord.value?.focus();
 }
 
@@ -265,7 +268,6 @@ async function selectAnswer(choice) {
 function nextQuestion() {
   if (currentIndex.value < questions.value.length - 1) {
     currentIndex.value += 1;
-    advancing.value = false;
   } else {
     finish();
   }
@@ -305,6 +307,8 @@ async function finish() {
 .quiz-card-wrap {
   max-width: 40rem;
   margin: 0 auto;
+  /* A double-click that misses the flipping card would select the nearest text. */
+  user-select: none;
 }
 .quiz-meta {
   display: flex;

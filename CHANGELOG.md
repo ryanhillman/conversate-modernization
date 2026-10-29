@@ -90,6 +90,7 @@
 - Stated the text-to-speech length limit in bytes, which is how it's measured, rather than characters.
 - Stopped rejecting out-of-order quiz answers as too fast.
 - Stopped an answer given just as the quiz pauses from ending it.
+- Ignored clicks on a quiz card while it flips out; they answered the next question unseen and could highlight the footer logo.
 - Kept the quiz going when an answer's reply is lost and the answer is sent again, instead of ending it early.
 - Stopped a quiz with nothing right counting as a best or reaching the leaderboard as 0.
 - Ended a quiz paused just as its time ran out when it's resumed, instead of showing 0:00 first.
