@@ -65,7 +65,7 @@ Conversate is a full-stack web application for learning Italian.
 
 ## How to Run
 
-Requires Python 3.14, Node 22.22.2+, 24.15+, or 26+, Docker, Auth0, and Google Cloud.
+Requires Python 3.14, Node 24 (LTS, 24.15 or newer), Docker, Auth0, and Google Cloud.
 
 ### Auth0
 
@@ -76,7 +76,7 @@ Create a Single Page Application and an API:
 
 ### Google Cloud
 
-In a project with billing enabled (required even within the free tiers), enable the Translation, Text-to-Speech, and Speech-to-Text APIs, and create an API key (APIs & Services → Credentials). Restrict the key to those three APIs (edit the key → API restrictions), so a leaked key can't call anything else.
+In a project with billing enabled: enable the Translation, Text-to-Speech, and Speech-to-Text APIs, and create an API key (APIs & Services → Credentials). Restrict the key to those three APIs (edit the key → API restrictions), so a leaked key can't call anything else.
 
 ### Environment
 
