@@ -81,8 +81,8 @@ export const LESSONS = [
     id: 2,
     slug: "basic-greetings",
     answerLang: "en",
-    menuTitle: "Basic Greetings",
-    title: "Basic Greetings",
+    menuTitle: "Basic greetings",
+    title: "Basic greetings",
     sections: [
       { t: "h", level: 1, size: 3, html: "<it>Ciao!</it>" },
       {
@@ -98,7 +98,7 @@ export const LESSONS = [
         t: "p",
         html: "In order to avoid being repetitive, it's important to learn more than just one way to say hello.",
       },
-      { t: "h", level: 2, size: 4, html: "Common Greetings" },
+      { t: "h", level: 2, size: 4, html: "Common greetings" },
       {
         t: "ul",
         items: [
@@ -568,7 +568,7 @@ export const LESSONS = [
   {
     id: 8,
     slug: "pronouns",
-    menuTitle: "Italian Pronouns",
+    menuTitle: "Italian pronouns",
     title: "Italian pronouns",
     sections: [
       {

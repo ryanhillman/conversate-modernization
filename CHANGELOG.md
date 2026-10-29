@@ -117,7 +117,7 @@
 - Told learners to type pronoun answers, not select them.
 - Said when a username was taken while saving, instead of a generic error.
 - Warned that resetting progress and deleting an account can't be undone.
-- Made lesson prompts and translations consistent in quotes, punctuation, and capitalization.
+- Made lesson titles, prompts, and translations consistent in quotes, punctuation, and capitalization.
 - Kept a local virtual environment out of the backend's Docker image.
 - Said to wait a minute when translation or speech hits the rate limit, instead of a generic error.
 - Kept keyboard focus visible in Windows High Contrast mode.

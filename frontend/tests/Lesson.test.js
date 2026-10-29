@@ -92,7 +92,7 @@ describe("Lesson", () => {
     const [done, notDone] = wrapper.findAll("h2");
 
     expect(done.text()).toBe("Avere and Essere (completed)");
-    expect(notDone.text()).toBe("Basic Greetings");
+    expect(notDone.text()).toBe("Basic greetings");
     expect(wrapper.get(".completed-check").attributes("aria-hidden")).toBe("true");
     setProfile({ username: "ryan_h", lessons_completed: [] });
   });
