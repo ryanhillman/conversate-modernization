@@ -60,6 +60,13 @@ def test_get_returns_only_the_profile_fields(client, auth_headers, create_user):
     }
 
 
+def test_an_unsupported_method_says_which_are_allowed(client):
+    response = client.patch(ME)
+    assert response.status_code == 405
+    assert set(response.headers['Allow'].split(', ')) >= {'GET', 'POST', 'PUT', 'DELETE'}
+    assert response.get_json() == {'error': 'The method is not allowed for the requested URL.'}
+
+
 def test_get_without_profile_is_404(client, auth_headers):
     assert client.get(ME, headers=auth_headers()).status_code == 404
 
