@@ -10,8 +10,6 @@ Conversate is a full-stack web application for learning Italian.
 
 [Visit original version of Conversate here.](https://github.com/ryanhillman/conversate-original)
 
-Thank you to everyone involved.
-
 ---
 
 ## [Demo (v1.0.0)](https://youtu.be/GpFT1M0YnfY)
@@ -27,10 +25,10 @@ Thank you to everyone involved.
 ## Features
 
 - Secure sign-in with Google or email through Auth0.
-- Interactive grammar lessons and progress tracking.
+- Interactive lessons and progress tracking.
 - Translation tool with text-to-speech and speech-to-text.
-- Timed vocabulary quiz with scores and times ranked on a leaderboard, and an untimed practice mode.
-- Usable by keyboard and screen reader, to WCAG 2.2 AA.
+- Timed quiz with scores and times ranked.
+- Built to WCAG 2.2 AA.
 
 ---
 
@@ -193,6 +191,8 @@ Errors return `{"error": "..."}`. Two add a `code` the app checks: `"username_ta
 ---
 
 ## Credits
+
+Thank you to everyone involved.
 
 Icons by [Icons8](https://icons8.com).
 Microphone, speaker, and log-out icons by [Font Awesome](https://fontawesome.com), [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
