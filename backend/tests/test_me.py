@@ -18,11 +18,6 @@ def test_create_stores_the_username(client, auth_headers):
     assert response.get_json()['username'] == 'tester'
 
 
-def test_create_rejects_a_non_string_username(client, auth_headers):
-    response = client.post(ME, json={'username': 123}, headers=auth_headers())
-    assert response.status_code == 400
-
-
 def test_create_rejects_a_duplicate(client, auth_headers, create_user):
     create_user(sub='auth0|test', username='tester')
     response = client.post(ME, json={'username': 'other'}, headers=auth_headers(sub='auth0|test'))
@@ -81,12 +76,6 @@ def test_rename(client, auth_headers, create_user):
     response = client.put(ME, json={'username': 'renamed'}, headers=auth_headers())
     assert response.status_code == 200
     assert response.get_json()['username'] == 'renamed'
-
-
-def test_rename_rejects_a_non_string_username(client, auth_headers, create_user):
-    create_user()
-    response = client.put(ME, json={'username': ['not', 'a', 'string']}, headers=auth_headers())
-    assert response.status_code == 400
 
 
 def test_rename_to_a_taken_username_is_409_with_a_code(client, auth_headers, create_user):

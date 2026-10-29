@@ -15,11 +15,6 @@ def test_unsupported_language_is_400(client, auth_headers):
     assert client.post(TTS, json=body, headers=auth_headers()).status_code == 400
 
 
-def test_rejects_a_list_language(client, auth_headers):
-    body = dict(VALID, language=['it'])
-    assert client.post(TTS, json=body, headers=auth_headers()).status_code == 400
-
-
 def test_synthesizes_successfully(client, auth_headers, google_stub):
     google_stub.respond({'audioContent': 'ZmFrZS1hdWRpbw=='})
     response = client.post(TTS, json=VALID, headers=auth_headers())

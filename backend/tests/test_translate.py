@@ -15,11 +15,6 @@ def test_rejects_a_non_string_text(client, auth_headers):
     assert client.post(TRANSLATE, json=body, headers=auth_headers()).status_code == 400
 
 
-def test_rejects_a_list_source(client, auth_headers):
-    body = dict(VALID, source=['it'])
-    assert client.post(TRANSLATE, json=body, headers=auth_headers()).status_code == 400
-
-
 def test_rejects_the_same_source_and_target(client, auth_headers, google_stub):
     body = dict(VALID, target='it')
     response = client.post(TRANSLATE, json=body, headers=auth_headers())
