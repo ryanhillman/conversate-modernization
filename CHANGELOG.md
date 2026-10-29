@@ -107,6 +107,7 @@
 - Made the 30-a-minute limit on Google calls apply per user across translation and speech, not per endpoint and server process.
 - Corrected Lesson 2's "ciao ciao" examples, which said hello instead of goodbye.
 - Returned a clear error, not a server error, when Google sends speech-to-text an unexpected response.
+- Kept the words after a pause in a recording, which were dropped.
 - Rejected translation requests whose source and target languages match.
 - Stopped screen readers reading the check mark before each lesson on Mastery.
 - Replaced two quiz words whose answer was the word itself.

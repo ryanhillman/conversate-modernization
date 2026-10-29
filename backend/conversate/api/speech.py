@@ -122,12 +122,14 @@ def transcribe_speech():
         return jsonify(error='Speech recognition service unavailable'), 502
 
     try:
-        results = data.get('results') or []
-        if not results:
-            return jsonify(error='No speech detected'), 422
-        transcript = results[0]['alternatives'][0]['transcript']
+        # Google splits the audio at pauses and transcribes each part as its
+        # own result.
+        parts = [r['alternatives'][0]['transcript'].strip() for r in data.get('results') or []]
     except (AttributeError, KeyError, IndexError, TypeError) as e:
         current_app.logger.warning('Unexpected transcription response shape: %s', e)
         return jsonify(error='Speech recognition service unavailable'), 502
 
+    transcript = ' '.join(part for part in parts if part)
+    if not transcript:
+        return jsonify(error='No speech detected'), 422
     return jsonify(transcript=transcript), 200

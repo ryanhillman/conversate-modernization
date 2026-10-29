@@ -22,6 +22,19 @@ def test_transcribes_successfully(client, auth_headers, google_stub):
     assert response.get_json() == {'transcript': 'ciao'}
 
 
+def test_joins_the_parts_google_splits_at_pauses(client, auth_headers, google_stub):
+    google_stub.respond(
+        {
+            'results': [
+                {'alternatives': [{'transcript': 'ciao'}]},
+                {'alternatives': [{'transcript': ' come stai'}]},
+            ]
+        }
+    )
+    response = client.post(STT, json=VALID, headers=auth_headers())
+    assert response.get_json() == {'transcript': 'ciao come stai'}
+
+
 def test_no_speech_detected_is_422(client, auth_headers, google_stub):
     google_stub.respond({'results': []})
     assert client.post(STT, json=VALID, headers=auth_headers()).status_code == 422
