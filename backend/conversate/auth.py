@@ -1,5 +1,5 @@
+import functools
 import time
-from functools import wraps
 
 import jwt
 from flask import current_app, g, jsonify, request
@@ -17,18 +17,15 @@ JWKS_RETRY_DELAYS_SECONDS = (0.5, 1, 2)
 # refresh cooldown; a key Auth0 removes stays trusted until the cache expires.
 JWKS_CACHE_SECONDS = 10 * 60 * 60
 
-# One client per Auth0 domain, each caching that domain's keys.
-_jwks_clients = {}
 
-
+# Made once, so its key cache lasts across requests.
+@functools.cache
 def _jwks_client(domain):
-    if domain not in _jwks_clients:
-        _jwks_clients[domain] = PyJWKClient(
-            f'https://{domain}/.well-known/jwks.json',
-            timeout=JWKS_TIMEOUT_SECONDS,
-            lifespan=JWKS_CACHE_SECONDS,
-        )
-    return _jwks_clients[domain]
+    return PyJWKClient(
+        f'https://{domain}/.well-known/jwks.json',
+        timeout=JWKS_TIMEOUT_SECONDS,
+        lifespan=JWKS_CACHE_SECONDS,
+    )
 
 
 def _timed_out(error):
@@ -73,7 +70,7 @@ def _verify_token():
 
 
 def require_auth(f):
-    @wraps(f)
+    @functools.wraps(f)
     def decorated(*args, **kwargs):
         try:
             claims = _verify_token()

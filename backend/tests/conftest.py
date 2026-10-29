@@ -100,8 +100,8 @@ class JwksStub:
 def stub_jwks(monkeypatch, signing_key):
     _, jwk = signing_key
     stub = JwksStub(jwk)
-    # Fresh clients per test, so no test sees keys another one cached.
-    monkeypatch.setattr(auth_module, '_jwks_clients', {})
+    # A fresh client per test, so no test sees keys another one cached.
+    auth_module._jwks_client.cache_clear()
     monkeypatch.setattr(urllib.request, 'build_opener', lambda *handlers: stub)
     # Record retry waits instead of sleeping through them.
     monkeypatch.setattr(auth_module.time, 'sleep', stub.sleep)
