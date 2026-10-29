@@ -1,19 +1,23 @@
 <template>
-  <!-- The page's h1 is in the slot, which these states replace, so they need their own. -->
-  <div v-if="loading" class="loading-state">
-    <h1 class="visually-hidden">{{ route.meta.title }}</h1>
-    <p>Loading…</p>
-  </div>
-  <div v-else-if="loadFailed" class="card-style">
-    <h1 class="visually-hidden">{{ route.meta.title }}</h1>
-    <p>Could not load your profile.</p>
-    <button ref="retryButton" class="btn btn-accent" @click="retry">Try again</button>
-  </div>
-  <div v-else-if="profile" ref="content" tabindex="-1">
-    <slot />
-  </div>
-  <div v-else ref="content" class="text-center" tabindex="-1">
-    <SetUsername />
+  <!-- One root that never changes: this is each page's root inside the route
+       fade, and a fade can't follow a root that's swapped mid-way. -->
+  <div>
+    <!-- The page's h1 is in the slot, which these states replace, so they need their own. -->
+    <div v-if="loading" class="loading-state">
+      <h1 class="visually-hidden">{{ route.meta.title }}</h1>
+      <p>Loading…</p>
+    </div>
+    <div v-else-if="loadFailed" class="card-style">
+      <h1 class="visually-hidden">{{ route.meta.title }}</h1>
+      <p>Could not load your profile.</p>
+      <button ref="retryButton" class="btn btn-accent" @click="retry">Try again</button>
+    </div>
+    <div v-else-if="profile" ref="content" tabindex="-1">
+      <slot />
+    </div>
+    <div v-else ref="content" class="text-center" tabindex="-1">
+      <SetUsername />
+    </div>
   </div>
 </template>
 
