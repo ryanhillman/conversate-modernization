@@ -41,7 +41,6 @@
 /* Google serves profile pictures only without a referrer, hence
    referrerpolicy="no-referrer" on each. Square boxes keep a failed one round. */
 .nav-user-profile {
-  border-radius: 50% 50%;
   max-width: 3.785rem;
   height: auto;
   aspect-ratio: 1;
