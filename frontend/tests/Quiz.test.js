@@ -199,6 +199,17 @@ describe("Quiz answers", () => {
     expect(toastState.toasts.at(-1).message).toBe("Your earlier answer was already counted.");
   });
 
+  it("finish the quiz when the already-counted answer was the last one", async () => {
+    answerQuiz.mockRejectedValueOnce(Object.assign(httpError(409), { code: "out_of_sync" }));
+    submitQuiz.mockResolvedValue({ score: 1, time_seconds: 30, is_new_best: false });
+    wrapper = await startQuizPage();
+
+    await answer(wrapper);
+
+    expect(submitQuiz).toHaveBeenCalledTimes(1);
+    expect(wrapper.text()).toContain("Score: 1 / 1");
+  });
+
   it("end the quiz on any other refusal, such as time being up", async () => {
     quizStarting(2);
     answerQuiz.mockRejectedValueOnce(httpError(409));

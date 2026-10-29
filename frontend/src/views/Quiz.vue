@@ -240,8 +240,7 @@ async function selectAnswer(choice) {
     if (err.code === "out_of_sync") {
       // The answer's first try was graded but its reply was lost: move on.
       showToast("Your earlier answer was already counted.", "success");
-      currentIndex.value += 1;
-      advancing.value = false;
+      nextQuestion();
     } else if (err.status === 409) {
       // Time ran out or the quiz is gone: finish with what's been graded.
       finish();
@@ -255,13 +254,17 @@ async function selectAnswer(choice) {
   setTimeout(() => {
     selectedChoice.value = null;
     feedback.value = null;
-    if (currentIndex.value < questions.value.length - 1) {
-      currentIndex.value += 1;
-      advancing.value = false;
-    } else {
-      finish();
-    }
+    nextQuestion();
   }, FEEDBACK_DISPLAY_MS);
+}
+
+function nextQuestion() {
+  if (currentIndex.value < questions.value.length - 1) {
+    currentIndex.value += 1;
+    advancing.value = false;
+  } else {
+    finish();
+  }
 }
 
 async function finish() {
