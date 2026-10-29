@@ -123,7 +123,8 @@ describe("Quiz practice", () => {
     await wrapper.findAll("button")[1].trigger("click");
     await flushPromises();
     expect(startQuiz).toHaveBeenCalledWith(true);
-    expect(wrapper.get(".quiz-meta").text()).toContain("Practice: no timer");
+    expect(wrapper.get(".quiz-meta").text()).toBe("Question 1 / 1");
+    expect(wrapper.get(".quiz-meta").classes()).toContain("justify-content-center");
     expect(wrapper.get("h1").text()).toBe("Practice");
     expect(wrapper.find(".quiz-timer").exists()).toBe(false);
     expect(wrapper.find(".quiz-meta button").exists()).toBe(false);

@@ -20,10 +20,10 @@
       </div>
 
       <div v-else-if="phase === 'active' || phase === 'paused'" class="quiz-card-wrap">
-        <div class="quiz-meta">
+        <!-- Practice has only the question count, so it sits in the middle. -->
+        <div class="quiz-meta" :class="{ 'justify-content-center': practice }">
           <span>Question {{ currentIndex + 1 }} / {{ questions.length }}</span>
-          <span v-if="practice">Practice: no timer</span>
-          <template v-else>
+          <template v-if="!practice">
             <span class="quiz-timer"
               ><span class="visually-hidden">Time left: </span>{{ formattedRemaining }}</span
             >
