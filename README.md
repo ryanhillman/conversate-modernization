@@ -125,18 +125,24 @@ Inside the container, `127.0.0.1` is the container itself, so it reaches Postgre
 ### Tests
 
 ```bash
-(cd backend && pip install -r requirements-dev.txt && pytest)
-(cd frontend && npm test)
+cd backend
+source venv/bin/activate  # Windows: venv\Scripts\activate
+pip install -r requirements-dev.txt
+pytest
+cd ../frontend
+npm test
 ```
 
 To run the backend suite against Postgres, use a separate database whose name ends in `_test`; the suite drops its tables.
 
 ```bash
 docker exec conversate-postgres createdb -U conversate conversate_test
-(cd backend && TEST_DATABASE_URL=postgresql://conversate:conversate@127.0.0.1:5432/conversate_test pytest)
+(cd ../backend && TEST_DATABASE_URL=postgresql://conversate:conversate@127.0.0.1:5432/conversate_test pytest)
 ```
 
 ### Lint & format
+
+From the repo root, with the backend venv active:
 
 ```bash
 (cd backend && ruff check . && ruff format .)
