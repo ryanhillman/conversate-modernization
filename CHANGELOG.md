@@ -40,6 +40,7 @@
 - Put each lesson's title and Open/Close button on one row.
 - Spaced out opened lessons and practice answers.
 - Checked lesson answers on Enter or leaving the box, not while typing.
+- Ignored end punctuation and extra spaces in lesson answers.
 - Said the quiz is timed before it starts.
 - Consistently used color tokens instead of hard-coded colors.
 - Moved all global CSS into app.css.

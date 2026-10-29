@@ -1,7 +1,13 @@
-// Lesson answers are graded case-insensitively, ignoring surrounding spaces.
+// Lesson answers are graded ignoring capitalization, extra spaces, and end
+// punctuation ("Good evening!"). Accents still count.
 
 export function normalizeAnswer(value) {
-  return (value || "").trim().toLowerCase();
+  return (value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[.!?]+$/, "")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 export function isAnswerCorrect(value, correctAnswers) {

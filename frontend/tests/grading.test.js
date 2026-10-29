@@ -13,6 +13,12 @@ describe("isAnswerCorrect", () => {
     expect(isAnswerCorrect(" ABBIAMO ", ["abbiamo"])).toBe(true);
   });
 
+  it("ignores end punctuation and extra spaces, but not accents", () => {
+    expect(isAnswerCorrect("Good  evening !", ["good evening"])).toBe(true);
+    expect(isAnswerCorrect("hello?!", ["hello"])).toBe(true);
+    expect(isAnswerCorrect("e", ["è"])).toBe(false);
+  });
+
   it("accepts any of several correct answers", () => {
     expect(isAnswerCorrect("good evening", ["good evening", "evening"])).toBe(true);
     expect(isAnswerCorrect("evening", ["good evening", "evening"])).toBe(true);
