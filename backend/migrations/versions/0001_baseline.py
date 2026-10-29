@@ -55,6 +55,7 @@ def upgrade():
         sa.Column('practice', sa.Boolean(), nullable=False, server_default=sa.false()),
         sa.ForeignKeyConstraint(['user_id'], ['account.id']),
         sa.PrimaryKeyConstraint('id'),
+        sqlite_autoincrement=True,
     )
     op.create_index('uq_quiz_attempt_user_id', 'quiz_attempt', ['user_id'], unique=True)
 

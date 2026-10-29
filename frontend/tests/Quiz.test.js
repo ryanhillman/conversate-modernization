@@ -24,8 +24,11 @@ function httpError(status) {
   return error;
 }
 
+const ATTEMPT_ID = 7;
+
 function quizStarting(questionCount) {
   startQuiz.mockResolvedValue({
+    attempt_id: ATTEMPT_ID,
     questions: Array.from({ length: questionCount }, (_, i) => ({ ...QUESTION, it: `word ${i}` })),
     seconds_remaining: 250,
     pauses_remaining: 1,
@@ -186,6 +189,20 @@ describe("Quiz feedback", () => {
 });
 
 describe("Quiz answers", () => {
+  it("name the quiz they belong to, and drop it when a newer start replaced it", async () => {
+    answerQuiz.mockRejectedValueOnce(Object.assign(httpError(409), { code: "replaced" }));
+    wrapper = await startQuizPage();
+
+    await answer(wrapper);
+
+    expect(answerQuiz).toHaveBeenCalledWith(ATTEMPT_ID, 0, "bread");
+    expect(submitQuiz).not.toHaveBeenCalled();
+    expect(document.activeElement.textContent.trim()).toBe("Start");
+    expect(toastState.toasts.at(-1).message).toBe(
+      "This quiz was restarted in another tab or browser.",
+    );
+  });
+
   it("move on when the server says the answer was already counted", async () => {
     quizStarting(2);
     answerQuiz.mockRejectedValueOnce(Object.assign(httpError(409), { code: "out_of_sync" }));

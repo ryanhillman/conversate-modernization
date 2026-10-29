@@ -1,7 +1,7 @@
 import random
 
-from flask import Blueprint, abort, jsonify, request
-from sqlalchemy import select, update
+from flask import Blueprint, abort, jsonify, make_response, request
+from sqlalchemy import delete, select, update
 from sqlalchemy.exc import IntegrityError
 
 from ..auth import require_auth
@@ -50,10 +50,26 @@ def _find_attempt(user_id):
     ).one_or_none()
 
 
-def _require_attempt(user_id):
+def _discard_attempt(user_id):
+    # Separate so a test can slip a rival start in before ours commits.
+    db.session.execute(delete(QuizAttempt).where(QuizAttempt.user_id == user_id))
+
+
+def _require_attempt(user_id, body):
+    """The user's quiz in progress, which body must name by attempt_id: a
+    later start replaces it, and a tab still on the old one is told so
+    instead of answering into the new one."""
     attempt = _find_attempt(user_id)
     if attempt is None:
         abort(409, description='No quiz in progress; call /api/me/quiz/start first')
+    attempt_id = body.get('attempt_id')
+    if not isinstance(attempt_id, int) or isinstance(attempt_id, bool):
+        abort(400, description='attempt_id must be an integer')
+    if attempt_id != attempt.id:
+        # The frontend checks the code and drops the old quiz.
+        abort(
+            make_response(jsonify(error='A newer start replaced this quiz', code='replaced'), 409)
+        )
     return attempt
 
 
@@ -86,27 +102,23 @@ def start_quiz(record):
     questions = _build_quiz()
     started_at = utcnow()
 
-    attempt = _find_attempt(record.id)
-    if attempt is None:
-        attempt = QuizAttempt(user_id=record.id)
-        db.session.add(attempt)
-    attempt.started_at = started_at
-    attempt.quiz_state = questions
-    attempt.next_index = 0
-    attempt.correct_count = 0
-    attempt.paused_at = None
-    attempt.pauses_used = 0
-    attempt.practice = practice
+    # A new row per start, so its id tells which quiz a later request means.
+    _discard_attempt(record.id)
+    attempt = QuizAttempt(
+        user_id=record.id, started_at=started_at, quiz_state=questions, practice=practice
+    )
+    db.session.add(attempt)
     try:
         db.session.commit()
     except IntegrityError:
-        # A simultaneous first start inserted first; the unique index on
-        # user_id lets only one through.
+        # A simultaneous start inserted first; the unique index on user_id
+        # lets only one through.
         db.session.rollback()
         return jsonify(error='Quiz already starting'), 409
 
     client_questions = [{'it': q['it'], 'choices': q['choices']} for q in questions]
     return jsonify(
+        attempt_id=attempt.id,
         questions=client_questions,
         practice=practice,
         seconds_remaining=None if practice else _seconds_remaining(started_at),
@@ -123,7 +135,7 @@ def answer_quiz(record):
     if not isinstance(index, int) or isinstance(index, bool):
         return jsonify(error='index must be an integer'), 400
 
-    attempt = _require_attempt(record.id)
+    attempt = _require_attempt(record.id, body)
     if attempt.paused_at is not None:
         return jsonify(error='Quiz is paused; call /api/me/quiz/resume first'), 409
     if not attempt.practice and _seconds_remaining(attempt.started_at) <= 0:
@@ -162,7 +174,7 @@ def answer_quiz(record):
 @require_auth
 @resolve_me
 def pause_quiz(record):
-    attempt = _require_attempt(record.id)
+    attempt = _require_attempt(record.id, json_body())
     _require_timed(attempt)
     if attempt.paused_at is None:
         if attempt.pauses_used >= MAX_QUIZ_PAUSES:
@@ -180,7 +192,7 @@ def pause_quiz(record):
 @require_auth
 @resolve_me
 def resume_quiz(record):
-    attempt = _require_attempt(record.id)
+    attempt = _require_attempt(record.id, json_body())
     _require_timed(attempt)
     if attempt.paused_at is not None:
         # Move the start forward by the pause, so none of it counts against
@@ -198,7 +210,7 @@ def resume_quiz(record):
 @require_auth
 @resolve_me
 def submit_quiz(record):
-    attempt = _require_attempt(record.id)
+    attempt = _require_attempt(record.id, json_body())
 
     score = attempt.correct_count
     if attempt.practice:

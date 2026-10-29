@@ -82,4 +82,9 @@ class QuizAttempt(db.Model):
     # Untimed, and never counts toward the leaderboard.
     practice: Mapped[bool] = mapped_column(default=False, server_default=false())
 
-    __table_args__ = (db.Index('uq_quiz_attempt_user_id', user_id, unique=True),)
+    # Each start is a new row whose id names the quiz, so ids must never come
+    # back; Postgres guarantees that, SQLite only with this.
+    __table_args__ = (
+        db.Index('uq_quiz_attempt_user_id', user_id, unique=True),
+        {'sqlite_autoincrement': True},
+    )

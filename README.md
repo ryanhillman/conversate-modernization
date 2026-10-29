@@ -157,7 +157,7 @@ Releases follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html) for t
 
 All `/api` endpoints require an Auth0 access token (`Authorization: Bearer <token>`).
 Translation and speech endpoints share a limit of 30 requests per minute per user.
-Errors return `{"error": "..."}`. Two add a `code` the app checks: `"username_taken"` for a taken username, and `"out_of_sync"` for an answer to a question other than the current one.
+Errors return `{"error": "..."}`. Three add a `code` the app checks: `"username_taken"` for a taken username, `"out_of_sync"` for an answer to a question other than the current one, and `"replaced"` for a quiz action after a newer start.
 
 ### Account
 
@@ -175,11 +175,13 @@ Errors return `{"error": "..."}`. Two add a `code` the app checks: `"username_ta
 
 | Method | Path | Purpose |
 |---|---|---|
-| POST | `/api/me/quiz/start` | Start a timed quiz and get its questions; send `{"practice": true}` for an untimed one |
+| POST | `/api/me/quiz/start` | Start a timed quiz and get its questions and `attempt_id`; send `{"practice": true}` for an untimed one |
 | POST | `/api/me/quiz/answer` | Answer the current question |
 | POST | `/api/me/quiz/pause` | Pause the quiz timer (once per quiz; timed quizzes only) |
 | POST | `/api/me/quiz/resume` | Resume the quiz timer |
 | POST | `/api/me/quiz/submit` | Finish the quiz and save a new best (practice results aren't saved) |
+
+The four actions after start send the quiz's `attempt_id` in their JSON body; a later start replaces the quiz, and the old one's actions are refused.
 | GET | `/api/leaderboard` | Top 100 quiz scores |
 
 ### Translation & speech

@@ -181,7 +181,7 @@ def test_reset_discards_an_in_progress_quiz_attempt(client, auth_headers, create
         is None
     )
     # Without the attempt, submitting can no longer record a bogus "new best".
-    submit = client.post('/api/me/quiz/submit', headers=auth_headers())
+    submit = client.post('/api/me/quiz/submit', json={'attempt_id': 1}, headers=auth_headers())
     assert submit.status_code == 409
 
 

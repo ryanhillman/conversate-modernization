@@ -120,6 +120,8 @@ const feedback = ref(null);
 const remainingSeconds = ref(0);
 const pausesRemaining = ref(0);
 let tickTimer = null;
+// Names this quiz to the server; a start elsewhere since then replaces it.
+let attemptId = null;
 // When the clock was last synced with the server, and its reading then.
 let displayStart = 0;
 let secondsRemainingAtStart = 0;
@@ -179,6 +181,7 @@ async function start(isPractice) {
   phase.value = "loading";
   try {
     const data = await startQuiz(isPractice);
+    attemptId = data.attempt_id;
     questions.value = data.questions;
     currentIndex.value = 0;
     advancing.value = false;
@@ -204,14 +207,14 @@ async function pause() {
   // which ends the quiz.
   advancing.value = true;
   try {
-    const data = await pauseQuiz();
+    const data = await pauseQuiz(attemptId);
     clearInterval(tickTimer);
     phase.value = "paused";
     remainingSeconds.value = data.seconds_remaining;
     pausesRemaining.value = data.pauses_remaining;
   } catch (err) {
     console.error("Failed to pause quiz:", err);
-    showToast("Could not pause the quiz.", "error");
+    if (!quizReplaced(err)) showToast("Could not pause the quiz.", "error");
   } finally {
     advancing.value = false;
   }
@@ -220,7 +223,7 @@ async function pause() {
 async function resume() {
   if (phase.value !== "paused") return;
   try {
-    const data = await resumeQuiz();
+    const data = await resumeQuiz(attemptId);
     // Paused just as time ran out: there's nothing left to resume.
     if (data.seconds_remaining <= 0) return finish();
     resetDisplayClock(data.seconds_remaining);
@@ -229,8 +232,18 @@ async function resume() {
     tickTimer = setInterval(tick, 1000);
   } catch (err) {
     console.error("Failed to resume quiz:", err);
-    showToast("Could not resume the quiz.", "error");
+    if (!quizReplaced(err)) showToast("Could not resume the quiz.", "error");
   }
+}
+
+// A start in another tab or browser replaced this quiz on the server, which
+// now refuses it: drop it here too, rather than answering into the new one.
+function quizReplaced(err) {
+  if (err.code !== "replaced") return false;
+  clearInterval(tickTimer);
+  showToast("This quiz was restarted in another tab or browser.", "error");
+  phase.value = "ready";
+  return true;
 }
 
 async function selectAnswer(choice) {
@@ -238,12 +251,13 @@ async function selectAnswer(choice) {
   advancing.value = true;
   selectedChoice.value = choice;
   try {
-    const { correct } = await answerQuiz(currentIndex.value, choice);
+    const { correct } = await answerQuiz(attemptId, currentIndex.value, choice);
     feedback.value = correct ? "correct" : "wrong";
     announce(correct ? "Correct" : "Incorrect");
   } catch (err) {
     console.error("Failed to submit answer:", err);
     selectedChoice.value = null;
+    if (quizReplaced(err)) return;
     if (err.code === "out_of_sync") {
       // The answer's first try was graded but its reply was lost: move on.
       showToast("Your earlier answer was already counted.", "success");
@@ -278,7 +292,7 @@ async function finish() {
   clearInterval(tickTimer);
   phase.value = "loading";
   try {
-    result.value = await submitQuiz();
+    result.value = await submitQuiz(attemptId);
     // Submit returns only this attempt, so update the stored best directly.
     if (result.value.is_new_best && profile.value) {
       setProfile({
@@ -290,6 +304,7 @@ async function finish() {
     phase.value = "results";
   } catch (err) {
     console.error("Failed to submit quiz:", err);
+    if (quizReplaced(err)) return;
     // 409: no quiz in progress, e.g. an earlier submit saved but its response
     // was lost, so retrying can't help. Other failures may be temporary.
     if (err.status === 409) {
