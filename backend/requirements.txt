@@ -9,4 +9,5 @@ httpx==0.28.1
 psycopg[binary]==3.3.6
 PyJWT[crypto]==2.15.1
 python-decouple==3.8
+python-dotenv==1.2.4
 SQLAlchemy==2.1.6
