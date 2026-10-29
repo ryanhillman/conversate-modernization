@@ -26,8 +26,6 @@ def create_app(config):
     CORS(app, origins=config.ALLOWED_ORIGIN)
     db.init_app(app)
     migrate.init_app(app, db)
-    # Off under TESTING; the rate-limit test turns it back on.
-    app.config.setdefault('RATELIMIT_ENABLED', not app.config.get('TESTING', False))
     # Counts live in this process, which is correct only while the backend runs
     # as one process (see the Dockerfile).
     app.config.setdefault('RATELIMIT_STORAGE_URI', 'memory://')
