@@ -85,10 +85,13 @@
                 width="50"
               />
             </button>
+            <!-- Bootstrap only right-aligns a menu that its own script has
+                 positioned, which this attribute stands in for. -->
             <div
               id="profileMenu"
               class="dropdown-menu dropdown-menu-end"
               :class="{ show: dropdownOpen }"
+              data-bs-popper="static"
             >
               <div class="dropdown-header">{{ user.name }}</div>
               <button type="button" class="dropdown-item" @click="logout">

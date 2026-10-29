@@ -66,6 +66,7 @@
 ### Fixed
 - Made the "View leaderboard" button on the quiz results screen visible by switching from navy-on-navy to amber.
 - Stopped the phone menu showing two active-page markers.
+- Kept the profile menu inside the window on 1200px screens, where it ran off the right edge.
 - Ignored all local .env files in Git, such as .env.local and .env.development.
 - Showed the home page images in full instead of cropping.
 - Lined up the profile page with the other pages.
