@@ -33,7 +33,7 @@
             </li>
           </ul>
 
-          <ul v-if="isAuthenticated" id="mobileAuthNavBar" class="navbar-nav d-xl-none d-flex">
+          <ul v-if="isAuthenticated" id="mobileAuthNavBar" class="navbar-nav d-xl-none">
             <li class="nav-item">
               <span class="user-info">
                 <img
@@ -63,7 +63,6 @@
             v-if="isAuthenticated"
             ref="dropdown"
             class="nav-item dropdown"
-            :class="{ show: dropdownOpen }"
             @focusout="onDropdownFocusOut"
           >
             <!-- A disclosure: a button that shows and hides the menu below it,

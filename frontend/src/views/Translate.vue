@@ -309,11 +309,9 @@ async function startTextToSpeech() {
   border: 0;
   padding: 0;
   color: inherit;
-  cursor: pointer;
 }
 .translate-icon {
   color: var(--brand-navy);
-  cursor: pointer;
 }
 .translate-icon:hover {
   color: var(--brand-navy-dark);
@@ -327,9 +325,6 @@ async function startTextToSpeech() {
 }
 .icon-button[aria-disabled="true"] {
   opacity: 0.5;
-}
-.icon-button[aria-disabled="true"],
-.icon-button[aria-disabled="true"] .translate-icon {
   cursor: default;
 }
 .back-card {
@@ -339,9 +334,7 @@ async function startTextToSpeech() {
   padding: 1.5rem;
   margin: 2rem auto;
   max-width: 40rem;
-  color: var(--text-color);
   background-color: var(--card-bg);
-  font-weight: 400;
 }
 .lang-select {
   appearance: none;
@@ -352,9 +345,7 @@ async function startTextToSpeech() {
   /* Never wider than the card on phones with larger text. */
   min-width: min(13rem, 100%);
   padding: 0.55rem 2.2rem 0.55rem 1rem;
-  border: 1px solid var(--bs-secondary);
   border-radius: 8px;
-  color: var(--text-color);
   font-family: var(--font-heading);
   font-weight: 500;
   cursor: pointer;

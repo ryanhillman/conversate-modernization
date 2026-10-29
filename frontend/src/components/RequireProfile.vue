@@ -4,7 +4,7 @@
     <h1 class="visually-hidden">{{ route.meta.title }}</h1>
     <p>Loading…</p>
   </div>
-  <div v-else-if="loadFailed" class="card-style text-center">
+  <div v-else-if="loadFailed" class="card-style">
     <h1 class="visually-hidden">{{ route.meta.title }}</h1>
     <p>Could not load your profile.</p>
     <button ref="retryButton" class="btn btn-accent" @click="retry">Try again</button>
