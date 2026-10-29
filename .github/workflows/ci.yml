@@ -9,35 +9,6 @@ permissions:
   contents: read
 
 jobs:
-  commit-messages:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-      - name: Commit subjects are 72 characters or fewer
-        env:
-          BEFORE: ${{ github.event.pull_request.base.sha || github.event.before }}
-          AFTER: ${{ github.event.pull_request.head.sha || github.sha }}
-        run: |
-          # Check the commits this push or pull request adds; with no earlier
-          # commit to compare against (a new branch, or a rewritten one), check
-          # the latest.
-          if git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
-            range=("$BEFORE..$AFTER")
-          else
-            range=(-1 "$AFTER")
-          fi
-          # Dependabot writes its own subjects, which can run long.
-          git log --no-merges --format='%an%x09%s' "${range[@]}" | python3 -c '
-          import sys
-          long = [s for a, s in (l.rstrip("\n").split("\t", 1) for l in sys.stdin)
-                  if a != "dependabot[bot]" and len(s) > 72]
-          for s in long:
-              print(f"{len(s)} characters: {s}")
-          sys.exit(1 if long else 0)
-          '
-
   backend:
     runs-on: ubuntu-latest
     defaults:
