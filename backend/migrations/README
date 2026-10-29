@@ -1,10 +1,10 @@
 Database migrations (Alembic, via Flask-Migrate)
 
-- Build a fresh database with `flask db upgrade`.
+- Build a fresh database with `flask --app run.py db upgrade`.
 - The test suite builds its schema with db.create_all(), not this chain.
 - The baseline's id is `0001_v2`, not `0001`, so a 1.x database at its own
   revision `0001` is never mistaken for it.
 - New revisions should use an explicit sequential id, the next number after
   the latest file in versions/ (e.g. `0002`):
-  `flask db migrate --rev-id 0002 -m "..."`.
+  `flask --app run.py db migrate --rev-id 0002 -m "..."`.
 - New revisions are formatted with ruff as they're written (see alembic.ini).
