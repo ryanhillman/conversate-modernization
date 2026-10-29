@@ -23,7 +23,7 @@ This release makes every page accessible to WCAG 2.2 AA and adds a practice quiz
 - **Breaking:** The API's user_name field is now username.
 - **Breaking:** The migration history is replaced with a single baseline, and the user table is now account, so databases from 1.x must be recreated.
 - **Breaking:** The frontend's tools need Node 24 (24.15 or newer); 22.22.2+ and 26+ also work.
-- **Breaking:** The quiz actions after start send the attempt_id that start now returns.
+- **Breaking:** The quiz endpoints need the attempt_id that start returns to allow only one quiz attempt at a time.
 - Pages reuse the loaded profile instead of fetching it on every visit.
 - Text-to-speech audio is cached, and connections to Google's APIs are reused.
 - The home page images are about 75% smaller, resized and converted to WebP.
@@ -90,7 +90,6 @@ This release makes every page accessible to WCAG 2.2 AA and adds a practice quiz
 - An answer given as the quiz paused ended it.
 - A click while the card flipped answered the next question unseen and could highlight the footer logo.
 - An answer whose reply was lost ended the quiz early when sent again.
-- A quiz started in another tab or browser left the first tab answering into it and submitting it early; the first tab now stops with a message.
 - A quiz with nothing right counted as a best and reached the leaderboard as 0.
 - A failed submit couldn't be retried.
 - Two words were their own answer.
