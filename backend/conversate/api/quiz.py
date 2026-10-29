@@ -65,6 +65,12 @@ def _require_timed(attempt):
         abort(409, description='A practice quiz has no timer')
 
 
+def _out_of_sync():
+    # The frontend checks the code: an answer sent again after its reply was
+    # lost gets this, and the quiz moves on instead of ending.
+    return jsonify(error='index does not match the current question', code='out_of_sync'), 409
+
+
 def _practice_requested():
     """Whether start was asked for a practice quiz. The body is optional."""
     if not request.get_data():
@@ -128,7 +134,7 @@ def answer_quiz(record):
     if attempt.next_index >= len(attempt.quiz_state):
         return jsonify(error='All questions have already been answered'), 409
     if index != attempt.next_index:
-        return jsonify(error='index does not match the current question'), 409
+        return _out_of_sync()
     if (utcnow() - attempt.started_at).total_seconds() < index * MIN_SECONDS_PER_ANSWER:
         return jsonify(error='Answering too fast'), 429
 
@@ -150,7 +156,7 @@ def answer_quiz(record):
     )
     db.session.commit()
     if result.rowcount == 0:
-        return jsonify(error='index does not match the current question'), 409
+        return _out_of_sync()
 
     return jsonify(correct=correct), 200
 

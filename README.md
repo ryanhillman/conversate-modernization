@@ -154,7 +154,7 @@ docker exec conversate-postgres createdb -U conversate conversate_test
 
 All `/api` endpoints require an Auth0 access token (`Authorization: Bearer <token>`).
 Translation and speech endpoints share a limit of 30 requests per minute per user.
-Errors return `{"error": "..."}`; a taken username also includes `"code": "username_taken"`.
+Errors return `{"error": "..."}`. Two add a `code` the app checks: `"username_taken"` for a taken username, and `"out_of_sync"` for an answer to a question other than the current one.
 
 ### Account
 

@@ -70,6 +70,7 @@ def test_answer_out_of_order_is_409(client, auth_headers, create_user):
     client.post(START, headers=auth_headers())
     response = client.post(ANSWER, json={'index': 1, 'answer': 'x'}, headers=auth_headers())
     assert response.status_code == 409
+    assert response.get_json()['code'] == 'out_of_sync'
 
 
 def test_answer_grades_against_the_servers_answer_key(client, auth_headers, create_user):

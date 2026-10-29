@@ -236,16 +236,20 @@ async function selectAnswer(choice) {
     announce(correct ? "Correct" : "Incorrect");
   } catch (err) {
     console.error("Failed to submit answer:", err);
-    if (err.status === 409) {
-      // Time ran out or the question is out of sync: finish with what's been
-      // graded.
-      finish();
-      return;
-    }
-    // Other failures may be temporary, so let the user retry.
-    showToast("Could not submit your answer. Try again.", "error");
     selectedChoice.value = null;
-    advancing.value = false;
+    if (err.code === "out_of_sync") {
+      // The answer's first try was graded but its reply was lost: move on.
+      showToast("Your earlier answer was already counted.", "success");
+      currentIndex.value += 1;
+      advancing.value = false;
+    } else if (err.status === 409) {
+      // Time ran out or the quiz is gone: finish with what's been graded.
+      finish();
+    } else {
+      // Other failures may be temporary, so let the user retry.
+      showToast("Could not submit your answer. Try again.", "error");
+      advancing.value = false;
+    }
     return;
   }
   setTimeout(() => {

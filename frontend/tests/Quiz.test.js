@@ -185,6 +185,32 @@ describe("Quiz feedback", () => {
 });
 
 describe("Quiz answers", () => {
+  it("move on when the server says the answer was already counted", async () => {
+    quizStarting(2);
+    answerQuiz.mockRejectedValueOnce(Object.assign(httpError(409), { code: "out_of_sync" }));
+    wrapper = await startQuizPage();
+
+    await answer(wrapper);
+    // The flip to the next card runs on timers.
+    await vi.advanceTimersByTimeAsync(100);
+
+    expect(wrapper.get(".quiz-word").text()).toBe("word 1");
+    expect(submitQuiz).not.toHaveBeenCalled();
+    expect(toastState.toasts.at(-1).message).toBe("Your earlier answer was already counted.");
+  });
+
+  it("end the quiz on any other refusal, such as time being up", async () => {
+    quizStarting(2);
+    answerQuiz.mockRejectedValueOnce(httpError(409));
+    submitQuiz.mockResolvedValue({ score: 0, time_seconds: 250, is_new_best: false });
+    wrapper = await startQuizPage();
+
+    await answer(wrapper);
+
+    expect(submitQuiz).toHaveBeenCalledTimes(1);
+    expect(wrapper.text()).toContain("Score: 0 / 2");
+  });
+
   it("stay focusable while an answer is checked, ignoring more clicks", async () => {
     answerQuiz.mockReturnValue(new Promise(() => {}));
     wrapper = await startQuizPage();
