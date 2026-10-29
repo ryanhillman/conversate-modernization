@@ -9,8 +9,10 @@
       <h1 v-else class="visually-hidden">{{ practice ? "Practice" : "Timed Quiz" }}</h1>
 
       <div v-if="phase === 'ready'" class="card-style quiz-results">
-        <button ref="startButton" class="btn btn-accent m-2" @click="start(false)">Start</button>
-        <button class="btn btn-practice m-2" @click="start(true)">Practice</button>
+        <div class="quiz-start-buttons">
+          <button ref="startButton" class="btn btn-accent" @click="start(false)">Start</button>
+          <button class="btn btn-practice" @click="start(true)">Practice</button>
+        </div>
       </div>
 
       <div v-else-if="phase === 'loading'" class="loading-state">
@@ -395,5 +397,12 @@ async function finish() {
 }
 .quiz-results {
   max-width: 30rem;
+}
+/* Side by side, each as wide as the wider. */
+.quiz-start-buttons {
+  display: inline-grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 1rem;
 }
 </style>
