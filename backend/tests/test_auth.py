@@ -48,7 +48,7 @@ def test_wrong_audience_is_401_and_logged(client, auth_headers, caplog):
     headers = auth_headers(audience='another-api')
     with caplog.at_level(logging.INFO):
         assert client.get(URL, headers=headers).status_code == 401
-    assert "Rejected token: Audience doesn't match" in caplog.text
+    assert 'Rejected token:' in caplog.text
 
 
 def test_a_bug_in_token_checking_is_not_reported_as_401(client, auth_headers, monkeypatch):

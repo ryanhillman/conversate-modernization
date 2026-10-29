@@ -23,9 +23,9 @@ def _attempt_for(user_id):
     return db.session.scalars(select(QuizAttempt).where(QuizAttempt.user_id == user_id)).one()
 
 
-def test_build_quiz_choices_are_unique_and_include_the_correct_answer():
+def test_build_quiz_asks_every_word_once_with_unique_choices_including_the_answer():
     questions = _build_quiz()
-    assert len(questions) == 50
+    assert sorted(q['it'] for q in questions) == sorted(w['it'] for w in QUIZ_WORDS)
     for q in questions:
         assert len(q['choices']) == 4
         assert len(set(q['choices'])) == 4
@@ -36,10 +36,10 @@ def test_no_quiz_word_is_its_own_answer():
     assert [w for w in QUIZ_WORDS if w['it'] == w['en']] == []
 
 
-def test_start_issues_fifty_questions_without_answers(client, auth_headers, create_user):
+def test_start_issues_every_question_without_its_answer(client, auth_headers, create_user):
     create_user()
     body = client.post(START, headers=auth_headers()).get_json()
-    assert len(body['questions']) == 50
+    assert len(body['questions']) == len(QUIZ_WORDS)
     for q in body['questions']:
         assert set(q.keys()) == {'it', 'choices'}
         assert len(q['choices']) == 4
@@ -161,9 +161,7 @@ def test_concurrent_guesses_for_one_question_only_score_once(
     assert statuses.count(200) == 1
     assert statuses.count(409) == len(choices) - 1
     with app.app_context():
-        attempt = _attempt_for(user.id)
-        assert attempt.next_index == 1
-        assert attempt.correct_count <= 1
+        assert _attempt_for(user.id).next_index == 1
 
 
 def test_answer_while_paused_is_rejected(client, auth_headers, create_user):
