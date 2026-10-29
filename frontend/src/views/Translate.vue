@@ -28,10 +28,13 @@
         <p v-if="sameLanguageOnBothSides" class="form-error small m-2">
           Input and output language must be different.
         </p>
-        <!-- The label sits in the box and moves to its corner when there's
-             text, so it never disappears like a placeholder would. Bootstrap
-             needs the placeholder attribute to tell, and hides its text. -->
-        <div class="form-floating translate-field">
+        <!-- Each box's prompt is a placeholder, gone once the box has text.
+             That's fine for WCAG because the page makes each box's purpose
+             clear: the one box to type in sits under Input language, and
+             the read-only box follows the Translate button. Screen readers
+             get the same words from the hidden labels. -->
+        <div class="translate-field">
+          <label for="textToTranslate" class="visually-hidden">Enter here to translate…</label>
           <textarea
             id="textToTranslate"
             v-model="textToTranslate"
@@ -40,7 +43,6 @@
             :maxlength="MAX_TEXT_LENGTH"
             placeholder="Enter here to translate…"
           ></textarea>
-          <label for="textToTranslate">Enter here to translate…</label>
         </div>
         <!-- Busy buttons use aria-disabled, not disabled: a disabled button loses keyboard focus. -->
         <div class="m-3">
@@ -79,7 +81,8 @@
         >
           Translate
         </button>
-        <div class="form-floating translate-field">
+        <div class="translate-field">
+          <label for="translation" class="visually-hidden">Translation</label>
           <textarea
             id="translation"
             :value="translatedText"
@@ -88,7 +91,6 @@
             readonly
             placeholder="Translation"
           ></textarea>
-          <label for="translation">Translation</label>
         </div>
         <div v-if="translatedText" class="m-3">
           <button
@@ -297,16 +299,9 @@ async function startTextToSpeech() {
   height: 15rem;
   resize: none;
 }
-/* Bootstrap keeps a floating label on one line and cuts off what doesn't fit;
-   wrap it instead, so narrow screens and wider text spacing lose nothing. */
-.translate-field > label {
-  white-space: normal;
-}
 /* Read-only rather than disabled, so the translation can be focused and
-   selected; shaded so it doesn't look editable. Bootstrap paints a white strip
-   behind a raised label, so it gets the shading too. */
-.translate-textarea[readonly],
-.translate-textarea[readonly] ~ label::after {
+   selected; shaded so it doesn't look editable. */
+.translate-textarea[readonly] {
   background-color: var(--bs-secondary-bg);
 }
 .icon-button {

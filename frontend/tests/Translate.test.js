@@ -179,13 +179,16 @@ describe("Translate", () => {
     expect(output.attributes("disabled")).toBeUndefined();
   });
 
-  it("names each text box by its visible label", () => {
+  it("names each text box for screen readers with the words its placeholder shows", () => {
     const wrapper = mount(Translate, {
       global: { stubs: { RequireProfile } },
       attachTo: document.body,
     });
     const [input, output] = wrapper.findAll("textarea");
 
+    for (const box of [input, output]) {
+      expect(computeAccessibleName(box.element)).toBe(box.attributes("placeholder"));
+    }
     expect(computeAccessibleName(input.element)).toBe("Enter here to translate…");
     expect(computeAccessibleName(output.element)).toBe("Translation");
     wrapper.unmount();
