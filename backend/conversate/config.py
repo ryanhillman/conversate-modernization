@@ -29,7 +29,9 @@ class Config:
             raise ConfigError(f'Missing required environment variables: {", ".join(missing)}')
 
         self.SQLALCHEMY_TRACK_MODIFICATIONS = False
-        self.SQLALCHEMY_ENGINE_OPTIONS = {'pool_pre_ping': True}
+        # A connection per Gunicorn thread (see the Dockerfile); the default
+        # pool of 15 would make the 16th wait.
+        self.SQLALCHEMY_ENGINE_OPTIONS = {'pool_pre_ping': True, 'pool_size': 16}
         self.ALLOWED_ORIGIN = config('ALLOWED_ORIGIN', default='http://localhost:3000')
         self.DEBUG = config('DEBUG', cast=bool, default=False)
         self.MAX_CONTENT_LENGTH = MAX_REQUEST_BYTES

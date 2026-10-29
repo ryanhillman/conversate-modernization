@@ -136,6 +136,7 @@
 - Opened each page from the nav bar at the top, instead of where the last page was scrolled to.
 - Centered the Mark lesson complete button on phones.
 - Returned a 400, not a server error, for deeply nested JSON.
+- Gave the backend a database connection per Gunicorn thread, so no request waits for one under load.
 
 ### Security
 - Made the backend's code read-only to the user it runs as.
