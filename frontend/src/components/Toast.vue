@@ -2,7 +2,7 @@
   <div ref="container" class="toast-container" role="status">
     <transition-group name="toast">
       <div
-        v-for="t in toasts"
+        v-for="t in toastState.toasts"
         :key="t.id"
         :class="['toast-item', `toast-${t.type}`]"
         :data-toast-id="t.id"
@@ -23,10 +23,9 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
+import { nextTick, onBeforeUnmount, onMounted, ref } from "vue";
 import { dismissToast, toastState } from "../stores/toastStore";
 
-const toasts = computed(() => toastState.toasts);
 const container = ref(null);
 
 // Toasts sit over the page, and browsers only scroll a newly focused control
@@ -35,7 +34,7 @@ const container = ref(null);
 // to scroll the page's last controls above them.
 function reserveSpace() {
   const root = document.documentElement;
-  if (!toasts.value.length) {
+  if (!toastState.toasts.length) {
     root.style.removeProperty("--toast-space");
     return;
   }
@@ -59,7 +58,7 @@ onBeforeUnmount(() => observer.disconnect());
 // error toast's Dismiss button, or else to the main content.
 async function dismiss(id, event) {
   const hadFocus = event.currentTarget === document.activeElement;
-  const errors = toasts.value.filter((t) => t.type === "error");
+  const errors = toastState.toasts.filter((t) => t.type === "error");
   const index = errors.findIndex((t) => t.id === id);
   const next = errors[index + 1] ?? errors[index - 1];
   dismissToast(id);

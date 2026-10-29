@@ -53,7 +53,7 @@ import { ref, nextTick, onMounted } from "vue";
 import RequireProfile from "../components/RequireProfile.vue";
 import { getLeaderboard } from "../api/leaderboard";
 import { announce } from "../stores/announceStore";
-import { profile as user } from "../stores/profileStore";
+import { profile } from "../stores/profileStore";
 import { formatTime } from "../utils/formatTime";
 
 const rows = ref([]);
@@ -63,7 +63,7 @@ const retryButton = ref(null);
 const results = ref(null);
 
 function isYou(row) {
-  return user.value && row.username === user.value.username;
+  return profile.value && row.username === profile.value.username;
 }
 
 async function load() {
