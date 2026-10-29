@@ -7,31 +7,23 @@
       <div class="back-card">
         <div class="m-3">
           <label class="d-block" for="selectInputLanguage">Input language</label>
-          <span class="lang-select-wrap">
-            <select
-              id="selectInputLanguage"
-              v-model="inputLanguage"
-              class="form-select lang-select"
-            >
-              <option v-for="language in languages" :key="language.code" :value="language.code">
-                {{ language.name }}
-              </option>
-            </select>
-          </span>
+          <select id="selectInputLanguage" v-model="inputLanguage" class="form-select lang-select">
+            <option v-for="language in languages" :key="language.code" :value="language.code">
+              {{ language.name }}
+            </option>
+          </select>
         </div>
         <div class="m-3">
           <label class="d-block" for="selectOutputLanguage">Output language</label>
-          <span class="lang-select-wrap">
-            <select
-              id="selectOutputLanguage"
-              v-model="outputLanguage"
-              class="form-select lang-select"
-            >
-              <option v-for="language in languages" :key="language.code" :value="language.code">
-                {{ language.name }}
-              </option>
-            </select>
-          </span>
+          <select
+            id="selectOutputLanguage"
+            v-model="outputLanguage"
+            class="form-select lang-select"
+          >
+            <option v-for="language in languages" :key="language.code" :value="language.code">
+              {{ language.name }}
+            </option>
+          </select>
         </div>
         <p v-if="sameLanguageOnBothSides" class="form-error small m-2">
           Input and output language must be different.
@@ -356,28 +348,8 @@ async function startTextToSpeech() {
   font-family: var(--font-heading);
   font-weight: 500;
   cursor: pointer;
-  background-image: none;
-}
-/* A select can't have ::after, so the arrow is drawn on this wrapper. The SVG
-   supplies only the shape; the color comes from the token. */
-.lang-select-wrap {
-  position: relative;
-  display: inline-block;
   /* Room for the focus ring below the label. */
   margin-top: 0.4rem;
-}
-.lang-select-wrap::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  right: calc(0.9rem + 1px);
-  width: 0.7rem;
-  height: 0.42rem;
-  transform: translateY(-50%);
-  background-color: var(--brand-navy);
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z'/%3E%3C/svg%3E")
-    no-repeat center / contain;
-  pointer-events: none;
 }
 .lang-select:hover {
   border-color: var(--brand-navy);

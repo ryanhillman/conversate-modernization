@@ -8,7 +8,7 @@
         <!-- Decorative: the button below names the page. -->
         <img class="card-img-top" :src="card.img" alt="" />
         <div class="card-body">
-          <router-link :to="card.path" class="btn btn-primary">{{ card.label }}</router-link>
+          <router-link :to="card.path" class="btn btn-accent">{{ card.label }}</router-link>
         </div>
       </div>
     </div>
@@ -92,17 +92,10 @@ try {
     var(--card-shadow),
     0 0 18px color-mix(in srgb, var(--brand-accent) 55%, transparent);
 }
-.card .btn-primary {
+.card .btn {
   display: block;
   width: 100%;
   padding: 0.4rem 0.4rem;
   white-space: normal;
-  background-color: var(--brand-accent);
-  border-color: var(--brand-accent);
-  color: var(--text-color);
-}
-.card .btn-primary:hover {
-  background-color: var(--brand-accent-dark);
-  border-color: var(--brand-accent-dark);
 }
 </style>
