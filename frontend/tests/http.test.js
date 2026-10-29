@@ -26,6 +26,29 @@ beforeEach(() => {
   auth0.getAccessTokenSilently.mockResolvedValue("token-123");
 });
 
+describe("api base URL", () => {
+  // http.js checks its config when first imported, so each case loads it fresh.
+  async function loadWith(env) {
+    vi.resetModules();
+    for (const [name, value] of Object.entries(env)) vi.stubEnv(name, value);
+    try {
+      return await import("../src/api/http");
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  }
+
+  it("refuses a production build that doesn't say where the API is", async () => {
+    await expect(loadWith({ PROD: true, VITE_API_URL: undefined })).rejects.toThrow(
+      "Set VITE_API_URL for production builds",
+    );
+  });
+
+  it("accepts an empty VITE_API_URL in production, meaning the same origin", async () => {
+    await expect(loadWith({ PROD: true, VITE_API_URL: "" })).resolves.toHaveProperty("api");
+  });
+});
+
 describe("api re-login handling", () => {
   it.each(["login_required", "consent_required", "missing_refresh_token", "invalid_grant"])(
     "sends the user to log in on %s and never calls the API",

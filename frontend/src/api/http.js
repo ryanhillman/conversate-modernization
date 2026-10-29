@@ -1,7 +1,13 @@
 import { auth0 } from "../auth";
 
 // An empty VITE_API_URL means same origin, for a deployment that proxies /api
-// to the backend; only an unset one falls back to local dev.
+// to the backend; only an unset one falls back to local dev. A production
+// build has to say which, or it would quietly call localhost.
+if (import.meta.env.PROD && import.meta.env.VITE_API_URL === undefined) {
+  throw new Error(
+    "Set VITE_API_URL for production builds: the API's origin, or empty for the same origin.",
+  );
+}
 const BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5000";
 
 // Errors from getAccessTokenSilently() meaning no session can renew, so the
