@@ -1,6 +1,8 @@
 <template>
   <form class="d-flex flex-column align-items-center" @submit.prevent="updateUsername(username)">
-    <label for="new-username" class="account-actions-field text-start mb-2">New username</label>
+    <!-- The prompt is a placeholder, as on Translate; the box sits right above
+         Update username, so its purpose stays clear once the prompt clears. -->
+    <label for="new-username" class="visually-hidden">New username</label>
     <input
       id="new-username"
       ref="usernameInput"
@@ -8,6 +10,7 @@
       class="form-control mb-2 account-actions-field"
       maxlength="100"
       autocomplete="nickname"
+      placeholder="New username"
       :aria-describedby="errorMessage ? 'edit-username-error' : undefined"
       :aria-invalid="errorMessage ? 'true' : undefined"
     />

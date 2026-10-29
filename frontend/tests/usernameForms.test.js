@@ -45,7 +45,7 @@ afterEach(() => {
 
 describe("busy username buttons", () => {
   // Attached, since jsdom only submits a form that's in the document.
-  it("keeps Save username focusable while it saves", async () => {
+  it("keeps Save focusable while it saves", async () => {
     createMe.mockReturnValue(new Promise(() => {}));
     const wrapper = mount(SetUsername, { attachTo: document.body });
     await typeAvailableName(wrapper);
@@ -88,19 +88,22 @@ describe("busy username buttons", () => {
 });
 
 describe("SetUsername", () => {
-  it("names the username box by its visible label", () => {
+  it("names the username box by the heading above it", () => {
     const wrapper = mount(SetUsername, { attachTo: document.body });
 
-    expect(computeAccessibleName(wrapper.get("input").element)).toBe("Username");
+    expect(computeAccessibleName(wrapper.get("input").element)).toBe("Set your username!");
+    expect(wrapper.get("button").text()).toBe("Save");
     wrapper.unmount();
   });
 });
 
 describe("AccountActions", () => {
-  it("names the rename box by its visible label", () => {
+  it("names the rename box for screen readers with the words its placeholder shows", () => {
     const wrapper = mount(AccountActions, { attachTo: document.body });
+    const input = wrapper.get("input");
 
-    expect(computeAccessibleName(wrapper.get("input").element)).toBe("New username");
+    expect(input.attributes("placeholder")).toBe("New username");
+    expect(computeAccessibleName(input.element)).toBe("New username");
     wrapper.unmount();
   });
 

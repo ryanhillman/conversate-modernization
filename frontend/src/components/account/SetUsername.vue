@@ -1,7 +1,7 @@
 <template>
   <form class="set-username" @submit.prevent="saveUsername(username)">
-    <h1>Set your username!</h1>
-    <label for="setup-username" class="username-label">Username</label>
+    <h1 id="setup-heading">Set your username!</h1>
+    <!-- The heading is the box's label, for screen readers too. -->
     <input
       id="setup-username"
       ref="usernameInput"
@@ -9,6 +9,7 @@
       class="form-control mb-2 username-input"
       maxlength="100"
       autocomplete="nickname"
+      aria-labelledby="setup-heading"
       :aria-describedby="errorMessage ? 'setup-username-error' : undefined"
       :aria-invalid="errorMessage ? 'true' : undefined"
     />
@@ -23,7 +24,7 @@
       :disabled="!!validationError || checking || takenUsername"
       :aria-disabled="saving"
     >
-      Save username
+      Save
     </button>
   </form>
 </template>
@@ -72,12 +73,6 @@ async function saveUsername(name) {
   text-align: center;
   max-width: 40rem;
   margin: 2rem auto;
-}
-.username-label {
-  width: 16.25rem;
-  max-width: 100%;
-  text-align: start;
-  margin-bottom: 0.5rem;
 }
 .username-input {
   width: 16.25rem;

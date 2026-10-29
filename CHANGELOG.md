@@ -29,6 +29,7 @@
 - Stopped re-reading the user from the database after saving changes.
 - Shortened Translate recordings from 60 to 30 seconds, stated the limit, and added each transcript to the text instead of replacing it.
 - Reordered Translate: prompts inside the boxes instead of labels above them, the mic and Translate button between them, and Listen below the translation.
+- Moved the New username prompt into its box, named the setup box by its heading alone, and shortened Save username to Save.
 - Renamed each lesson's Toggle lesson button to Open lesson or Close lesson.
 - Colored the 404 page's Back to home button gold to match the site.
 - Let speech-to-text wait up to 20 seconds for Google, instead of 8.
