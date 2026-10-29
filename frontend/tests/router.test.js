@@ -6,7 +6,7 @@ vi.mock("@auth0/auth0-vue", async (importOriginal) => ({
   authGuard: () => true,
 }));
 
-import router from "../src/router";
+import router, { reloadOnMissingFile } from "../src/router";
 import { showToast, toastState } from "../src/stores/toastStore";
 
 describe("router", () => {
@@ -47,5 +47,32 @@ describe("router", () => {
     expect(document.activeElement).toBe(main);
     main.remove();
     button.remove();
+  });
+
+  it("reloads once when a page's file is gone after a deploy, not in a loop", async () => {
+    sessionStorage.clear();
+    const reload = vi.fn();
+    const gone = new TypeError("Failed to fetch dynamically imported module: /assets/Quiz-old.js");
+    const to = { fullPath: "/quiz" };
+
+    expect(reloadOnMissingFile(gone, to, reload)).toBe(true);
+    expect(reload).toHaveBeenCalledWith("/quiz");
+    // Still missing after that reload: let the error stand.
+    expect(reloadOnMissingFile(gone, to, reload)).toBe(false);
+    expect(reload).toHaveBeenCalledTimes(1);
+
+    // A page that loads resets the guard, so a later deploy reloads again.
+    await router.push("/leaderboard");
+    expect(reloadOnMissingFile(gone, to, reload)).toBe(true);
+    expect(reload).toHaveBeenCalledTimes(2);
+  });
+
+  it("doesn't reload for other errors", () => {
+    sessionStorage.clear();
+    const reload = vi.fn();
+    expect(reloadOnMissingFile(new Error("Something else"), { fullPath: "/quiz" }, reload)).toBe(
+      false,
+    );
+    expect(reload).not.toHaveBeenCalled();
   });
 });
