@@ -21,8 +21,6 @@
 - **Breaking:** The API's user_name field is now username.
 - **Breaking:** The migration history is replaced with a single baseline (the user table is now account; databases from 1.x must be recreated).
 - Made pages reuse the loaded profile instead of fetching it on every visit.
-- Made the profile page read and update the shared profile store directly.
-- Read completed lessons from the shared profile store in one place.
 - Cached text-to-speech audio, so replaying the same text doesn't call Google again.
 - Reused connections to Google's APIs instead of opening a new one for every request.
 - Shrank the home page images by about 75% by resizing and converting them to WebP.
@@ -51,17 +49,15 @@
 - Stored quiz times as timezone-aware UTC.
 - Updated README's How to Run: Docker database address, .env.example files, and Google Cloud billing.
 - Upgraded Vue Router to 5 and Auth0's Vue SDK to 2.11.
-- Upgraded jsdom, which the frontend tests run in, to 30.
 - Upgraded SQLAlchemy to 2.1, Alembic to 1.20, and Gunicorn to 26.2, and switched the Postgres driver to psycopg 3.
-- Upgraded the GitHub Actions used in CI.
-- Raised the Node requirement to 22.22.2 (or 24.15), which the frontend's tools need.
+- Raised the Node requirement to 22.22.2+, 24.15+, or 26+, which the frontend's tools need.
 - Ran the backend as one Gunicorn worker with 16 threads, so rate limits are counted in one place.
 - Reworded two API errors: Profile not found and Profile already exists.
 
 ### Removed
 - Removed the old Auth0 wrapper's $auth compatibility layer.
 - Removed the duplicate Resume button from a paused quiz.
-- Removed the unused id from the profile API response.
+- **Breaking:** Removed the unused id from the profile API response.
 
 ### Fixed
 - Made the "View leaderboard" button on the quiz results screen visible by switching from navy-on-navy to amber.
@@ -134,7 +130,7 @@
 
 ### Security
 - Made the backend's code read-only to the user it runs as.
-- Rejected access tokens missing an expiry, issue time, or subject.
+- Rejected access tokens missing an expiry or issue time.
 
 ## [1.0.0] - 2026-10-22
 
