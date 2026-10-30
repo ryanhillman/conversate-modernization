@@ -347,19 +347,6 @@ async function finish() {
   --bs-btn-active-bg: var(--border-subtle);
   --bs-btn-active-border-color: var(--border-subtle);
 }
-/* The site's navy, not Bootstrap's blue, for Pause and the answers. */
-.btn-outline-primary {
-  --bs-btn-color: var(--brand-navy);
-  --bs-btn-border-color: var(--brand-navy);
-  --bs-btn-hover-color: var(--text-on-dark);
-  --bs-btn-hover-bg: var(--brand-navy);
-  --bs-btn-hover-border-color: var(--brand-navy);
-  --bs-btn-active-color: var(--text-on-dark);
-  --bs-btn-active-bg: var(--brand-navy-dark);
-  --bs-btn-active-border-color: var(--brand-navy-dark);
-  --bs-btn-disabled-color: var(--brand-navy);
-  --bs-btn-disabled-border-color: var(--brand-navy);
-}
 .quiz-timer {
   font-variant-numeric: tabular-nums;
 }

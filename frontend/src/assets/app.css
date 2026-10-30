@@ -181,7 +181,33 @@ h6,
   border-radius: 8px;
 }
 
-/* Bootstrap draws every button state from these variables. */
+/* Bootstrap draws every button state from these variables. The outlines fill
+   with their color on hover. */
+.btn-outline-primary {
+  --bs-btn-color: var(--brand-navy);
+  --bs-btn-border-color: var(--brand-navy);
+  --bs-btn-hover-color: var(--text-on-dark);
+  --bs-btn-hover-bg: var(--brand-navy);
+  --bs-btn-hover-border-color: var(--brand-navy);
+  --bs-btn-active-color: var(--text-on-dark);
+  --bs-btn-active-bg: var(--brand-navy-dark);
+  --bs-btn-active-border-color: var(--brand-navy-dark);
+  --bs-btn-disabled-color: var(--brand-navy);
+  --bs-btn-disabled-border-color: var(--brand-navy);
+}
+/* The darker red: Bootstrap's main red is below 4.5:1 on the gray page. */
+.btn-outline-danger {
+  --bs-btn-color: var(--danger-text);
+  --bs-btn-border-color: var(--danger-text);
+  --bs-btn-hover-color: var(--text-on-dark);
+  --bs-btn-hover-bg: var(--danger-text);
+  --bs-btn-hover-border-color: var(--danger-text);
+  --bs-btn-active-color: var(--text-on-dark);
+  --bs-btn-active-bg: var(--danger-text);
+  --bs-btn-active-border-color: var(--danger-text);
+  --bs-btn-disabled-color: var(--danger-text);
+  --bs-btn-disabled-border-color: var(--danger-text);
+}
 .btn-primary {
   --bs-btn-bg: var(--brand-navy);
   --bs-btn-border-color: var(--brand-navy);

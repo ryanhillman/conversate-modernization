@@ -19,7 +19,7 @@
     <!-- Busy buttons use aria-disabled, not disabled: a disabled button loses keyboard focus. -->
     <button
       type="submit"
-      class="btn btn-success"
+      class="btn btn-accent"
       :class="{ disabled: saving }"
       :disabled="!!validationError || checking || takenUsername"
       :aria-disabled="saving"

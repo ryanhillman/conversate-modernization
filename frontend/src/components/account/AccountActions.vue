@@ -20,7 +20,7 @@
     <!-- Busy buttons use aria-disabled, not disabled: a disabled button loses keyboard focus. -->
     <button
       type="submit"
-      class="btn btn-success mb-2 account-actions-field"
+      class="btn btn-accent mb-2 account-actions-field"
       :class="{ disabled: saving }"
       :disabled="!!validationError || checking || takenUsername"
       :aria-disabled="saving"
@@ -29,7 +29,7 @@
     </button>
     <button
       type="button"
-      class="btn btn-warning mb-2 account-actions-field"
+      class="btn btn-outline-primary mb-2 account-actions-field"
       :class="{ disabled: saving }"
       :aria-disabled="saving"
       @click="resetProgress()"
@@ -38,7 +38,7 @@
     </button>
     <button
       type="button"
-      class="btn btn-danger account-actions-field"
+      class="btn btn-outline-danger account-actions-field"
       :class="{ disabled: saving }"
       :aria-disabled="saving"
       @click="deleteAccount()"
