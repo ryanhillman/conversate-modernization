@@ -171,7 +171,7 @@ Errors return `{"error": "..."}`. Three add a `code` the app checks: `"username_
 | POST | `/api/me/reset` | Reset your progress (keeps your username) |
 | GET | `/api/usernames/<username>` | Check whether a username is valid and available |
 
-### Quiz
+### Quiz & leaderboard
 
 | Method | Path | Purpose |
 |---|---|---|
