@@ -16,11 +16,15 @@
         <p class="mb-2"><strong>Username:</strong> {{ profile.username }}</p>
         <p class="mb-2">
           <strong>Best quiz score:</strong>
-          {{ profile.quiz_best_score ?? "—" }}
+          {{ profile.quiz_best_score ?? "None yet" }}
         </p>
         <p class="mb-2">
           <strong>Best quiz time:</strong>
-          {{ profile.quiz_best_score != null ? formatTime(profile.quiz_best_time_seconds) : "—" }}
+          {{
+            profile.quiz_best_score != null
+              ? formatTime(profile.quiz_best_time_seconds)
+              : "None yet"
+          }}
         </p>
       </div>
       <div class="col-md text-center text-md-start">
