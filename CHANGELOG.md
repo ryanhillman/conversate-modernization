@@ -99,6 +99,7 @@ This release makes every page accessible to WCAG 2.2 AA and adds a practice quiz
 - Words after a pause in a recording were dropped.
 - Longer recordings timed out before Google answered; the server now waits up to 20 seconds, not 8.
 - A double-clicked microphone stayed on.
+- A recording couldn't be stopped while a translation or Listen was loading; both now wait for the recording to end.
 - Requests with the same source and target language are rejected.
 - An unexpected Google response, or the rate limit, gets a clear message.
 - A browser without voice input, or a missing microphone, gets its own message.

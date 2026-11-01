@@ -74,9 +74,9 @@
         </div>
         <button
           :disabled="!textToTranslate.trim() || sameLanguageOnBothSides"
-          :aria-disabled="busy"
+          :aria-disabled="busyOrRecording"
           class="btn btn-accent mb-3"
-          :class="{ disabled: busy }"
+          :class="{ disabled: busyOrRecording }"
           @click="translateEnteredText()"
         >
           Translate
@@ -97,7 +97,7 @@
             v-if="!translatedTextTooLong"
             type="button"
             class="icon-button"
-            :aria-disabled="busy"
+            :aria-disabled="busyOrRecording"
             aria-label="Listen to translation"
             @click="startTextToSpeech"
           >
@@ -142,6 +142,9 @@ function blobToBase64(blob) {
 const recording = ref(false);
 const startingMic = ref(false);
 const busy = ref(false);
+// Translate and Listen also wait for a recording: its transcript is about to
+// change the text, and their busy would stop the recording being stopped.
+const busyOrRecording = computed(() => busy.value || recording.value);
 const textToTranslate = ref("");
 const translatedText = ref(null);
 // The language translatedText is in, captured when translated; the picker may
@@ -191,7 +194,7 @@ onBeforeUnmount(() => {
 });
 
 async function translateEnteredText() {
-  if (busy.value) return;
+  if (busyOrRecording.value) return;
   busy.value = true;
   try {
     const { translated_text: result } = await translateText(
@@ -278,7 +281,7 @@ async function transcribeRecording() {
 }
 
 async function startTextToSpeech() {
-  if (busy.value) return;
+  if (busyOrRecording.value) return;
   busy.value = true;
   try {
     const { audio_content } = await synthesizeSpeech(

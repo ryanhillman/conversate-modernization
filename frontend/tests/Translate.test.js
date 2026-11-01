@@ -261,6 +261,25 @@ describe("Translate", () => {
     wrapper.unmount();
   });
 
+  it("holds Translate while recording, so the recording can always be stopped", async () => {
+    transcribeSpeech.mockResolvedValue({ transcript: "come stai" });
+    const mic = fakeMicrophone();
+    const wrapper = mount(Translate, { global: { stubs: { RequireProfile } } });
+    await wrapper.get("textarea").setValue("ciao");
+    await wrapper.get('[aria-label="Start recording"]').trigger("click");
+    mic.allow();
+    await flushPromises();
+
+    const translate = wrapper.get(".btn-accent");
+    await translate.trigger("click");
+    expectBusy(translate);
+    expect(translateText).not.toHaveBeenCalled();
+
+    await wrapper.get('[aria-label="Stop recording"]').trigger("click");
+    await vi.waitFor(() => expect(transcribeSpeech).toHaveBeenCalledTimes(1));
+    wrapper.unmount();
+  });
+
   it("opens one microphone, even when the button is double-clicked", async () => {
     const mic = fakeMicrophone();
     const wrapper = mount(Translate, { global: { stubs: { RequireProfile } } });
