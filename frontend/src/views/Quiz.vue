@@ -148,9 +148,8 @@ const FOCUS_TARGETS = {
 };
 watch(phase, (newPhase) => FOCUS_TARGETS[newPhase]?.value?.focus(), { flush: "post" });
 
-// A new question's card has flipped in: it can take answers now, and focus.
-// Until then a click would land on the old card, still flipping out, and be
-// sent as an answer to the new question.
+// Answers open once the new card has flipped in: a click on the old one,
+// still flipping out, would answer the new question.
 function cardShown() {
   advancing.value = false;
   questionWord.value?.focus();
@@ -376,9 +375,9 @@ async function finish() {
 .quiz-choice {
   padding: 0.75rem 1rem;
 }
-/* Bootstrap's .disabled lets clicks fall through to the page, where a
-   double-click's second click selected text. Busy choices keep the click and
-   ignore it (selectAnswer returns early), and don't look pressed. */
+/* Bootstrap's .disabled lets clicks through to the page, where a
+   double-click would select text. Busy choices keep the click, ignore it
+   (selectAnswer returns early), and don't look pressed. */
 .quiz-choice.disabled {
   pointer-events: auto;
   cursor: default;
@@ -417,7 +416,6 @@ async function finish() {
   transform: rotateY(-90deg);
   opacity: 0;
 }
-/* The start and results cards. */
 .quiz-narrow {
   max-width: 30rem;
 }

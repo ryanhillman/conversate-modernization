@@ -1,6 +1,6 @@
 FROM python:3.14-slim
 
-# No .pyc files: the app user couldn't write them into root-owned /app anyway.
+# No .pyc files: the app user can't write to root-owned /app.
 ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
 
 RUN groupadd --system app && useradd --system --gid app --home-dir /app app

@@ -28,10 +28,8 @@ import { dismissToast, toastState } from "../stores/toastStore";
 
 const container = ref(null);
 
-// Toasts sit over the page, and browsers only scroll a newly focused control
-// into view when it's off-screen, so it could land hidden behind them.
-// app.css uses --toast-space to keep focus clear of them and to leave room
-// to scroll the page's last controls above them.
+// Toasts float over the page and can hide a focused control. app.css uses
+// --toast-space to keep focus clear of them and leave room to scroll past.
 function reserveSpace() {
   const root = document.documentElement;
   if (!toastState.toasts.length) {

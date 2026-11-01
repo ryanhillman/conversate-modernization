@@ -28,11 +28,9 @@
         <p v-if="sameLanguageOnBothSides" class="form-error small m-2">
           Input and output language must be different.
         </p>
-        <!-- Each box's prompt is a placeholder, gone once the box has text.
-             That's fine for WCAG because the page makes each box's purpose
-             clear: the one box to type in sits under Input language, and
-             the read-only box follows the Translate button. Screen readers
-             get the same words from the hidden labels. -->
+        <!-- Placeholders, not visible labels: each box's place on the page
+             makes its purpose clear, and hidden labels give screen readers
+             the same words. -->
         <div class="translate-field">
           <label for="textToTranslate" class="visually-hidden">Enter here to translate…</label>
           <textarea
@@ -142,8 +140,7 @@ function blobToBase64(blob) {
 const recording = ref(false);
 const startingMic = ref(false);
 const busy = ref(false);
-// Translate and Listen also wait for a recording: its transcript is about to
-// change the text, and their busy would stop the recording being stopped.
+// Translate and Listen wait out a recording, so busy never blocks stopping it.
 const busyOrRecording = computed(() => busy.value || recording.value);
 const textToTranslate = ref("");
 const translatedText = ref(null);

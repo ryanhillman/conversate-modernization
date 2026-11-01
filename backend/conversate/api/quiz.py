@@ -56,9 +56,8 @@ def _discard_attempt(user_id):
 
 
 def _require_attempt(user_id, body):
-    """The user's quiz in progress, which body must name by attempt_id: a
-    later start replaces it, and a tab still on the old one is told so
-    instead of answering into the new one."""
+    """The user's quiz in progress, which body must name by attempt_id; a
+    later start replaces it."""
     attempt = _find_attempt(user_id)
     if attempt is None:
         abort(409, description='No quiz in progress; call /api/me/quiz/start first')

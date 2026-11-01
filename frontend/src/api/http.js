@@ -1,8 +1,7 @@
 import { auth0 } from "../auth";
 
-// An empty VITE_API_URL means same origin, for a deployment that proxies /api
-// to the backend; only an unset one falls back to local dev. A production
-// build has to say which, or it would quietly call localhost.
+// Empty means same origin (the API proxied under /api); unset means local
+// dev, which a production build mustn't fall back to.
 if (import.meta.env.PROD && import.meta.env.VITE_API_URL === undefined) {
   throw new Error(
     "Set VITE_API_URL for production builds: the API's origin, or empty for the same origin.",

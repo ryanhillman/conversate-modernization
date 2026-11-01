@@ -66,17 +66,15 @@
 .nav-item.dropdown .dropdown-item:focus-visible {
   background-color: var(--bs-gray-300);
 }
-/* Caps the layout at 1140px at the default text size, even on screens 1400px
-   and wider where Bootstrap would allow 1320px. In rem, so it grows with a
-   larger text size and the nav bar still fits beside the logo and picture. */
+/* 1140px at the default text size, in rem so it grows with larger text
+   and the nav still fits beside the logo and picture. */
 @media (min-width: 1200px) {
   .container {
     max-width: 71.25rem;
   }
 }
-/* Bootstrap's xl breakpoint is in px, so a larger default text size doesn't
-   move it and the full nav runs off the screen. The nav also needs 75em (1200px
-   at the default 16px) before it leaves the phone menu. */
+/* Bootstrap's xl breakpoint is in px, which larger default text doesn't
+   move, so the phone menu also stays until 75em. */
 @media (min-width: 1200px) and (max-width: 74.99875em) {
   .navbar-expand-xl {
     flex-wrap: wrap;
@@ -137,11 +135,10 @@
     color: var(--text-color);
   }
 }
-/* --toast-space is the toasts' height while any show (set in Toast.vue). The
-   scroll padding makes browsers treat the strip under them as off-screen when
-   focus moves; the footer's margin gives the page room to scroll above them.
-   The page is 100% tall with its content overflowing, so padding on html or
-   body wouldn't add that room. */
+/* --toast-space is the toasts' height while any show (set in Toast.vue).
+   The scroll padding keeps focus from landing under them; the footer's
+   margin adds room to scroll past them, which padding on the 100%-tall html
+   or body wouldn't. */
 html {
   scroll-padding-bottom: var(--toast-space, 0px);
 }

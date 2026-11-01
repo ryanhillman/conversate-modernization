@@ -6,14 +6,11 @@ from flask import current_app, g, jsonify, request
 from jwt import PyJWKClient, PyJWKClientConnectionError
 
 JWKS_TIMEOUT_SECONDS = 5
-# The wait before retrying a key download that failed fast. After a backend
-# restart the first download sometimes hits a connection reset, and one a
-# moment later gets through, so the request succeeds instead of returning
-# 503. A timeout isn't retried; it has already waited JWKS_TIMEOUT_SECONDS.
+# One retry for a key download that fails fast, such as a connection reset
+# just after a restart. A timeout isn't retried; it has already waited.
 JWKS_RETRY_DELAY_SECONDS = 1
-# Keep keys an hour (PyJWT's default is 5 minutes): the retry above covers a
-# failed download, and a key Auth0 revokes stays trusted no longer than this.
-# A new key is fetched when first used, subject to PyJWT's refresh cooldown.
+# Keys are cached an hour (PyJWT's default is 5 minutes), so a key Auth0
+# revokes is trusted no longer than that.
 JWKS_CACHE_SECONDS = 60 * 60
 
 

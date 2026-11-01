@@ -43,9 +43,9 @@ const router = createRouter({
 // Fail closed: every route needs a login unless it sets meta.public.
 router.beforeEach((to) => (to.meta.public ? true : authGuard(to)));
 
-// Each page's code and CSS are separate files named for their build, so after
-// a deploy a page left open asks for a file that's gone. Load the new build at
-// that address instead, once: if the file is still missing, the error stands.
+// Page files are named for their build, so a page left open across a deploy
+// asks for files that are gone. Load the new build there, once; if a file is
+// still missing, the error stands.
 const STALE_FILE =
   /dynamically imported module|Importing a module script failed|Unable to preload CSS/i;
 const RELOAD_KEY = "reloadedForMissingFile";

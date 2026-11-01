@@ -413,8 +413,7 @@ function launchCelebration() {
     transform: translateX(-50%) translateY(-20px);
   }
 }
-/* Completed lessons: a corner check, and a green title and Open/Close button
-   (5.14:1 with white text). The button keeps its amber hover. */
+/* Completed lessons' green: 5.14:1 with white text. */
 .completed-check {
   position: absolute;
   top: -0.75rem;
