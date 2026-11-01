@@ -56,7 +56,6 @@ This release makes every page accessible to WCAG 2.2 AA and adds a practice quiz
 ### Fixed
 - Error messages stay until dismissed, have a larger Dismiss button, don't cover the focused control, and fit narrow screens.
 - A leaderboard that fails to load says so instead of showing empty.
-- The leaderboard loaded, and announced itself, behind the username setup form; it now waits for a username.
 - Pages stayed blank when the profile loaded during the page fade-in.
 - Pages did nothing after a new version was deployed until a refresh.
 - Pages opened where the last page was scrolled to instead of at the top.
@@ -99,7 +98,6 @@ This release makes every page accessible to WCAG 2.2 AA and adds a practice quiz
 - Words after a pause in a recording were dropped.
 - Longer recordings timed out before Google answered; the server now waits up to 20 seconds, not 8.
 - A double-clicked microphone stayed on.
-- A recording couldn't be stopped while a translation or Listen was loading; both now wait for the recording to end.
 - Requests with the same source and target language are rejected.
 - An unexpected Google response, or the rate limit, gets a clear message.
 - A browser without voice input, or a missing microphone, gets its own message.
@@ -109,7 +107,6 @@ This release makes every page accessible to WCAG 2.2 AA and adds a practice quiz
 - Lesson 2's "ciao ciao" examples said hello instead of goodbye.
 - *capire* moved to Lesson 6 as a regular *-ire* pattern; Lesson 7 had called it irregular.
 - Pronoun answers are typed, not selected.
-- An open lesson lifted on hover, moving its answer boxes while typing; only closed lessons lift now.
 - Practice instructions follow their heading.
 - Titles, prompts, and translations are consistent in quotes, punctuation, and capitalization.
 
