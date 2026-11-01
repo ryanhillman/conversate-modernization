@@ -14,6 +14,12 @@ import Lesson from "../src/views/Lesson.vue";
 import { RequireProfile } from "./helpers";
 
 describe("Lesson", () => {
+  it("marks only the open lesson, which the hover lift leaves still", async () => {
+    const wrapper = mount(Lesson, { global: { stubs: { RequireProfile } } });
+    await wrapper.get("#avere-essere").trigger("click");
+    expect(wrapper.findAll(".individual-lesson.is-open")).toHaveLength(1);
+    expect(wrapper.get(".individual-lesson.is-open").find("#avere-essere").exists()).toBe(true);
+  });
   it("gives each lesson a heading, and never skips a heading level in any lesson", async () => {
     const wrapper = mount(Lesson, { global: { stubs: { RequireProfile } } });
     expect(wrapper.findAll("h2").map((h) => h.text())).toEqual(

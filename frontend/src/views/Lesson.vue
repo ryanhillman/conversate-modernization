@@ -10,7 +10,7 @@
       v-for="lesson in LESSONS"
       :key="lesson.id"
       class="individual-lesson"
-      :class="{ 'is-complete': isComplete(lesson.id) }"
+      :class="{ 'is-complete': isComplete(lesson.id), 'is-open': currentLessonId === lesson.id }"
     >
       <span v-if="isComplete(lesson.id)" class="completed-check" aria-hidden="true">✓</span>
       <div class="lesson-row">
@@ -249,7 +249,9 @@ function launchCelebration() {
     transform 0.2s ease,
     box-shadow 0.2s ease;
 }
-.individual-lesson:hover {
+/* Closed lessons only: lifting an open one would move its answer boxes
+   while someone types in them. */
+.individual-lesson:not(.is-open):hover {
   transform: translateY(-3px);
 }
 /* A heading, styled as plain text. */

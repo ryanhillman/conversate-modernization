@@ -109,6 +109,7 @@ This release makes every page accessible to WCAG 2.2 AA and adds a practice quiz
 - Lesson 2's "ciao ciao" examples said hello instead of goodbye.
 - *capire* moved to Lesson 6 as a regular *-ire* pattern; Lesson 7 had called it irregular.
 - Pronoun answers are typed, not selected.
+- An open lesson lifted on hover, moving its answer boxes while typing; only closed lessons lift now.
 - Practice instructions follow their heading.
 - Titles, prompts, and translations are consistent in quotes, punctuation, and capitalization.
 
