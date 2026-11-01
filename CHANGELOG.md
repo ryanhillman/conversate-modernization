@@ -22,7 +22,7 @@ This release makes every page accessible to WCAG 2.2 AA and adds a practice quiz
 ### Changed
 - **Breaking:** The API's user_name field is now username.
 - **Breaking:** The migration history is replaced with a single baseline, and the user table is now account, so databases from 1.x must be recreated.
-- **Breaking:** The frontend's tools need Node 24 (24.15 or newer); 22.22.2+ and 26+ also work.
+- The frontend's tools need Node 22.22.2+, 24.15+, or 26+.
 - **Breaking:** The quiz endpoints need the attempt_id that start returns to allow only one quiz attempt at a time.
 - Pages reuse the loaded profile instead of fetching it on every visit.
 - Text-to-speech audio is cached, and connections to Google's APIs are reused.
@@ -149,7 +149,7 @@ This version is the first stage of modernization. It was upgraded to current fra
 ### Changed
 - **Breaking:** Accounts are identified by their Auth0 ID instead of email, and the per-user account endpoints are replaced by /api/me.
 - **Breaking:** The original's Alembic history is replaced with a new baseline migration.
-- **Breaking:** The frontend builds with Vite on Node 22, up from Vue CLI on Node 10, and the backend runs on Python 3.14.
+- The frontend builds with Vite on Node 22, up from Vue CLI on Node 10, and the backend runs on Python 3.14.
 - Translation uses the Google Cloud Translation API, replacing an unofficial translator.
 - Speech uses Google Cloud Text-to-Speech and Speech-to-Text, replacing the browser's Speech API.
 - Account settings moved from the drop-down menu to the profile page.
