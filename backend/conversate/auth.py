@@ -6,13 +6,12 @@ from flask import current_app, g, jsonify, request
 from jwt import PyJWKClient, PyJWKClientConnectionError
 
 JWKS_TIMEOUT_SECONDS = 5
-# Waits between attempts when a key download fails fast. After a backend
-# restart the first download sometimes hits a connection reset, and an
-# attempt a moment later gets through, so the request succeeds instead of
-# returning 503. Timeouts aren't retried; each has already waited
-# JWKS_TIMEOUT_SECONDS.
-JWKS_RETRY_DELAYS_SECONDS = (0.5, 1, 2)
-# Keep keys an hour (PyJWT's default is 5 minutes): the retries above cover a
+# The wait before retrying a key download that failed fast. After a backend
+# restart the first download sometimes hits a connection reset, and one a
+# moment later gets through, so the request succeeds instead of returning
+# 503. A timeout isn't retried; it has already waited JWKS_TIMEOUT_SECONDS.
+JWKS_RETRY_DELAY_SECONDS = 1
+# Keep keys an hour (PyJWT's default is 5 minutes): the retry above covers a
 # failed download, and a key Auth0 revokes stays trusted no longer than this.
 # A new key is fetched when first used, subject to PyJWT's refresh cooldown.
 JWKS_CACHE_SECONDS = 60 * 60
@@ -37,14 +36,15 @@ def _timed_out(error):
 
 def _signing_key(domain, token):
     client = _jwks_client(domain)
-    for delay in JWKS_RETRY_DELAYS_SECONDS:
-        try:
-            return client.get_signing_key_from_jwt(token)
-        except PyJWKClientConnectionError as e:
-            if _timed_out(e):
-                raise
-            current_app.logger.info('JWKS fetch failed, retrying in %ss: %s', delay, e)
-            time.sleep(delay)
+    try:
+        return client.get_signing_key_from_jwt(token)
+    except PyJWKClientConnectionError as e:
+        if _timed_out(e):
+            raise
+        current_app.logger.info(
+            'JWKS fetch failed, retrying in %ss: %s', JWKS_RETRY_DELAY_SECONDS, e
+        )
+        time.sleep(JWKS_RETRY_DELAY_SECONDS)
     return client.get_signing_key_from_jwt(token)
 
 
