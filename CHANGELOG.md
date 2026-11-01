@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/2.0.0/),
 
 ## [Unreleased]
 
-## [2.0.0] - 2026-10-29
+## [2.0.0] - 2026-11-01
 
 This release makes every page accessible to WCAG 2.2 AA and adds a practice quiz. The API's user field and the database schema change. Please see the Breaking entries before upgrading.
 
