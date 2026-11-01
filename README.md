@@ -180,9 +180,9 @@ Errors return `{"error": "..."}`. Three add a `code` the app checks: `"username_
 | POST | `/api/me/quiz/pause` | Pause the quiz timer (once per quiz; timed quizzes only) |
 | POST | `/api/me/quiz/resume` | Resume the quiz timer |
 | POST | `/api/me/quiz/submit` | Finish the quiz and save a new best (practice results aren't saved) |
+| GET | `/api/leaderboard` | Top 100 quiz scores |
 
 The four actions after start send the quiz's `attempt_id` in their JSON body; a later start replaces the quiz, and the old one's actions are refused.
-| GET | `/api/leaderboard` | Top 100 quiz scores |
 
 ### Translation & speech
 
