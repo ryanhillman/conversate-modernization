@@ -65,18 +65,18 @@ Conversate is a full-stack web application for learning Italian.
 
 ## How to Run
 
-Requires Python 3.14, Node 24 (LTS, 24.15 or newer), Docker, Auth0, and Google Cloud.
+Requires Python 3.14, Node 24.15+, Docker, Auth0 and Google Cloud.
 
 ### Auth0
 
 Create a Single Page Application and an API:
 
-- **SPA:** add `http://localhost:3000` to Allowed Callback URLs, Allowed Logout URLs, and Allowed Web Origins. Turn on **Refresh Token Rotation**, and the **Refresh Token** grant type (Advanced Settings → Grant Types).
-- **API:** set an identifier, e.g. `https://conversate-api`; it's the audience for both apps. Turn on **Allow Offline Access**, so expired sessions renew silently.
+- **SPA:** add `http://localhost:3000` to Allowed Callback URLs, Allowed Logout URLs, and Allowed Web Origins. Turn on **Refresh Token Rotation** and the **Refresh Token** grant type (Advanced Settings → Grant Types).
+- **API:** set an identifier, like `https://conversate-api`. Both apps use it as the audience. Turn on **Allow Offline Access**.
 
 ### Google Cloud
 
-In a project with billing enabled: enable the Translation, Text-to-Speech, and Speech-to-Text APIs, and create an API key (APIs & Services → Credentials). Restrict the key to those three APIs (edit the key → API restrictions), so a leaked key can't call anything else.
+In a project with billing enabled: enable the Translation, Text-to-Speech, and Speech-to-Text APIs, and create an API key (APIs & Services → Credentials). Restrict the key to those three APIs (edit the key → API restrictions).
 
 ### Environment
 
@@ -85,7 +85,7 @@ cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env
 ```
 
-Fill in the Auth0 domain and audience (both files), the SPA client ID (frontend), and the Google API key (backend). The default `DATABASE_URL` matches the Postgres container below.
+Fill in the Auth0 domain and audience in both files, the SPA client ID in the frontend file, and the Google API key in the backend file. The default `DATABASE_URL` works with the Postgres container below.
 
 ### Run
 
@@ -120,7 +120,7 @@ docker run -p 5000:5000 --env-file backend/.env \
   conversate-backend
 ```
 
-Inside the container, `127.0.0.1` is the container itself, so it reaches Postgres through `host.docker.internal`; `--add-host` makes that name work on Linux too. The container doesn't run migrations; run `flask --app run.py db upgrade` first, as above.
+Run the migrations first, as in Run above. `host.docker.internal` lets the container reach Postgres on your machine, and `--add-host` makes that work on Linux.
 
 ### Tests
 
@@ -133,7 +133,7 @@ cd ../frontend
 npm test
 ```
 
-To run the backend suite against Postgres, use a separate database whose name ends in `_test`; the suite drops its tables.
+To test against Postgres, create a database whose name ends in `_test`. The tests drop its tables.
 
 ```bash
 docker exec conversate-postgres createdb -U conversate conversate_test
@@ -153,11 +153,11 @@ From the repo root, with the backend venv active:
 
 ## API
 
-Releases follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html) for this API and the database schema: only a major version changes or removes anything here.
+The API and database schema follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Only a major version changes or removes anything.
 
-All `/api` endpoints require an Auth0 access token (`Authorization: Bearer <token>`).
-Translation and speech endpoints share a limit of 30 requests per minute per user.
-Errors return `{"error": "..."}`. Three add a `code` the app checks: `"username_taken"` for a taken username, `"out_of_sync"` for an answer to a question other than the current one, and `"replaced"` for a quiz action after a newer start.
+All `/api` endpoints need an Auth0 access token (`Authorization: Bearer <token>`).
+Translation and speech share a limit of 30 requests per minute per user.
+Errors return `{"error": "..."}`. Some also return a `code`: `username_taken`, `out_of_sync` (an answer to the wrong question), or `replaced` (the quiz was started again).
 
 ### Account
 
@@ -175,14 +175,14 @@ Errors return `{"error": "..."}`. Three add a `code` the app checks: `"username_
 
 | Method | Path | Purpose |
 |---|---|---|
-| POST | `/api/me/quiz/start` | Start a timed quiz and get its questions and `attempt_id`; send `{"practice": true}` for an untimed one |
+| POST | `/api/me/quiz/start` | Start a timed quiz, or send `{"practice": true}` for an untimed one |
 | POST | `/api/me/quiz/answer` | Answer the current question |
-| POST | `/api/me/quiz/pause` | Pause the quiz timer (once per quiz; timed quizzes only) |
-| POST | `/api/me/quiz/resume` | Resume the quiz timer |
+| POST | `/api/me/quiz/pause` | Pause the timer (once, timed quizzes only) |
+| POST | `/api/me/quiz/resume` | Resume the timer |
 | POST | `/api/me/quiz/submit` | Finish the quiz and save a new best (practice results aren't saved) |
 | GET | `/api/leaderboard` | Top 100 quiz scores |
 
-The four actions after start send the quiz's `attempt_id` in their JSON body; a later start replaces the quiz, and the old one's actions are refused.
+Answer, pause, resume, and submit must send the `attempt_id` that start returns. Starting again replaces the quiz, and the old one's calls fail.
 
 ### Translation & speech
 
