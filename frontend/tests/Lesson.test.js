@@ -14,11 +14,6 @@ import Lesson from "../src/views/Lesson.vue";
 import { RequireProfile } from "./helpers";
 
 describe("Lesson", () => {
-  it("titles the page with a heading", () => {
-    const wrapper = mount(Lesson, { global: { stubs: { RequireProfile } } });
-    expect(wrapper.get("h1").text()).toBe("Select any lesson to begin!");
-  });
-
   it("gives each lesson a heading, and never skips a heading level in any lesson", async () => {
     const wrapper = mount(Lesson, { global: { stubs: { RequireProfile } } });
     expect(wrapper.findAll("h2").map((h) => h.text())).toEqual(

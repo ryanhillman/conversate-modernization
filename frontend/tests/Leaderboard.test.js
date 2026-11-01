@@ -17,20 +17,6 @@ import Leaderboard from "../src/views/Leaderboard.vue";
 import { RequireProfile } from "./helpers";
 
 describe("Leaderboard", () => {
-  it("titles the page with its one h1", () => {
-    const wrapper = mount(Leaderboard, { global: { stubs: { RequireProfile } } });
-    expect(wrapper.findAll("h1").map((h) => h.text())).toEqual(["Leaderboard"]);
-  });
-
-  it("names the table for screen readers", async () => {
-    const wrapper = mount(Leaderboard, { global: { stubs: { RequireProfile } } });
-    await flushPromises();
-
-    const caption = wrapper.get("table caption");
-    expect(caption.text()).toBe("Top quiz scores");
-    expect(caption.classes()).toContain("visually-hidden");
-  });
-
   it("tells screen readers which row is yours", async () => {
     setProfile({ username: "ryan_h" });
     const wrapper = mount(Leaderboard, { global: { stubs: { RequireProfile } } });

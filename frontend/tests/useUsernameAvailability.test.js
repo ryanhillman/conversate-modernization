@@ -42,14 +42,17 @@ describe("useUsernameAvailability", () => {
     expect(checkUsername).toHaveBeenCalledWith("ryan");
   });
 
-  it("reports taken only when the API says the name is unavailable", async () => {
+  it("shows and announces a name as taken only when the API says so", async () => {
     const username = ref("");
-    const { takenUsername } = useUsernameAvailability(username);
+    const { takenUsername, errorMessage } = useUsernameAvailability(username);
 
     checkUsername.mockResolvedValue({ available: false });
     await type(username, "ryan_h");
     await vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
+    await nextTick();
     expect(takenUsername.value).toBe(true);
+    expect(errorMessage.value).toBe("That username is taken");
+    expect(announce).toHaveBeenCalledWith("That username is taken");
 
     checkUsername.mockResolvedValue({ available: true });
     await type(username, "ryan_h2");
@@ -74,9 +77,9 @@ describe("useUsernameAvailability", () => {
     expect(takenUsername.value).toBe(true);
   });
 
-  it("stops checking when the name becomes invalid or skipped", async () => {
+  it("doesn't check invalid names or names the host marks as fine", async () => {
     const username = ref("");
-    const { checking } = useUsernameAvailability(username, {
+    const { checking, validationError } = useUsernameAvailability(username, {
       skipAvailabilityCheck: (name) => name === "ryan_h",
     });
 
@@ -84,10 +87,12 @@ describe("useUsernameAvailability", () => {
     expect(checking.value).toBe(true);
     await type(username, "ry");
     expect(checking.value).toBe(false);
+    expect(validationError.value).toMatch(/at least 3/);
 
-    await type(username, "ryan_h2");
     await type(username, "ryan_h");
     expect(checking.value).toBe(false);
+    await vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
+    expect(checkUsername).not.toHaveBeenCalled();
   });
 
   it("keeps checking when a superseded response settles first", async () => {
@@ -139,30 +144,10 @@ describe("useUsernameAvailability", () => {
     expect(takenUsername.value).toBe(false);
   });
 
-  it("skips the API for invalid names and for names the host marks as available", async () => {
-    const username = ref("");
-    const { validationError } = useUsernameAvailability(username, {
-      skipAvailabilityCheck: (name) => name === "ryan_h",
-    });
-
-    await type(username, "ab");
-    await vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
-    expect(validationError.value).toMatch(/at least 3/);
-
-    await type(username, "ryan_h");
-    await vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
-
-    expect(checkUsername).not.toHaveBeenCalled();
-  });
-
-  it("shows no error for an empty field", () => {
-    const { errorMessage } = useUsernameAvailability(ref(""));
-    expect(errorMessage.value).toBe("");
-  });
-
-  it("announces a validation error once, not on every keystroke", async () => {
+  it("shows nothing until something's typed, then announces a format error once", async () => {
     const username = ref("");
     const { errorMessage } = useUsernameAvailability(username);
+    expect(errorMessage.value).toBe("");
 
     await type(username, "r");
     await type(username, "ry");
@@ -170,18 +155,5 @@ describe("useUsernameAvailability", () => {
     expect(errorMessage.value).toMatch(/at least 3/);
     expect(announce).toHaveBeenCalledTimes(1);
     expect(announce).toHaveBeenCalledWith(errorMessage.value);
-  });
-
-  it("shows and announces a taken name", async () => {
-    checkUsername.mockResolvedValue({ available: false });
-    const username = ref("");
-    const { errorMessage } = useUsernameAvailability(username);
-
-    await type(username, "ryan_h");
-    await vi.advanceTimersByTimeAsync(DEBOUNCE_MS);
-    await nextTick();
-
-    expect(errorMessage.value).toBe("That username is taken");
-    expect(announce).toHaveBeenCalledWith("That username is taken");
   });
 });
