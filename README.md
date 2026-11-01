@@ -65,7 +65,7 @@ Conversate is a full-stack web application for learning Italian.
 
 ## How to Run
 
-Requires Python 3.14, Node 24.15+, Docker, Auth0 and Google Cloud.
+Requires Python 3.14, Node (24.15+ recommended), Docker, Auth0 and Google Cloud.
 
 ### Auth0
 
