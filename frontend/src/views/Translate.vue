@@ -29,10 +29,9 @@
           Input and output language must be different.
         </p>
         <!-- Placeholders, not visible labels: each box's place on the page
-             makes its purpose clear, and hidden labels give screen readers
-             the same words. -->
+             makes its purpose clear, and screen readers take its name from
+             the placeholder. A separate hidden label would be read twice. -->
         <div class="translate-field">
-          <label for="textToTranslate" class="visually-hidden">Enter here to translate…</label>
           <textarea
             id="textToTranslate"
             v-model="textToTranslate"
@@ -80,7 +79,6 @@
           Translate
         </button>
         <div class="translate-field">
-          <label for="translation" class="visually-hidden">Translation</label>
           <textarea
             id="translation"
             :value="translatedText"

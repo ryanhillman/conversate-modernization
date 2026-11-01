@@ -1,8 +1,7 @@
 <template>
   <form class="d-flex flex-column align-items-center" @submit.prevent="updateUsername(username)">
-    <!-- The prompt is a placeholder, as on Translate; the box sits right above
+    <!-- Named by its placeholder, as on Translate; the box sits right above
          Update username, so its purpose stays clear once the prompt clears. -->
-    <label for="new-username" class="visually-hidden">New username</label>
     <input
       id="new-username"
       ref="usernameInput"
@@ -11,7 +10,7 @@
       maxlength="100"
       autocomplete="nickname"
       placeholder="New username"
-      :aria-describedby="errorMessage ? 'edit-username-error' : undefined"
+      :aria-errormessage="errorMessage ? 'edit-username-error' : undefined"
       :aria-invalid="errorMessage ? 'true' : undefined"
     />
     <p v-if="errorMessage" id="edit-username-error" class="form-error small mb-2">

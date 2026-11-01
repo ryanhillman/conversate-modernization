@@ -10,7 +10,7 @@
       maxlength="100"
       autocomplete="nickname"
       aria-labelledby="setup-heading"
-      :aria-describedby="errorMessage ? 'setup-username-error' : undefined"
+      :aria-errormessage="errorMessage ? 'setup-username-error' : undefined"
       :aria-invalid="errorMessage ? 'true' : undefined"
     />
     <p v-if="errorMessage" id="setup-username-error" class="form-error small mb-2">

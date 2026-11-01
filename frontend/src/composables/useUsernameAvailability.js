@@ -49,7 +49,9 @@ export function useUsernameAvailability(username, { skipAvailabilityCheck = () =
     if (username.value && validationError.value) return validationError.value;
     return takenUsername.value ? "That username is taken" : "";
   });
-  // Errors appear as you type, so announce them to screen readers.
+  // Errors appear as you type, so announce them to screen readers. The boxes
+  // link them with aria-errormessage, not aria-describedby, which NVDA would
+  // read out a second time as the box's description changes.
   watch(errorMessage, (message) => {
     if (message) announce(message);
   });

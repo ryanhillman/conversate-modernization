@@ -98,13 +98,11 @@ describe("SetUsername", () => {
 });
 
 describe("AccountActions", () => {
-  it("names the rename box for screen readers with the words its placeholder shows", () => {
-    const wrapper = mount(AccountActions, { attachTo: document.body });
-    const input = wrapper.get("input");
+  it("names the rename box by its placeholder alone, as on Translate", () => {
+    const wrapper = mount(AccountActions);
 
-    expect(input.attributes("placeholder")).toBe("New username");
-    expect(computeAccessibleName(input.element)).toBe("New username");
-    wrapper.unmount();
+    expect(wrapper.get("input").attributes("placeholder")).toBe("New username");
+    expect(wrapper.find("label[for=new-username]").exists()).toBe(false);
   });
 
   it("keeps Reset progress and Delete account from submitting the form", () => {
@@ -154,7 +152,7 @@ describe.each([
   it("marks the box invalid and points it at the error only while one shows", async () => {
     const wrapper = mount(form);
     const input = wrapper.get("input");
-    expect(input.attributes("aria-describedby")).toBeUndefined();
+    expect(input.attributes("aria-errormessage")).toBeUndefined();
     expect(input.attributes("aria-invalid")).toBeUndefined();
 
     checkUsername.mockResolvedValue({ available: false });
@@ -162,7 +160,7 @@ describe.each([
     await vi.advanceTimersByTimeAsync(400);
     await flushPromises();
 
-    const error = wrapper.get(`#${input.attributes("aria-describedby")}`);
+    const error = wrapper.get(`#${input.attributes("aria-errormessage")}`);
     expect(error.text()).toBe("That username is taken");
     expect(input.attributes("aria-invalid")).toBe("true");
   });

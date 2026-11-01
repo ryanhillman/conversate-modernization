@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { flushPromises, mount } from "@vue/test-utils";
-import { computeAccessibleDescription, computeAccessibleName } from "dom-accessibility-api";
+import { computeAccessibleDescription } from "dom-accessibility-api";
 
 vi.mock("../src/api/translate", () => ({ translateText: vi.fn() }));
 vi.mock("../src/api/tts", () => ({ synthesizeSpeech: vi.fn() }));
@@ -193,19 +193,15 @@ describe("Translate", () => {
     expect(output.attributes("disabled")).toBeUndefined();
   });
 
-  it("names each text box for screen readers with the words its placeholder shows", () => {
-    const wrapper = mount(Translate, {
-      global: { stubs: { RequireProfile } },
-      attachTo: document.body,
-    });
+  // Browsers name a box from its placeholder when nothing else names it; a
+  // separate hidden label with the same words gets read twice.
+  it("names each text box by its placeholder alone", () => {
+    const wrapper = mount(Translate, { global: { stubs: { RequireProfile } } });
     const [input, output] = wrapper.findAll("textarea");
 
-    for (const box of [input, output]) {
-      expect(computeAccessibleName(box.element)).toBe(box.attributes("placeholder"));
-    }
-    expect(computeAccessibleName(input.element)).toBe("Enter here to translate…");
-    expect(computeAccessibleName(output.element)).toBe("Translation");
-    wrapper.unmount();
+    expect(input.attributes("placeholder")).toBe("Enter here to translate…");
+    expect(output.attributes("placeholder")).toBe("Translation");
+    expect(wrapper.find("label[for=textToTranslate], label[for=translation]").exists()).toBe(false);
   });
 
   it("marks each text box with the language it holds", async () => {
