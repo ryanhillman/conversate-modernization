@@ -22,8 +22,8 @@ This release makes every page accessible to WCAG 2.2 AA and adds a practice quiz
 ### Changed
 - **Breaking:** The API's user_name field is now username.
 - **Breaking:** The migration history is replaced with a single baseline, and the user table is now account, so databases from 1.x must be recreated.
-- The frontend's tools need Node 22.22.2+, 24.15+, or 26+.
 - **Breaking:** The quiz endpoints need the attempt_id that start returns to allow only one quiz attempt at a time.
+- The frontend's tools need Node 22.22.2+, 24.15+, or 26+.
 - Pages reuse the loaded profile instead of fetching it on every visit.
 - Text-to-speech audio is cached, and connections to Google's APIs are reused.
 - The home page images are about 75% smaller, resized and converted to WebP.
