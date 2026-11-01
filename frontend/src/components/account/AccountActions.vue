@@ -29,7 +29,7 @@
     </button>
     <button
       type="button"
-      class="btn btn-outline-primary mb-2 account-actions-field"
+      class="btn btn-primary mb-2 account-actions-field"
       :class="{ disabled: saving }"
       :aria-disabled="saving"
       @click="resetProgress()"
@@ -38,7 +38,7 @@
     </button>
     <button
       type="button"
-      class="btn btn-outline-danger account-actions-field"
+      class="btn btn-danger account-actions-field"
       :class="{ disabled: saving }"
       :aria-disabled="saving"
       @click="deleteAccount()"

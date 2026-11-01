@@ -6,6 +6,7 @@
   --brand-accent-dark: #c8901a;
   --success: #1e7e34;
   --danger-text: #b02a37;
+  --danger-text-dark: #8c1f2b;
   --page-bg: #d8dee8;
   --text-color: #1f2937;
   --text-muted: var(--bs-secondary-color);
@@ -188,8 +189,8 @@ h6,
   border-radius: 8px;
 }
 
-/* Bootstrap draws every button state from these variables. The outlines fill
-   with their color on hover. */
+/* Bootstrap draws every button state from these variables. The outline fills
+   with its color on hover. */
 .btn-outline-primary {
   --bs-btn-color: var(--brand-navy);
   --bs-btn-border-color: var(--brand-navy);
@@ -202,17 +203,15 @@ h6,
   --bs-btn-disabled-color: var(--brand-navy);
   --bs-btn-disabled-border-color: var(--brand-navy);
 }
-/* The darker red: Bootstrap's main red is below 4.5:1 on the gray page. */
-.btn-outline-danger {
-  --bs-btn-color: var(--danger-text);
+/* The darker red, as for error text, darkening further on hover. */
+.btn-danger {
+  --bs-btn-bg: var(--danger-text);
   --bs-btn-border-color: var(--danger-text);
-  --bs-btn-hover-color: var(--text-on-dark);
-  --bs-btn-hover-bg: var(--danger-text);
-  --bs-btn-hover-border-color: var(--danger-text);
-  --bs-btn-active-color: var(--text-on-dark);
-  --bs-btn-active-bg: var(--danger-text);
-  --bs-btn-active-border-color: var(--danger-text);
-  --bs-btn-disabled-color: var(--danger-text);
+  --bs-btn-hover-bg: var(--danger-text-dark);
+  --bs-btn-hover-border-color: var(--danger-text-dark);
+  --bs-btn-active-bg: var(--danger-text-dark);
+  --bs-btn-active-border-color: var(--danger-text-dark);
+  --bs-btn-disabled-bg: var(--danger-text);
   --bs-btn-disabled-border-color: var(--danger-text);
 }
 .btn-primary {
