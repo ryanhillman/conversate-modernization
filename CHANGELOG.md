@@ -56,6 +56,7 @@ This release makes every page accessible to WCAG 2.2 AA and adds a practice quiz
 ### Fixed
 - Error messages stay until dismissed, have a larger Dismiss button, don't cover the focused control, and fit narrow screens.
 - A leaderboard that fails to load says so instead of showing empty.
+- The leaderboard loaded, and announced itself, behind the username setup form; it now waits for a username.
 - Pages stayed blank when the profile loaded during the page fade-in.
 - Pages did nothing after a new version was deployed until a refresh.
 - Pages opened where the last page was scrolled to instead of at the top.

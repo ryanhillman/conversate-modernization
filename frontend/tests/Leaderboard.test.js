@@ -17,6 +17,20 @@ import Leaderboard from "../src/views/Leaderboard.vue";
 import { RequireProfile } from "./helpers";
 
 describe("Leaderboard", () => {
+  it("waits for a profile before loading, so the username form isn't interrupted", async () => {
+    getLeaderboard.mockClear();
+    setProfile(null);
+    const wrapper = mount(Leaderboard, { global: { stubs: { RequireProfile } } });
+    await flushPromises();
+    expect(getLeaderboard).not.toHaveBeenCalled();
+    expect(announce).not.toHaveBeenCalled();
+
+    setProfile({ username: "ryan_h" });
+    await flushPromises();
+    expect(getLeaderboard).toHaveBeenCalledTimes(1);
+    expect(announce).toHaveBeenCalledWith("Leaderboard loaded.");
+    wrapper.unmount();
+  });
   it("tells screen readers which row is yours", async () => {
     setProfile({ username: "ryan_h" });
     const wrapper = mount(Leaderboard, { global: { stubs: { RequireProfile } } });
@@ -32,6 +46,7 @@ describe("Leaderboard", () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
     getLeaderboard.mockRejectedValueOnce(new Error("down"));
     toastState.toasts = [];
+    setProfile({ username: "ryan_h" });
     const wrapper = mount(Leaderboard, {
       attachTo: document.body,
       global: { stubs: { RequireProfile } },

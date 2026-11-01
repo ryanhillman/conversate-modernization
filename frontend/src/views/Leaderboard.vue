@@ -49,7 +49,7 @@
 </template>
 
 <script setup>
-import { ref, nextTick, onMounted } from "vue";
+import { ref, nextTick, watch } from "vue";
 import RequireProfile from "../components/RequireProfile.vue";
 import { getLeaderboard } from "../api/leaderboard";
 import { announce } from "../stores/announceStore";
@@ -89,7 +89,15 @@ async function retry() {
   (loadFailed.value ? retryButton : results).value?.focus();
 }
 
-onMounted(load);
+// Not before there's a profile: until then the username form shows instead,
+// and announcing the leaderboard would interrupt it.
+watch(
+  () => !!profile.value,
+  (hasProfile) => {
+    if (hasProfile) load();
+  },
+  { immediate: true },
+);
 </script>
 
 <style scoped>
