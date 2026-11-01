@@ -32,6 +32,7 @@ This release makes every page accessible to WCAG 2.2 AA and adds a practice quiz
 - Two API errors reworded: Profile not found and Profile already exists.
 - The README's How to Run covers the Docker database address, the .env.example files, and restricting the Google API key.
 - Visual polish across every page: site colors on buttons and checkmarks, matching button sizes, consistent spacing, an evenly spaced and centered nav bar, and the profile page lined up with the rest.
+- Signed-out visitors on phones see a header Log in instead of inside a menu.
 
 #### Translate
 - Recordings stop at 30 seconds, down from 60, and the limit is shown while recording.

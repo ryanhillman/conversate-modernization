@@ -101,30 +101,37 @@
     display: none !important;
   }
 }
+/* The phone menu's layout. A guest's Log in stays in the header, lined up
+   with where the menu's toggle would be. */
 @media (max-width: 1199.98px), (max-width: 74.99875em) {
-  .nav-item {
-    margin-bottom: 1rem;
-  }
-  .navbar-toggler {
+  .navbar-toggler,
+  .nav-guest .nav-right {
     margin-right: 2.5rem;
   }
-  .navbar-nav {
+  /* Sized to its text, so it fits beside the logo on the narrowest phones. */
+  .nav-guest .nav-right .btn {
+    min-width: 0;
+  }
+  #navbarNav .nav-item {
+    margin-bottom: 1rem;
+  }
+  #navbarNav .navbar-nav {
     margin-left: 1.5rem;
     margin-right: 1.5rem;
   }
-  .navbar-nav:first-child {
+  #navbarNav .navbar-nav:first-child {
     margin-top: 1.5em;
   }
-  .navbar-nav:last-child {
+  #navbarNav .navbar-nav:last-child {
     background: var(--card-bg);
     box-shadow: 0 -1px 2px 0 var(--edge-shadow-color);
     margin: 1.5em 0 0 0;
     padding: 1.5em 2.5rem;
   }
-  .navbar-nav:last-child li {
+  #navbarNav .navbar-nav:last-child li {
     margin-bottom: 1em;
   }
-  .navbar-nav:last-child li .nav-logout {
+  #navbarNav .navbar-nav:last-child li .nav-logout {
     vertical-align: middle;
     color: var(--text-color);
   }

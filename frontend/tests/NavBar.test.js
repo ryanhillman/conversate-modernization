@@ -3,9 +3,11 @@ import { mount } from "@vue/test-utils";
 import { computeAccessibleName } from "dom-accessibility-api";
 import { ref } from "vue";
 
+// Signed in unless a test says otherwise; read when NavBar mounts.
+const auth = vi.hoisted(() => ({ signedIn: true }));
 vi.mock("@auth0/auth0-vue", () => ({
   useAuth0: () => ({
-    isAuthenticated: ref(true),
+    isAuthenticated: ref(auth.signedIn),
     isLoading: ref(false),
     user: ref({ name: "Ryan Hillman", picture: "/me.png" }),
   }),
@@ -20,6 +22,17 @@ import NavBar from "../src/components/NavBar.vue";
 import { pages } from "../src/router/pages";
 
 describe("NavBar", () => {
+  it("shows a signed-out visitor Log in in the header, with no menu to open", () => {
+    auth.signedIn = false;
+    const wrapper = mount(NavBar, { global: { stubs: { RouterLink: true } } });
+    auth.signedIn = true;
+
+    expect(wrapper.findAll("button").map((b) => b.text())).toEqual(["Log in"]);
+    expect(wrapper.find("#navbarNav").exists()).toBe(false);
+    expect(wrapper.get(".nav-right").classes()).toEqual(expect.arrayContaining(["d-flex"]));
+    expect(wrapper.get(".nav-right").classes()).not.toContain("d-none");
+  });
+
   it("shows the user's name without making it a heading", () => {
     const wrapper = mount(NavBar, { global: { stubs: { RouterLink: true } } });
 

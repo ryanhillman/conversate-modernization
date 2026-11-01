@@ -5,7 +5,10 @@
         <div class="nav-side nav-left">
           <img src="/logo.png" alt="Conversate logo" width="100" height="100" />
         </div>
+        <!-- A guest's only item is Log in, shown in the header, so only a
+             signed-in user gets the menu. -->
         <button
+          v-if="isAuthenticated"
           class="navbar-toggler"
           type="button"
           aria-controls="navbarNav"
@@ -16,24 +19,21 @@
           <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div id="navbarNav" class="collapse navbar-collapse" :class="{ show: navOpen }">
+        <div
+          v-if="isAuthenticated"
+          id="navbarNav"
+          class="collapse navbar-collapse"
+          :class="{ show: navOpen }"
+        >
           <ul class="navbar-nav">
-            <template v-if="isAuthenticated">
-              <li v-for="page in pages" :key="page.path" class="nav-item">
-                <router-link :to="page.path" class="nav-link"
-                  ><span class="nav-label">{{ page.label }}</span></router-link
-                >
-              </li>
-            </template>
-          </ul>
-
-          <ul v-if="!isAuthenticated && !isLoading" class="navbar-nav d-xl-none">
-            <li class="nav-item">
-              <button class="btn btn-primary w-100" @click="login">Log in</button>
+            <li v-for="page in pages" :key="page.path" class="nav-item">
+              <router-link :to="page.path" class="nav-link"
+                ><span class="nav-label">{{ page.label }}</span></router-link
+              >
             </li>
           </ul>
 
-          <ul v-if="isAuthenticated" id="mobileAuthNavBar" class="navbar-nav d-xl-none">
+          <ul id="mobileAuthNavBar" class="navbar-nav d-xl-none">
             <li class="nav-item">
               <span class="user-info">
                 <img
@@ -54,7 +54,10 @@
           </ul>
         </div>
 
-        <ul class="navbar-nav nav-side nav-right d-none d-xl-flex">
+        <ul
+          class="navbar-nav nav-side nav-right"
+          :class="isAuthenticated ? 'd-none d-xl-flex' : 'd-flex'"
+        >
           <li v-if="!isAuthenticated && !isLoading" class="nav-item">
             <button class="btn btn-primary" @click="login">Log in</button>
           </li>
@@ -265,7 +268,7 @@ function login() {
   #navbarNav > .navbar-nav {
     gap: 0.15rem;
   }
-  .container:not(.nav-guest) #navbarNav {
+  #navbarNav {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
