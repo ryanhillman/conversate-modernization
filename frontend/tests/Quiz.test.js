@@ -312,10 +312,12 @@ describe("Quiz timer", () => {
     expect(wrapper.text()).toContain("Score: 0 / 1");
   });
 
-  it("labels the time left for screen readers", async () => {
+  it("labels the time left and separates the status items for screen readers", async () => {
     wrapper = await startQuizPage();
-    expect(wrapper.get(".quiz-timer").text()).toBe("Time left: 4:10");
-    expect(wrapper.get(".quiz-timer .visually-hidden").text()).toBe("Time left:");
+    // The visible gaps aren't text, so the hidden commas are what a screen reader pauses on.
+    expect(wrapper.get(".quiz-meta").element.textContent).toContain(
+      "Question 1 / 1, Time left: 4:10, Pauses left: 1",
+    );
   });
 });
 

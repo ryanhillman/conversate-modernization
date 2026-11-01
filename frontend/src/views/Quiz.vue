@@ -23,11 +23,16 @@
         <!-- Practice has only the question count, so it sits in the middle. -->
         <div class="quiz-meta" :class="{ 'justify-content-center': practice }">
           <span>Question {{ currentIndex + 1 }} / {{ questions.length }}</span>
+          <!-- The spacing between items is only visual, so hidden commas keep a
+               screen reader from running them together. -->
           <template v-if="!practice">
             <span class="quiz-timer"
-              ><span class="visually-hidden">Time left: </span>{{ formattedRemaining }}</span
+              ><span class="visually-hidden">,&nbsp;Time left:&nbsp;</span
+              >{{ formattedRemaining }}</span
             >
-            <span class="quiz-pauses">Pauses left: {{ pausesRemaining }}</span>
+            <span class="quiz-pauses"
+              ><span class="visually-hidden">,&nbsp;</span>Pauses left: {{ pausesRemaining }}</span
+            >
             <button
               v-if="phase === 'active' && pausesRemaining > 0"
               class="btn btn-sm btn-outline-primary"
