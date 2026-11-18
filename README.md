@@ -10,17 +10,11 @@ Conversate is a full-stack web application for learning Italian.
 
 [Visit original version of Conversate here.](https://github.com/ryanhillman/conversate-original)
 
----
-
 ## [Demo (v1.0.0)](https://youtu.be/GpFT1M0YnfY)
-
----
 
 ## Screenshot
 
 ![Conversate Screenshot](./docs/screenshot.png)
-
----
 
 ## Features
 
@@ -29,8 +23,6 @@ Conversate is a full-stack web application for learning Italian.
 - Translation tool with text-to-speech and speech-to-text.
 - Timed quiz with scores and times ranked.
 - Built to WCAG 2.2 AA.
-
----
 
 ## Tech Stack
 
@@ -60,8 +52,6 @@ Conversate is a full-stack web application for learning Italian.
 - Cloud Translation API
 - Text-to-Speech API
 - Speech-to-Text API
-
----
 
 ## How to Run
 
@@ -149,8 +139,6 @@ From the repo root, with the backend venv active:
 (cd frontend && npm run lint && npm run format)
 ```
 
----
-
 ## API
 
 The API and database schema follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Only a major version changes or removes anything.
@@ -197,8 +185,6 @@ Answer, pause, resume, and submit must send the `attempt_id` that start returns.
 | Method | Path | Purpose |
 |---|---|---|
 | GET | `/health` | Health check (no token needed) |
-
----
 
 ## Credits
 
